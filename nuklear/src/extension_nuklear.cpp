@@ -340,7 +340,18 @@ static int nuklear_Input_Motion(lua_State *L)
 {
     float motionx = luaL_checknumber(L, 1);
     float motiony = luaL_checknumber(L, 2);
-    nk_input_motion(&defoldfb->ctx, motionx, motiony);
+
+    if (&defoldfb->ctx.input.mouse.grabbed) {
+        int x = (int)&defoldfb->ctx.input.mouse.prev.x;
+        int y = (int)&defoldfb->ctx.input.mouse.prev.y;
+        printf("----> ref xy motion\n");
+        nk_input_motion(&defoldfb->ctx, motionx, motiony);
+    }
+    else 
+    {
+        printf("----> xy motion\n");
+        nk_input_motion(&defoldfb->ctx, motionx, motiony);    
+    }
     return 0;
 }
 
