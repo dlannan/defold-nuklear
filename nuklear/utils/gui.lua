@@ -123,7 +123,6 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
-
 	    if(panel_function) then panel_function(left, top, width, height) end
 	end
 	

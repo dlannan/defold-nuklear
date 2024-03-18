@@ -127,11 +127,7 @@ function on_input(self, action_id, action)
 	local xdiff = action.x -self.mouse.x 
 	local ydiff = nkgui.window.height - action.y + nkgui.edge_top - self.mouse.y 
 	if( xdiff ~= 0 or ydiff ~= 0 ) then 
-		if( nuklear.input_get_grabbed() == 1) then
-			tinsert(self.evt_queue, { evt = "motion", x = xdiff, y = ydiff } )
-		else
-			tinsert(self.evt_queue, { evt = "motion", x = action.x, y = nkgui.window.height - action.y + nkgui.edge_top } )
-		end
+		tinsert(self.evt_queue, { evt = "motion", x = action.x, y = nkgui.window.height - action.y + nkgui.edge_top } )
 	end
 
 	self.mouse.x = action.x 
