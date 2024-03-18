@@ -86,13 +86,13 @@ void nk_defold_set_style(struct nk_context *ctx, enum theme theme, int bgalpha, 
         if(txtcolor != 0)
             table[NK_COLOR_TEXT] = nk_rgba_u32(txtcolor);
         if(bgalpha != 215)
-            table[NK_COLOR_WINDOW] = nk_rgba(202, 212, 214, bgalpha);
+            table[NK_COLOR_WINDOW] = nk_rgba(12, 61, 70, bgalpha);
         else 
-            table[NK_COLOR_WINDOW] = nk_rgba(202, 212, 214, 215);
-        table[NK_COLOR_HEADER] = nk_rgba(137, 182, 224, 220);
+            table[NK_COLOR_WINDOW] = nk_rgba(12, 61, 70, 215);
+        table[NK_COLOR_HEADER] = nk_rgba_u32(0x80043e49);
         table[NK_COLOR_BORDER] = nk_rgba(140, 159, 173, 255);
-        table[NK_COLOR_BUTTON] = nk_rgba(137, 182, 224, 255);
-        table[NK_COLOR_BUTTON_HOVER] = nk_rgba(142, 187, 229, 255);
+        table[NK_COLOR_BUTTON] = nk_rgba_u32(0x80043e49);
+        table[NK_COLOR_BUTTON_HOVER] = nk_rgba_u32(0x800c3d46);
         table[NK_COLOR_BUTTON_ACTIVE] = nk_rgba(147, 192, 234, 255);
         table[NK_COLOR_TOGGLE] = nk_rgba(177, 210, 210, 255);
         table[NK_COLOR_TOGGLE_HOVER] = nk_rgba(182, 215, 215, 255);

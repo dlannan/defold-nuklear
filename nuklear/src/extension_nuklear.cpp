@@ -50,12 +50,14 @@ static int nuklear_End_Window(lua_State *L)
 
 // ----------------------------
 
-static int nuklear_Get_Pos_Window(lua_State *L)
+static int nuklear_Get_Bounds_Window(lua_State *L)
 {
-    struct nk_vec2 pos = nk_window_get_position(&defoldfb->ctx);
-    lua_pushnumber(L, pos.x);
-    lua_pushnumber(L, pos.y);
-    return 2;
+    struct nk_rect bnd = nk_window_get_bounds(&defoldfb->ctx);
+    lua_pushnumber(L, bnd.x);
+    lua_pushnumber(L, bnd.y);
+    lua_pushnumber(L, bnd.w);
+    lua_pushnumber(L, bnd.h);
+    return 4;
 }
 
 // ----------------------------
@@ -335,24 +337,21 @@ static int nuklear_Input_End(lua_State *L)
 
 // ----------------------------
 
-
 static int nuklear_Input_Motion(lua_State *L)
 {
     float motionx = luaL_checknumber(L, 1);
     float motiony = luaL_checknumber(L, 2);
 
-    if (&defoldfb->ctx.input.mouse.grabbed) {
-        int x = (int)&defoldfb->ctx.input.mouse.prev.x;
-        int y = (int)&defoldfb->ctx.input.mouse.prev.y;
-        printf("----> ref xy motion\n");
-        nk_input_motion(&defoldfb->ctx, motionx, motiony);
-    }
-    else 
-    {
-        printf("----> xy motion\n");
-        nk_input_motion(&defoldfb->ctx, motionx, motiony);    
-    }
+    nk_input_motion(&defoldfb->ctx, motionx, motiony);    
     return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Input_Get_Grabbed(lua_State *L)
+{
+    lua_pushnumber(L, defoldfb->ctx.input.mouse.grabbed);
+    return 1;
 }
 
 // ----------------------------
@@ -519,7 +518,8 @@ static const luaL_reg Module_methods[] =
     {"clear", nuklear_Clear}, 
     {"begin_window", nuklear_Begin_Window },
     {"end_window", nuklear_End_Window }, 
-    {"bgcolor_window", nuklear_BGColor_Window},
+    {"bgcolor_window", nuklear_BGColor_Window },
+    {"get_bounds_window",nuklear_Get_Bounds_Window },
 
     {"layout_row_static", nuklear_Layout_Row_Static },
     {"layout_row_dyn", nuklear_Layout_Row_Dynamic },
@@ -554,6 +554,8 @@ static const luaL_reg Module_methods[] =
     { "input_char", nuklear_Input_Char },
     { "input_utf", nuklear_Input_Glyph },
     { "input_unicode", nuklear_Input_Unicode },
+
+    {"input_get_grabbed", nuklear_Input_Get_Grabbed },
 
     {"render", nuklear_Render },
     

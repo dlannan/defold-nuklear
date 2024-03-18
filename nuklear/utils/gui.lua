@@ -103,7 +103,7 @@ nuklear_gui.init = function(self, width, height, bgalpha)
     if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
-	nuklear.init(width, height, 0, self.buffer_info.buffer, 2, bgalpha, self.colors.bg2)
+	nuklear.init(width, height, 0, self.buffer_info.buffer, 3, bgalpha, self.colors.bg2)
  
 	local fontdata, error = sys.load_resource("/example/fonts/Pixeltype.ttf")
 	nuklear.setup_font( fontdata, #fontdata, 14.0, width )
@@ -126,8 +126,10 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 
 	    if(panel_function) then panel_function(left, top, width, height) end
 	end
+	
+	local newx, newy, wide, high = nuklear.get_bounds_window()
 	nuklear.end_window()
-	return winshow
+	return winshow, newx, newy, wide, high
 end	
 
 --------------------------------------------------------------------------------
@@ -137,7 +139,7 @@ nuklear_gui.widget_button = function (self, text, left, top, width, height)
 	local y = self.edge_top + top
 	local x = left
 
-	local button = nuklear.begin_window( text , x, y, width, height, self.flags.NK_WINDOW_NO_SCROLLBAR)
+	local button = nuklear.begin_window( text , x, y, width+10, height+8, self.flags.NK_WINDOW_NO_SCROLLBAR)
 
 	nuklear.layout_space_begin(50, 2)
 	nuklear.layout_space_push(0, 0, width, height)
