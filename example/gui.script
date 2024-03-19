@@ -24,14 +24,20 @@ function init(self)
 	self.winh = 300
 
 	self.winshow = 1
-	
-	-- Green theme
-	nkgui.colors.bg1 = 0xff177772
-	nkgui.colors.bg2 = 0xff29f9e5
-	nkgui.colors.fg1 = 0x800c3d46
-	
-	nkgui:init(960, 960, 0)
+
+	self.fancy = false
+
+	if(self.fancy) then 	
+		-- Green theme
+		nkgui.colors.bg1 = 0xff177772
+		nkgui.colors.bg2 = 0xff29f9e5
+		nkgui.colors.fg1 = 0x800c3d46
+		nkgui:init(960, 960, 0, 3)
+	else 
+		nkgui:init(960, 960, 255, 4)
+	end
 	self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
+
 end
 
 --------------------------------------------------------------------------------
@@ -52,24 +58,26 @@ end
 
 function update(self, dt)
 
+	local events = #self.evt_queue
 	nuklear.input_begin()
 	for k,v in pairs(self.evt_queue) do 
 		if(v.evt == "button") then 
 			nuklear.input_button( v.button, v.x, v.y, v.down )
-		elseif (v.evt == "motion") then 
+		end
+		if (v.evt == "motion") then 
 			nuklear.input_motion( v.x, v.y )
 		end
 	end
 	nuklear.input_end()
-	local events = #self.evt_queue
 	self.evt_queue = {}
 
-	nuklear.clear()
-
+	print(self.state)
 	local sec = os.clock()
 	local hr = tonumber(os.date("%H")) / 24
 	local min = tonumber(os.date("%M")) / 60
 	local datetime = os.date("%X %p")
+
+	if(self.fancy) then 
 	nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
 	nkgui:widget_text_movable( 50, 100, 20, "Test Node 1", " ", 1.0, 1.0 )
 	
@@ -86,15 +94,20 @@ function update(self, dt)
 	nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
 
 	if(self.winshow == 1) then
-		self.winshow, self.winx, self.winy, self.winw, self.winh = nkgui:widget_panel("Main Panel", self.winx, self.winy, self.winw, self.winh, panel_func)
+		self.winshow, self.winx, self.winy, self.winw, self.winh = nkgui:widget_panel("Main Panel", 
+							self.winx, self.winy, self.winw, self.winh, panel_func)
 		self.winy = self.winy - nkgui.edge_top
 	end 
 
-	local button = nkgui:widget_button(" Show Panel", 30, 250, 150, 30)
+	local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
 	if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
 	self.prev_button = button
-	
+	else 
+		nuklear.overview_demo()
+	end
 	nkgui:render()		
+
+	nuklear.clear()
 end
 
 --------------------------------------------------------------------------------
@@ -104,13 +117,7 @@ function on_input(self, action_id, action)
 	if action_id == hash("touch") then
 
 		if action.pressed then 
-			self.state = "pressed"
-			tinsert(self.evt_queue, { 
-				evt = "button", button = 0, 
-				x = action.x, 
-				y = nkgui.window.height - action.y + nkgui.edge_top, 
-				down = 1,
-			} )			
+			self.state = "pressed"		
 			print("Pressed: "..self.state)
 		elseif action.released then 
 			self.state = ""
@@ -123,13 +130,22 @@ function on_input(self, action_id, action)
 			print("Released: "..self.state)
 		end
 	end
+
+	if(self.state == "pressed") then 
+		tinsert(self.evt_queue, { 
+			evt = "button", button = 0, 
+			x = action.x, 
+			y = nkgui.window.height - action.y + nkgui.edge_top, 
+			down = 1,
+		} )	
+	end
 	
 	local xdiff = action.x -self.mouse.x 
 	local ydiff = nkgui.window.height - action.y + nkgui.edge_top - self.mouse.y 
 	if( xdiff ~= 0 or ydiff ~= 0 ) then 
 		tinsert(self.evt_queue, { evt = "motion", x = action.x, y = nkgui.window.height - action.y + nkgui.edge_top } )
 	end
-
+	
 	self.mouse.x = action.x 
 	self.mouse.y = nkgui.window.height - action.y + nkgui.edge_top
 	return true

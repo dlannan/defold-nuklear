@@ -70,7 +70,7 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.init = function(self, width, height, bgalpha)
+nuklear_gui.init = function(self, width, height, bgalpha, theme)
 
 	self.winctr = 0
     self.res.width = width
@@ -103,7 +103,7 @@ nuklear_gui.init = function(self, width, height, bgalpha)
     if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
-	nuklear.init(width, height, 0, self.buffer_info.buffer, 3, bgalpha, self.colors.bg2)
+	nuklear.init(width, height, 0, self.buffer_info.buffer, theme, bgalpha, self.colors.bg2)
  
 	local fontdata, error = sys.load_resource("/example/fonts/Pixeltype.ttf")
 	nuklear.setup_font( fontdata, #fontdata, 14.0, width )

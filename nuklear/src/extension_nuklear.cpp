@@ -13,6 +13,8 @@
 #include "nuklear.h"
 #include "nuklear_defold.h"
 
+int do_overview(struct nk_context *ctx);
+
 static int RES_WIDTH = 1024;
 static int RES_HEIGHT = 1024;
 
@@ -444,6 +446,13 @@ static int nuklear_Render(lua_State *L)
     return 0;
 }
 
+// ----------------------------
+
+static int nuklear_overview_demo(lua_State *L)
+{
+    do_overview(&defoldfb->ctx);
+    return 0;
+}
 
 // ----------------------------
 
@@ -514,6 +523,8 @@ static const luaL_reg Module_methods[] =
 {
     {"init", nuklear_Init},
     {"setup_font", nuklear_Setup_Font},
+
+    {"overview_demo", nuklear_overview_demo },
 
     {"clear", nuklear_Clear}, 
     {"begin_window", nuklear_Begin_Window },
