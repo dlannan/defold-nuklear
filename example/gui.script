@@ -89,7 +89,7 @@ function update(self, dt)
 
 	local fancystr = "Tech Theme"
 	if(self.fancy == 1) then fancystr = "Common Theme" end
-	local press = nkgui:widget_button(fancystr, 30, 250, 150, 30)
+	local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
 	if(press == 1) then self.fancy = 1-self.fancy end
 	
 	if(self.fancy == 1) then 
