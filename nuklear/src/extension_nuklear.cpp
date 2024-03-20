@@ -317,7 +317,6 @@ static int nuklear_Stroke_Curve(lua_State *L)
 static int nuklear_Clear(lua_State *L)
 {
     nk_clear(&defoldfb->ctx);
-    memset(fb, 0, RES_WIDTH * RES_HEIGHT * 4);
     return 0;
 }
 
@@ -326,6 +325,12 @@ static int nuklear_Clear(lua_State *L)
 static int nuklear_Input_Begin(lua_State *L)
 {
     nk_input_begin(&defoldfb->ctx);
+
+    if (defoldfb->ctx.input.mouse.grab) {
+        defoldfb->ctx.input.mouse.grab = 0;
+    } else if (defoldfb->ctx.input.mouse.ungrab) {
+        defoldfb->ctx.input.mouse.ungrab = 0;
+    }
     return 0;
 }
 
@@ -429,6 +434,8 @@ static int nuklear_Render(lua_State *L)
     int clear = luaL_checknumber(L, 4);
     dmBuffer::HBuffer buffer = dmScript::CheckBufferUnpack(L, 5);
 
+    memset(fb, 0, RES_WIDTH * RES_HEIGHT * 4);
+
     nk_defold_render( defoldfb, nk_rgb(r,g,b), clear);
 
     // uint8_t* bytes = 0x0;
@@ -498,6 +505,15 @@ static int nuklear_Init(lua_State *L)
     return 0;  
 }
 
+static int nuklear_Set_Style(lua_State *L)
+{
+    int theme = luaL_checknumber(L, 1);
+    int bgalpha = luaL_checknumber(L, 2);
+    unsigned int txtcolor = luaL_checknumber(L, 3);
+    nk_defold_set_style(&defoldfb->ctx, (enum theme)theme, bgalpha, txtcolor);
+    return 0;
+}
+
 static int nuklear_Setup_Font(lua_State *L)
 {
     const char * fontdata = luaL_checkstring(L, 1);
@@ -523,6 +539,7 @@ static const luaL_reg Module_methods[] =
 {
     {"init", nuklear_Init},
     {"setup_font", nuklear_Setup_Font},
+    {"set_style", nuklear_Set_Style}, 
 
     {"overview_demo", nuklear_overview_demo },
 

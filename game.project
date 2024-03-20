@@ -15,3 +15,6 @@ custom_resources = example/
 [library]
 include_dirs = myextension
 
+[input]
+game_binding = /input/game.input_bindingc
+

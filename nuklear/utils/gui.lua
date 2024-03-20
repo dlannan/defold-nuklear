@@ -149,7 +149,6 @@ nuklear_gui.widget_button = function (self, text, left, top, width, height)
 	return res
 end	
 
-
 --------------------------------------------------------------------------------
 
 nuklear_gui.widget_text = function (self, left, top, text, value, lvl1, lvl2)
