@@ -8,6 +8,6 @@ General reasoning for this extension development:
 
 Example screenshots:
 
-![alt text](https://github.com/dlannan/defold-nuklear/main/screenshots/2024-03-21_22-02.png?raw=true)
+![alt text](https://github.com/dlannan/defold-nuklear/blob/main/screenshots/2024-03-21_22-02.png?raw=true)
 
-![alt text](https://github.com/dlannan/defold-nuklear/main/screenshots/2024-03-21_22-02_1.png?raw=true)
+![alt text](https://github.com/dlannan/defold-nuklear/blob/main/screenshots/2024-03-21_22-02_1.png?raw=true)
