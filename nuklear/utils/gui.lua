@@ -1,5 +1,6 @@
 
 local tf = require("nuklear.utils.transforms")
+local tinsert = table.insert 
 
 --------------------------------------------------------------------------------
 local nuklear_gui = {
@@ -22,6 +23,14 @@ local nuklear_gui = {
 	},
 
     win_ctr = 0,
+
+    mouse = { 
+        x = 0, 
+        y = 0 
+    },
+	
+    evt_queue = {},
+    prev_button = 0,
 }
 
 --------------------------------------------------------------------------------
@@ -226,6 +235,112 @@ nuklear_gui.render = function(self)
     nuklear.render(0,0,0,0 , self.buffer_info.buffer)
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	self.winctr = 0
+end
+
+--------------------------------------------------------------------------------
+-- Notes: This handler relies on the input bindings from the example.
+--        It is easy enough to modify this behavior if needed.
+
+nuklear_gui.handle_input = function(self, caller, action_id, action)
+
+    local evt_insert = false
+    local evt_type = "button"
+    local evt_button = 0
+
+    -- Leftclick handler
+	if action_id == hash("touch") or action_id == hash("button_left") then
+        evt_insert = true 
+        evt_type = "button"
+        evt_button = 0
+	end
+
+    if action_id == hash("button_middle") then
+        evt_insert = true 
+        evt_type = "button"
+        evt_button = 1
+	end
+
+	if action_id == hash("button_right") then
+        evt_insert = true 
+        evt_type = "button"
+        evt_button = 2
+	end
+
+    if action_id == hash("wheel_up") then
+        evt_type = "wheel"
+        evt_dir = 1
+    end
+    
+    if action_id == hash("wheel_down") then
+        evt_type = "wheel"
+        evt_dir = -1
+	end    
+
+    if(evt_type == "wheel") then 
+        if(action.value == 1) then 
+            tinsert(self.evt_queue, { 
+                evt = "wheel", 
+                button = 1, 
+                x =self.mouse.x, 
+                y = self.mouse.y, 
+                value = action.value * evt_dir,
+            } )
+        end
+    end
+    
+    if(evt_insert == true) then 
+        if action.pressed == true then 
+            tinsert(self.evt_queue, { 
+                evt = evt_type, 
+                button = evt_button, 
+                x =self.mouse.x, 
+                y = self.mouse.y, 
+                down = 1,
+            } )	
+        end
+		if action.released == true then 
+            tinsert(self.evt_queue, { 
+                evt = evt_type, 
+                button = evt_button, 
+                x =self.mouse.x, 
+                y = self.mouse.y, 
+                down = 0,
+            } )	
+        end
+    end
+	
+    -- Mouse movement update events
+	local xdiff = action.x -self.mouse.x 
+	local ydiff = self.window.height - action.y + self.edge_top - self.mouse.y 
+	if( xdiff ~= 0 or ydiff ~= 0 ) then 
+		tinsert(self.evt_queue, { evt = "motion", x = action.x, y = self.window.height - action.y + self.edge_top } )
+	end
+
+    -- store for previous movememt
+	self.mouse.x = action.x 
+	self.mouse.y = self.window.height - action.y + self.edge_top
+	return true
+end
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.update = function(self, caller, dt)
+
+	local events = #self.evt_queue
+	nuklear.input_begin()
+	for k,v in pairs(self.evt_queue) do 
+		if(v.evt == "button") then 
+			nuklear.input_button( v.button, v.x, v.y, v.down )
+        elseif (v.evt == "motion") then 
+			if(v.evt.down == 1) then nuklear.input_button( 0, v.x, v.y, 1 ) end
+			nuklear.input_motion( v.x, v.y )
+        elseif (v.evt == "wheel") then 
+            print(v.value)
+			nuklear.input_scroll( 0, v.value )
+		end
+	end
+	nuklear.input_end()
+	self.evt_queue = {}
 end
 
 --------------------------------------------------------------------------------
