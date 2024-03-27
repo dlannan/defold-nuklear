@@ -114,7 +114,7 @@ nuklear_gui.init = function(self, width, height, bgalpha, theme)
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(width, height, 0, self.buffer_info.buffer, theme, bgalpha, self.colors.bg2)
  
-	local fontdata, error = sys.load_resource("/example/fonts/Pointless.ttf")
+	local fontdata, error = sys.load_resource("/nuklear/fonts/Pointless.ttf")
 	nuklear.setup_font( fontdata, #fontdata, 13.0, width )
 end
 
