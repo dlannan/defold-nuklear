@@ -6,7 +6,7 @@
 -- Soft start and stop - all movements should be softened to make a nice movement
 --   experience. Camera motion should also be dampened.
 
-local tf = require("utils.transforms")
+local tf = require("nuklear.utils.transforms")
 
 local move_dampen 	= 0.89
 local look_dampen 	= 0.89
