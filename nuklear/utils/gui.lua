@@ -249,6 +249,9 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
     local evt_type = "button"
     local evt_button = 0
 
+	local mousex = action.x + self.window.offx
+	local mousey = self.window.height - action.y + self.edge_top
+
     -- Leftclick handler
 	if action_id == hash("touch") or action_id == hash("button_left") then
         evt_insert = true 
@@ -283,8 +286,8 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
             tinsert(self.evt_queue, { 
                 evt = "wheel", 
                 button = 1, 
-                x =self.mouse.x, 
-                y = self.mouse.y, 
+                x = mousex, 
+                y = mousey, 
                 value = action.value * evt_dir,
             } )
         end
@@ -295,8 +298,8 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
             tinsert(self.evt_queue, { 
                 evt = evt_type, 
                 button = evt_button, 
-                x =self.mouse.x, 
-                y = self.mouse.y, 
+                x = mousex, 
+                y = mousey, 
                 down = 1,
             } )	
         end
@@ -304,23 +307,23 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
             tinsert(self.evt_queue, { 
                 evt = evt_type, 
                 button = evt_button, 
-                x =self.mouse.x, 
-                y = self.mouse.y, 
+                x = mousex, 
+                y = mousey, 
                 down = 0,
             } )	
         end
     end
 	
     -- Mouse movement update events
-	local xdiff = (action.x + self.window.offx) -self.mouse.x 
-	local ydiff = self.window.height - action.y + self.edge_top - self.mouse.y 
+	local xdiff = mousex -self.mouse.x 
+	local ydiff = mousey - self.mouse.y 
 	if( xdiff ~= 0 or ydiff ~= 0 ) then 
-		tinsert(self.evt_queue, { evt = "motion", x = action.x, y = self.window.height - action.y + self.edge_top } )
+		tinsert(self.evt_queue, { evt = "motion", x = mousex, y = mousey } )
 	end
 
     -- store for previous movememt
-	self.mouse.x = action.x + self.window.offx
-	self.mouse.y = self.window.height - action.y + self.edge_top
+	self.mouse.x = mousex
+	self.mouse.y = mousey
 	return true
 end
 
