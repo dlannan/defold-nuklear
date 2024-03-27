@@ -312,14 +312,14 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
     end
 	
     -- Mouse movement update events
-	local xdiff = action.x -self.mouse.x 
+	local xdiff = (action.x + self.window.offx) -self.mouse.x 
 	local ydiff = self.window.height - action.y + self.edge_top - self.mouse.y 
 	if( xdiff ~= 0 or ydiff ~= 0 ) then 
 		tinsert(self.evt_queue, { evt = "motion", x = action.x, y = self.window.height - action.y + self.edge_top } )
 	end
 
     -- store for previous movememt
-	self.mouse.x = action.x 
+	self.mouse.x = action.x + self.window.offx
 	self.mouse.y = self.window.height - action.y + self.edge_top
 	return true
 end
