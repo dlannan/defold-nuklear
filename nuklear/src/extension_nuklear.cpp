@@ -514,6 +514,16 @@ static int nuklear_Set_Style(lua_State *L)
     return 0;
 }
 
+static int nuklear_Show_Cursor(lua_State *L)
+{
+    int show = luaL_checknumber(L, 1);
+    if(show > 0)
+        nk_style_show_cursor(&defoldfb->ctx);
+    else 
+        nk_style_hide_cursor(&defoldfb->ctx);
+    return 0;
+}
+
 static int nuklear_Setup_Font(lua_State *L)
 {
     const char * fontdata = luaL_checkstring(L, 1);
@@ -540,6 +550,7 @@ static const luaL_reg Module_methods[] =
     {"init", nuklear_Init},
     {"setup_font", nuklear_Setup_Font},
     {"set_style", nuklear_Set_Style}, 
+    {"show_cursor", nuklear_Show_Cursor},
 
     {"overview_demo", nuklear_overview_demo },
 
