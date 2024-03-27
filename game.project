@@ -10,7 +10,7 @@ height = 640
 
 [project]
 title = defold-nuklear
-custom_resources = example/
+custom_resources = nuklear/
 
 [library]
 include_dirs = nuklear
