@@ -13,7 +13,7 @@ title = defold-nuklear
 custom_resources = example/
 
 [library]
-include_dirs = nuklear input
+include_dirs = nuklear
 
 [input]
 game_binding = /input/game.input_bindingc
