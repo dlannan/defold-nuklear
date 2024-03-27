@@ -74,7 +74,7 @@ nuklear_gui.get_screen_pos = function( self, x, y, z )
 	local issrot = vmath.quat()
 	local lp = vmath.rotate(issrot, vmath.vector3(x, y, z))
 	local p = self:world_to_screen( lp, self.window.width, self.window.height, 0, 0 )
-	return vmath.vector3(p.x, p.y - 60, 0)
+	return vmath.vector3(p.x, p.y, 0)
 end
 
 --------------------------------------------------------------------------------
