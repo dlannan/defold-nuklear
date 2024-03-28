@@ -27,9 +27,9 @@ function init(self)
 		nkgui.colors.bg1 = 0xff177772
 		nkgui.colors.bg2 = 0xff29f9e5
 		nkgui.colors.fg1 = 0x800c3d46
-		nkgui:init(960, 960, 0, 3, "/nuklear/fonts/Pointless.ttf")
+		nkgui:init(960, 960, 0, 3, "/example/fonts/Pointless.ttf")
 	else 
-		nkgui:init(960, 960, 255, 4, "/nuklear/fonts/Pointless.ttf")
+		nkgui:init(960, 960, 255, 4, "/example/fonts/Pointless.ttf")
 	end
 	self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
 end
