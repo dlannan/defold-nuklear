@@ -54,7 +54,7 @@ static int overview(struct nk_context *ctx)
             nk_layout_row_push(ctx, 45);
             if (nk_menu_begin_label(ctx, "MENU", NK_TEXT_LEFT, nk_vec2(120, 200)))
             {
-                static size_t prog = 40;
+                static nk_size prog = 40;
                 static int slider = 10;
                 static int check = nk_true;
                 nk_layout_row_dynamic(ctx, 25, 1);
@@ -107,7 +107,7 @@ static int overview(struct nk_context *ctx)
 
                 state = (menu_state == MENU_CHART) ? NK_MAXIMIZED: NK_MINIMIZED;
                 if (nk_tree_state_push(ctx, NK_TREE_TAB, "CHART", &state)) {
-                    size_t i = 0;
+                    nk_size i = 0;
                     const float values[]={26.0f,13.0f,30.0f,15.0f,25.0f,10.0f,20.0f,40.0f,12.0f,8.0f,22.0f,28.0f};
                     menu_state = MENU_CHART;
                     nk_layout_row_dynamic(ctx, 150, 1);
@@ -211,7 +211,7 @@ static int overview(struct nk_context *ctx)
                 /* Basic widgets */
                 static int int_slider = 5;
                 static float float_slider = 2.5f;
-                static size_t prog_value = 40;
+                static nk_size prog_value = 40;
                 static float property_float = 2;
                 static int property_int = 10;
                 static int property_neg = 10;
@@ -356,11 +356,11 @@ static int overview(struct nk_context *ctx)
                 static float position[3];
                 static struct nk_color combo_color = {130, 50, 50, 255};
                 static struct nk_colorf combo_color2 = {0.509f, 0.705f, 0.2f, 1.0f};
-                static size_t prog_a =  20, prog_b = 40, prog_c = 10, prog_d = 90;
+                static nk_size prog_a =  20, prog_b = 40, prog_c = 10, prog_d = 90;
                 static const char *weapons[] = {"Fist","Pistol","Shotgun","Plasma","BFG"};
 
                 char buffer[64];
-                size_t sum = 0;
+                nk_size sum = 0;
 
                 /* default combobox */
                 nk_layout_row_static(ctx, 25, 200, 1);
@@ -423,7 +423,7 @@ static int overview(struct nk_context *ctx)
                 }
 
                 /* checkbox combobox */
-                sum = (size_t)(check_values[0] + check_values[1] + check_values[2] + check_values[3] + check_values[4]);
+                sum = (nk_size)(check_values[0] + check_values[1] + check_values[2] + check_values[3] + check_values[4]);
                 sprintf(buffer, "%lu", (unsigned long)sum);
                 if (nk_combo_begin_label(ctx, buffer, nk_vec2(200,200))) {
                     nk_layout_row_dynamic(ctx, 30, 1);
@@ -447,7 +447,7 @@ static int overview(struct nk_context *ctx)
                 /* chart combobox */
                 sprintf(buffer, "%.1f", chart_selection);
                 if (nk_combo_begin_label(ctx, buffer, nk_vec2(200,250))) {
-                    size_t i = 0;
+                    nk_size i = 0;
                     static const float values[]={26.0f,13.0f,30.0f,15.0f,25.0f,10.0f,20.0f,40.0f, 12.0f, 8.0f, 22.0f, 28.0f, 5.0f};
                     nk_layout_row_dynamic(ctx, 150, 1);
                     nk_chart_begin(ctx, NK_CHART_COLUMN, NK_LEN(values), 0, 50);
@@ -728,7 +728,7 @@ static int overview(struct nk_context *ctx)
             nk_label(ctx, "Right click me for menu", NK_TEXT_LEFT);
 
             if (nk_contextual_begin(ctx, 0, nk_vec2(100, 300), bounds)) {
-                static size_t prog = 40;
+                static nk_size prog = 40;
                 static int slider = 10;
 
                 nk_layout_row_dynamic(ctx, 25, 1);
