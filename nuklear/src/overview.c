@@ -256,9 +256,9 @@ static int overview(struct nk_context *ctx)
                 nk_property_float(ctx, "#float:", range_float_min, &range_float_value, range_float_max, 1.0f, 0.2f);
                 nk_property_float(ctx, "#max:", range_float_min, &range_float_max, 100, 1.0f, 0.2f);
 
-                nk_property_int(ctx, "#min:", INT_MIN, &range_int_min, range_int_max, 1, 10);
+                nk_property_int(ctx, "#min:", NK_MIN, &range_int_min, range_int_max, 1, 10);
                 nk_property_int(ctx, "#neg:", range_int_min, &range_int_value, range_int_max, 1, 10);
-                nk_property_int(ctx, "#max:", range_int_min, &range_int_max, INT_MAX, 1, 10);
+                nk_property_int(ctx, "#max:", range_int_min, &range_int_max, NK_MAX, 1, 10);
 
                 nk_tree_pop(ctx);
             }
