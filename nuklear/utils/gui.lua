@@ -36,6 +36,17 @@ local nuklear_gui = {
 }
 
 --------------------------------------------------------------------------------
+-- Helpers
+
+local function getCamDistToSeeSize(FOV, size)
+	return (size/2) / math.tan(FOV/2)
+end
+
+local function getHorizFOV(vertFOV, aspect)
+	return 2 * math.atan(math.tan(vertFOV/2) * aspect)
+end
+
+--------------------------------------------------------------------------------
 
 nuklear_gui.flags = {
 -- /// #### nk_panel_flags
@@ -77,6 +88,29 @@ nuklear_gui.get_screen_pos = function( self, x, y, z, rot )
 	local lp = vmath.rotate(issrot, vmath.vector3(x, y, z))
 	local p = self:world_to_screen( lp, self.window.width, self.window.height, self.window.offx, self.window.offy )
 	return vmath.vector3(p.x, p.y, 0)
+end
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.setup_gui = function( gui_quad, camera_url, gui_resolution )
+
+	-- Trying to fit width of gui quad into exact position 
+	local w,h = window.get_size()
+	local aspect = w/h
+	local vertFOV = go.get(camera_url, "fov")
+	local horizFOV = getHorizFOV(vertFOV, aspect)
+	local aspectFOV = horizFOV
+	local aspectScale = 1.0
+	--if( aspect < 1.0) then aspectScale = 0.95 end
+
+	--local panel_distance = math.atan(go.get("/camera#camera", "fov") * aspect * 0.5)
+	local panel_distance = getCamDistToSeeSize(aspectFOV, aspectScale)
+	go.set_position(vmath.vector3(0,0,-panel_distance), gui_quad)
+
+	local visible_vertical = math.tan(vertFOV /2) * panel_distance * 2.0 * gui_resolution
+	nuklear_gui.edge_top = ( gui_resolution - visible_vertical ) * 0.5
+	if(aspect < 1.0) then nuklear_gui.edge_top = 0 end
+	nuklear_gui.window.offx = 0
 end
 
 --------------------------------------------------------------------------------
