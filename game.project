@@ -10,7 +10,8 @@ height = 640
 
 [project]
 title = defold-nuklear
-custom_resources = nuklear/
+custom_resources =  /example/fonts/
+bundle_resources = 
 
 [library]
 include_dirs = nuklear

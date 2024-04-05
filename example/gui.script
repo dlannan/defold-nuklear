@@ -22,6 +22,8 @@ function init(self)
 
 	self.fancy = 0
 
+	nkgui:setup_gui( "/gui", "/camera#camera", 960 )
+
 	if(self.fancy == 0) then 	
 		-- Green theme
 		nkgui.colors.bg1 = 0xff177772
