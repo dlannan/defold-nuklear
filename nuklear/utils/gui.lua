@@ -144,8 +144,8 @@ nuklear_gui.init = function(self, width, height, bgalpha, theme, font)
  		num_mip_maps = 1
  	}
 
-    self.edge_top = (self.window.width-self.window.height) / 2
-    if(self.window.height >= self.window.width) then self.edge_top = 0 end
+    -- self.edge_top = (self.window.width-self.window.height) / 2
+    -- if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(width, height, 0, self.buffer_info.buffer, theme, bgalpha, self.colors.bg2)
