@@ -92,7 +92,7 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.setup_gui = function( gui_quad, camera_url, gui_resolution )
+nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
 
 	-- Trying to fit width of gui quad into exact position 
 	local w,h = window.get_size()
@@ -108,9 +108,9 @@ nuklear_gui.setup_gui = function( gui_quad, camera_url, gui_resolution )
 	go.set_position(vmath.vector3(0,0,-panel_distance), gui_quad)
 
 	local visible_vertical = math.tan(vertFOV /2) * panel_distance * 2.0 * gui_resolution
-	nuklear_gui.edge_top = ( gui_resolution - visible_vertical ) * 0.5
-	if(aspect < 1.0) then nuklear_gui.edge_top = 0 end
-	nuklear_gui.window.offx = 0
+	self.edge_top = ( gui_resolution - visible_vertical ) * 0.5
+	if(aspect < 1.0) then self.edge_top = 0 end
+	self.window.offx = 0
 end
 
 --------------------------------------------------------------------------------
