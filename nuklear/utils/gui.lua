@@ -117,7 +117,7 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
 	if(aspect < 1.0) then self.edge_top = 0 end
 
 	self.window.scalex = (gui_resolution / w)
-	self.window.scaley = (gui_resolution / w)
+	self.window.scaley = (gui_resolution / h)
 	self.window.offx = 0
 end
 
