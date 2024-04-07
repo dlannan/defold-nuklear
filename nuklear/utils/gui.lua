@@ -89,7 +89,7 @@ nuklear_gui.get_screen_pos = function( self, x, y, z, rot )
 	local p = self:world_to_screen( lp, self.window.width, self.window.height, self.window.offx, self.window.offy )
 
 	p.x = p.x * self.window.scalex
-	p.y = p.y * self.window.scaley
+	p.y = p.y * self.window.scaley - self.edge_top
 	return vmath.vector3(p.x, p.y, 0)
 end
 
@@ -117,7 +117,7 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
 	if(aspect < 1.0) then self.edge_top = 0 end
 
 	self.window.scalex = (gui_resolution / w)
-	self.window.scaley = (visible_vertical / h)
+	self.window.scaley = (gui_resolution / w)
 	self.window.offx = 0
 end
 
