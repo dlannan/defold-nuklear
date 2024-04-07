@@ -86,7 +86,7 @@ end
 nuklear_gui.get_screen_pos = function( self, x, y, z, rot )
 	local issrot = rot or vmath.quat()
 	local lp = vmath.rotate(issrot, vmath.vector3(x, y, z))
-	local p = self:world_to_screen( lp, self.res.width, self.res.height, self.window.offx, self.window.offy )
+	local p = self:world_to_screen( lp, self.window.width, self.window.height, self.window.offx, self.window.offy )
 
 	p.y = p.y - self.edge_top
 	return vmath.vector3(p.x, p.y, 0)
@@ -95,6 +95,8 @@ end
 --------------------------------------------------------------------------------
 
 nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
+
+	self.camera.url = camera_url or self.camera.url
 
 	-- Trying to fit width of gui quad into exact position 
 	local w,h = window.get_size()
