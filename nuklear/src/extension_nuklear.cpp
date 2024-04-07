@@ -272,6 +272,30 @@ static int nuklear_Fill_Rect(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Line_Chart(lua_State *L)
+{
+    /* line chart */
+    id = 0;
+    index = -1;
+    
+    nk_context *ctx = &defoldfb->ctx;
+    bounds = nk_widget_bounds(ctx);
+    if (nk_chart_begin(ctx, NK_CHART_LINES, 32, -1.0f, 1.0f)) {
+        for (i = 0; i < 32; ++i) {
+            nk_flags res = nk_chart_push(ctx, (float)NK_COS(id));
+            if (res & NK_CHART_HOVERING)
+                index = (int)i;
+            if (res & NK_CHART_CLICKED)
+                line_index = (int)i;
+            id += step;
+        }
+        nk_chart_end(ctx);
+    }
+    return 0;
+}
+
+// ----------------------------
+
 static int nuklear_Draw_Text(lua_State *L)
 {
     float x0 = luaL_checknumber(L, 1);
@@ -583,6 +607,7 @@ static const luaL_reg Module_methods[] =
     {"stroke_curve", nuklear_Stroke_Curve},
     {"fill_rect", nuklear_Fill_Rect },
 
+    { "line_chart", nuklear_Line_Chart },
     { "input_begin", nuklear_Input_Begin },
     { "input_end", nuklear_Input_End },
 
