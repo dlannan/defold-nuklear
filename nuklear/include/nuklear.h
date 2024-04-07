@@ -5213,6 +5213,7 @@ struct nk_style {
     const struct nk_cursor *cursor_active;
     struct nk_cursor *cursor_last;
     int cursor_visible;
+    struct nk_color table[28];
 
     struct nk_style_text text;
     struct nk_style_button button;
@@ -5275,6 +5276,7 @@ struct nk_chart_slot {
 
 struct nk_chart {
     int slot;
+    unsigned int bittype;
     float x, y, w, h;
     struct nk_chart_slot slots[NK_CHART_MAX_SLOT];
 };

@@ -8,6 +8,15 @@
 #include "nuklear.h"
 #include "nuklear_defold.h"
 
+void nk_defold_set_style_prop(struct nk_context *ctx, unsigned int prop, unsigned int color)
+{
+    // This is extremely inefficient, because it sets the whole table for each property change. 
+    //  However considering there are only 28 entires, it is not overall that bad.
+    // WARNING: It modified the "current" set theme.
+    ctx->style.table[prop] = nk_rgba_u32(color); 
+    nk_style_from_table(ctx, ctx->style.table);
+}
+
 void nk_defold_set_style(struct nk_context *ctx, enum theme theme, int bgalpha, unsigned int txtcolor)
 {
     struct nk_color table[NK_COLOR_COUNT];

@@ -8279,6 +8279,7 @@ nk_style_from_table(struct nk_context *ctx, const struct nk_color *table)
     if (!ctx) return;
     style = &ctx->style;
     table = (!table) ? nk_default_color_style: table;
+    NK_MEMCPY(style->table, table, sizeof(struct nk_color) * 28);
 
     /* default text */
     text = &style->text;
@@ -18150,7 +18151,7 @@ nk_chart_push_line(struct nk_context *ctx, struct nk_window *win,
                 i->mouse.buttons[NK_BUTTON_LEFT].clicked) ? NK_CHART_CLICKED: 0;
             color = g->slots[slot].highlight;
         }
-        nk_fill_rect(out, bounds, 0, color);
+        if(g->bittype & 0x1) nk_fill_rect(out, bounds, 0, color);
         g->slots[slot].index += 1;
         return ret;
     }
@@ -18174,7 +18175,7 @@ nk_chart_push_line(struct nk_context *ctx, struct nk_window *win,
             color = g->slots[slot].highlight;
         }
     }
-    nk_fill_rect(out, nk_rect(cur.x - 2, cur.y - 2, 4, 4), 0, color);
+    if(g->bittype & 0x2) nk_fill_rect(out, nk_rect(cur.x - 2, cur.y - 2, 4, 4), 0, color);
 
     /* save current data point position */
     g->slots[slot].last.x = cur.x;
