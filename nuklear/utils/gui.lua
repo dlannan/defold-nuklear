@@ -100,8 +100,8 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
 	self.camera.url = camera_url or self.camera.url
 
 	-- Trying to fit width of gui quad into exact position 
-	local w,h = window.get_size()
-	local aspect = w/h
+	self.window.width, self.window.height = window.get_size()
+	local aspect = self.window.width/self.window.height
 	local vertFOV = go.get(camera_url, "fov")
 	local horizFOV = getHorizFOV(vertFOV, aspect)
 	local aspectFOV = horizFOV
@@ -116,8 +116,8 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
 	self.edge_top = ( gui_resolution - visible_vertical ) * 0.5
 	if(aspect < 1.0) then self.edge_top = 0 end
 
-	self.window.scalex = (gui_resolution / w)
-	self.window.scaley = (gui_resolution / h)
+	self.window.scalex = (gui_resolution / self.window.width)
+	self.window.scaley = (gui_resolution / self.window.height)
 	self.window.offx = 0
 end
 
@@ -128,7 +128,6 @@ nuklear_gui.init = function(self, width, height, bgalpha, theme, font)
 	self.winctr = 0
     self.res.width = width
     self.res.height = height
-    self.window.width, self.window.height = window.get_size()
 
  	self.resource_path = go.get("/gui#model", "texture0")
  
