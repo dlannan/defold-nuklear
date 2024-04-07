@@ -86,11 +86,9 @@ end
 nuklear_gui.get_screen_pos = function( self, x, y, z, rot )
 	local issrot = rot or vmath.quat()
 	local lp = vmath.rotate(issrot, vmath.vector3(x, y, z))
-	local p = self:world_to_screen( lp, self.window.width, self.window.height, self.window.offx, self.window.offy )
+	local p = self:world_to_screen( lp, self.res.width, self.res.height, self.window.offx, self.window.offy )
 
-	-- Scale based on window to texture resolution values
-	p.x = p.x * (self.res.width / self.window.width)
-	p.y = p.y * (self.res.height / self.window.height) - self.edge_top
+	p.y = p.y - self.edge_top
 	return vmath.vector3(p.x, p.y, 0)
 end
 
