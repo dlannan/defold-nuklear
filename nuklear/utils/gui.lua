@@ -237,6 +237,40 @@ end
 
 --------------------------------------------------------------------------------
 
+nuklear_gui.widget_chart = function (self, left, top, text, lvl1, lvl2, charttbl)
+
+	local y = self.edge_top + top
+	local x = left
+
+	lvl1 = lvl1 or 1.0
+	lvl2 = lvl2 or 1.0
+
+	nuklear.begin_window( "win_"..self.winctr , x, y, 400, 60, self.flags.NK_WINDOW_NO_SCROLLBAR)
+	
+	nuklear.stroke_rect(x + 4, y, 190, 34, 0, 2, self.colors.bg1)
+	nuklear.fill_rect(x + 4, y, 190, 3, 0, self.colors.bg1)
+
+	nuklear.fill_rect(x + 7, y + 5 + (28 * (1.0-lvl1)), 5, 28 * lvl1, 0, self.colors.bg2)
+	nuklear.fill_rect(x + 14, y + 5 + (28 * (1.0-lvl2)), 5, 28 * lvl2, 0, self.colors.bg1)
+
+	nuklear.fill_rect(x + 21, y + 5, 173, 28, 0, self.colors.fg1)
+
+	-- nuklear.layout_row_static(10, 400, 1)
+	nuklear.layout_space_begin(50, 2)
+	nuklear.layout_space_push(22, 0, 300, 20)
+	nuklear.label(text, 1)
+		
+	-- nuklear.layout_row_static(10, 400, 1)
+	nuklear.layout_space_push(18, 12, 170, 18)
+	nuklear.line_chart(0x1, charttbl);
+	nuklear.layout_space_end()
+
+	nuklear.end_window()
+	self.winctr = self.winctr + 1
+end	
+
+--------------------------------------------------------------------------------
+
 nuklear_gui.widget_text_movable = function(self, left, top, spacer, text, value, lvl1, lvl2)
 
 	local y = self.edge_top + top
@@ -271,6 +305,47 @@ nuklear_gui.widget_text_movable = function(self, left, top, spacer, text, value,
 	nuklear.end_window()
 	self.winctr = self.winctr + 1
 end	
+
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.widget_chart_movable = function(self, left, top, spacer, text, lvl1, lvl2, charttbl)
+
+	local y = self.edge_top + top
+	local x = left
+
+	lvl1 = lvl1 or 1.0
+	lvl2 = lvl2 or 1.0
+	
+	nuklear.begin_window( "win_"..self.winctr , x, y, 400 + spacer, 60,  self.flags.NK_WINDOW_NO_SCROLLBAR)
+	
+	nuklear.stroke_rect(x + 100 + spacer, y, 190, 34, 0, 2, self.colors.bg1)
+	nuklear.fill_rect(x + 100 + spacer, y, 190, 3, 0, self.colors.bg1)
+	
+	nuklear.fill_rect(x + 102 + spacer, y + 5 + (28 * (1.0-lvl1)), 5, 28 * lvl1, 0, self.colors.bg1)
+	nuklear.fill_rect(x + 109 + spacer, y + 5 + (28 * (1.0-lvl2)), 5, 28 * lvl2, 0, self.colors.bg1)
+
+	nuklear.fill_rect(x + 116 + spacer, y + 5, 173, 28, 0, self.colors.fg1)
+
+	nuklear.stroke_line( x + 20, y + 15 + 20, x + 100, y + 2, 1, self.colors.bg2 )
+	nuklear.stroke_line( x + 100, y + 2, x + 100 + spacer, y + 2, 1, self.colors.bg2 )
+	nuklear.stroke_circle( x + 10, y + 5 + 20, 20, 20, 1, self.colors.bg1 )
+	nuklear.stroke_circle( x + 9, y + 4 + 20, 22, 22, 1, self.colors.bg1 )
+	nuklear.stroke_circle( x + 17, y + 12 + 20, 6, 6, 1, self.colors.bg1 )
+
+	nuklear.layout_space_begin(50, 2)
+	nuklear.layout_space_push(100 + 22 + spacer, 0, 300, 20)
+	nuklear.label(text, 1)
+
+	--nuklear.layout_space_push(100 + 55 + spacer, 12, 300, 20)
+	nuklear.layout_space_push(112 + spacer, 12, 170, 18)
+	nuklear.line_chart( 0x1, charttbl);
+	nuklear.layout_space_end()
+
+	nuklear.end_window()
+	self.winctr = self.winctr + 1
+end	
+
 
 --------------------------------------------------------------------------------
 

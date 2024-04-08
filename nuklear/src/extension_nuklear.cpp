@@ -275,33 +275,44 @@ static int nuklear_Fill_Rect(lua_State *L)
 static int nuklear_Line_Chart(lua_State *L)
 {
     /* line chart */
-    unsigned int color = (unsigned int)lua_tonumber( L, 1 ); 
-    unsigned int bittype = (unsigned int)lua_tonumber( L, 2 ); 
-    luaL_checktype(L, 3, LUA_TTABLE);
-    int count = lua_objlen(L, 3);
+    unsigned int bittype = (unsigned int)lua_tonumber( L, 1 ); 
+    luaL_checktype(L, 2, LUA_TTABLE);
+    int count = lua_objlen(L, 2);
 
     int index = -1;
     int line_index = -1;
     int i = 0;
 
     nk_context *ctx = &defoldfb->ctx;
-    ctx->style.chart.color = nk_rgba_u32(color);
+
+    lua_pushnil(L);
+    // First entry is always color of chart
+    if( lua_next(L, 2 ) != 0 ) {
+        unsigned int color = (unsigned int)lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        ctx->style.chart.color = nk_rgba_u32(color);        
+    }
+    else 
+    {
+        lua_pushnumber(L, index);
+        lua_pushnumber(L, line_index);        
+        return 2;
+    }
 
     //  Set the start and joined dots visibility
     struct nk_window *win = ctx->current;
 
-    lua_pushnil(L);
     struct nk_rect bounds = nk_widget_bounds(ctx);
     if (nk_chart_begin(ctx, NK_CHART_LINES, count, -1.0f, 1.0f)) {
         struct nk_chart *chart = &win->layout->chart;
         chart->bittype = bittype;
 
-        while( lua_next(L, 3 ) != 0 ) {
+        while( lua_next(L, 2 ) != 0 ) {
 
             nk_flags res = nk_chart_push(ctx, (float)lua_tonumber( L, -1 ));
             lua_pop( L, 1 );
 
-            if (res & NK_CHART_HOVERING)
+            if (res & NK_CHART_HOVERING) 
                 index = (int)i;
             if (res & NK_CHART_CLICKED)
                 line_index = (int)i;
