@@ -13,7 +13,7 @@
 #include "nuklear.h"
 #include "nuklear_defold.h"
 
-int do_overview(struct nk_context *ctx);
+int do_overview(struct nk_context *ctx, int left, int top);
 
 static int RES_WIDTH = 1024;
 static int RES_HEIGHT = 1024;
@@ -513,7 +513,9 @@ static int nuklear_Render(lua_State *L)
 
 static int nuklear_overview_demo(lua_State *L)
 {
-    do_overview(&defoldfb->ctx);
+    int left = luaL_checknumber(L, 1);
+    int top = luaL_checknumber(L, 2);
+    do_overview(&defoldfb->ctx, left, top);
     return 0;
 }
 

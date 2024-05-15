@@ -154,7 +154,7 @@ function update(self, dt)
 
 	else 
 		nuklear.set_style(4, 255, 0xffffffff)
-		nuklear.overview_demo()
+		nuklear.overview_demo(10, 170)
 	end
 
 	nkgui:render()

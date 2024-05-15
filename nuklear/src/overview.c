@@ -14,7 +14,7 @@
 #define INT_MIN  -2147483647 
 #define INT_MAX  2147483647 
 
-static int overview(struct nk_context *ctx)
+static int overview(struct nk_context *ctx, int left, int top)
 {
     /* window flags */
     static int show_menu = nk_true;
@@ -41,7 +41,7 @@ static int overview(struct nk_context *ctx)
     if (scale_left) window_flags |= NK_WINDOW_SCALE_LEFT;
     if (minimizable) window_flags |= NK_WINDOW_MINIMIZABLE;
 
-    if (nk_begin(ctx, "Overview", nk_rect(10, 170, 400, 600), window_flags))
+    if (nk_begin(ctx, "Overview", nk_rect(left, top, 400, 600), window_flags))
     {
         if (show_menu)
         {
@@ -1317,7 +1317,7 @@ static int overview(struct nk_context *ctx)
     return !nk_window_is_closed(ctx, "Overview");
 }
 
-int do_overview(struct nk_context *ctx)
+int do_overview(struct nk_context *ctx, int left, int top)
 {
-    return overview(ctx);
+    return overview(ctx, left, top);
 }
