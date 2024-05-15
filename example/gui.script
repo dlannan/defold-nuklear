@@ -20,7 +20,17 @@ function init(self)
 
 	self.winshow = 1
 
-	self.fancy = 0
+	self.fancy = 1
+
+	local font = {
+		path = "/example/fonts/Pointless.ttf",
+		size = 13.0,
+	}
+
+	local gui_data = {
+		theme_id = 3,
+		resource_path = go.get("/gui#model", "texture0"),
+	}
 
 	nkgui:setup_gui( "/gui", "/camera#camera", 960 )
 
@@ -29,11 +39,12 @@ function init(self)
 		nkgui.colors.bg1 = 0xff177772
 		nkgui.colors.bg2 = 0xff29f9e5
 		nkgui.colors.fg1 = 0x800c3d46
-		nkgui:init(960, 960, 0, 3, "/example/fonts/Pointless.ttf")
+		nkgui:init(960, 960, 0, gui_data, font)
 	else 
-		nkgui:init(960, 960, 255, 4, "/example/fonts/Pointless.ttf")
+		gui_data.theme_id = 4
+		nkgui:init(960, 960, 255, gui_data, font)
 	end
-	self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
+	-- self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
 	nuklear.show_cursor(0)
 end
 
@@ -102,6 +113,9 @@ function update(self, dt)
 	if(press == 1) then self.fancy = 1-self.fancy end
 	
 	if(self.fancy == 1) then 
+		nkgui.colors.bg1 = 0xff177772
+		nkgui.colors.bg2 = 0xff29f9e5
+		nkgui.colors.fg1 = 0x800c3d46
 		nuklear.set_style(3, 0, 0xff177772)
 		nuklear.set_style_prop(20, 0xff000000)
 				
@@ -111,13 +125,13 @@ function update(self, dt)
 		local posx = math.sin(sec) * 100 + 480
 		nkgui:widget_text_movable( posx, 150, 660-posx, "Moving Handle", " ", 1.0, 1.0 )
 
-		local posx = math.sin(sec) * 100 + 480
+		posx = math.sin(sec) * 100 + 480
 		nkgui:widget_text_movable( posx, 190, 20, "Moving Widget", " ", 1.0, 1.0 )
 
 		local posy = math.sin(sec) * 100 + 200
 		nkgui:widget_text(10, posy, "Moving Text", datetime, hr, min )
 
-		local posy = math.cos(sec) * 100 + 200
+		posy = math.cos(sec) * 100 + 200
 		nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
 
 		if(self.winshow == 1) then

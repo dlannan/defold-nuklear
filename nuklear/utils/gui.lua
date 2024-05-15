@@ -123,13 +123,13 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.init = function(self, width, height, bgalpha, theme, font)
+nuklear_gui.init = function(self, width, height, bgalpha, gui, font)
 
 	self.winctr = 0
     self.res.width = width
     self.res.height = height
 
- 	self.resource_path = go.get("/gui#model", "texture0")
+ 	self.resource_path = gui.resource_path
  
  	self.buffer_info = {
  		buffer = buffer.create(width * height, {{
@@ -151,14 +151,16 @@ nuklear_gui.init = function(self, width, height, bgalpha, theme, font)
  		num_mip_maps = 1
  	}
 
+	self.font = font
+
     -- self.edge_top = (self.window.width-self.window.height) / 2
     -- if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
-	nuklear.init(width, height, 0, self.buffer_info.buffer, theme, bgalpha, self.colors.bg2)
+	nuklear.init(width, height, 0, self.buffer_info.buffer, gui.theme_id, bgalpha, self.colors.bg2)
  
-	local fontdata, error = sys.load_resource(font)
-	nuklear.setup_font( fontdata, #fontdata, 13.0, width )
+	local fontdata, error = sys.load_resource(font.path)
+	nuklear.setup_font( fontdata, #fontdata, font.size, width )
 end
 
 --------------------------------------------------------------------------------
@@ -169,9 +171,9 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 	local x = left
 
     local flags = bit.bor(self.flags.NK_WINDOW_TITLE, self.flags.NK_WINDOW_BORDER)
-    local flags = bit.bor(flags, self.flags.NK_WINDOW_MOVABLE)
-    local flags = bit.bor(flags, self.flags.NK_WINDOW_CLOSABLE)
-    local flags = bit.bor(flags, self.flags.NK_WINDOW_SCALABLE)
+    flags = bit.bor(flags, self.flags.NK_WINDOW_MOVABLE)
+    flags = bit.bor(flags, self.flags.NK_WINDOW_CLOSABLE)
+    flags = bit.bor(flags, self.flags.NK_WINDOW_SCALABLE)
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
