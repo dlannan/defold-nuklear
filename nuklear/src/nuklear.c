@@ -153,6 +153,23 @@ nk_log10(double n)
     if (neg) exp = -exp;
     return exp;
 }
+NK_LIB float 
+lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
+
+NK_LIB struct nk_color
+lerp_color(struct nk_color a, struct nk_color b, float f)
+{
+    struct nk_color res;
+    res.r = lerp(a.r, b.r, f);
+    res.g = lerp(a.g, b.g, f);
+    res.b = lerp(a.b, b.b, f);
+    res.a = lerp(a.a, b.a, f);
+    return res;
+}
+
 NK_API struct nk_rect
 nk_get_null_rect(void)
 {
@@ -18326,10 +18343,6 @@ nk_plot_function(struct nk_context *ctx, enum nk_chart_type type, void *userdata
         nk_chart_end(ctx);
     }
 }
-
-
-
-
 
 /* ==============================================================
  *

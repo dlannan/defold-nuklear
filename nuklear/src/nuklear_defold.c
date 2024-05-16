@@ -206,9 +206,10 @@ nk_defold_img_blendpixel(const struct defold_image *img,
 
     inv_a = 0xff - col.a;
     col2 = nk_defold_img_getpixel(img, x0, y0);
-    col.r = (col.r * col.a + col2.r * inv_a) >> 8;
-    col.g = (col.g * col.a + col2.g * inv_a) >> 8;
-    col.b = (col.b * col.a + col2.b * inv_a) >> 8;
+    // col.r = (col.r * col.a + col2.r * inv_a) >> 8;
+    // col.g = (col.g * col.a + col2.g * inv_a) >> 8;
+    // col.b = (col.b * col.a + col2.b * inv_a) >> 8;
+    col = lerp_color( col, col2, inv_a / 255.0);
     nk_defold_img_setpixel(img, x0, y0, col);
 }
 
@@ -639,8 +640,8 @@ nk_defold_fill_rect(const struct defold_context *defold,
 
 NK_API void
 nk_defold_draw_rect_multi_color(const struct defold_context *defold,
-                                const short x, const short y, const short w, const short h, struct nk_color tl,
-                                struct nk_color tr, struct nk_color br, struct nk_color bl)
+                                const short x, const short y, const short w, const short h, struct nk_color l,
+                                struct nk_color t, struct nk_color r, struct nk_color b)
 {
     int i, j;
     struct nk_color *edge_buf;
@@ -662,31 +663,38 @@ nk_defold_draw_rect_multi_color(const struct defold_context *defold,
     /* Top and bottom edge gradients */
     for (i = 0; i < w; i++)
     {
-        edge_t[i].r = (((((float)tr.r - tl.r) / (w - 1)) * i) + 0.5) + tl.r;
-        edge_t[i].g = (((((float)tr.g - tl.g) / (w - 1)) * i) + 0.5) + tl.g;
-        edge_t[i].b = (((((float)tr.b - tl.b) / (w - 1)) * i) + 0.5) + tl.b;
-        edge_t[i].a = (((((float)tr.a - tl.a) / (w - 1)) * i) + 0.5) + tl.a;
+        edge_t[i] = lerp_color(l, t,  i / (w - 0.5));
+        edge_b[i] = lerp_color(b, r,  i / (w - 0.5));
 
-        edge_b[i].r = (((((float)br.r - bl.r) / (w - 1)) * i) + 0.5) + bl.r;
-        edge_b[i].g = (((((float)br.g - bl.g) / (w - 1)) * i) + 0.5) + bl.g;
-        edge_b[i].b = (((((float)br.b - bl.b) / (w - 1)) * i) + 0.5) + bl.b;
-        edge_b[i].a = (((((float)br.a - bl.a) / (w - 1)) * i) + 0.5) + bl.a;
+        // edge_t[i].r = (((((float)tr.r - tl.r) / (w - 1)) * i) + 0.5) + tl.r;
+        // edge_t[i].g = (((((float)tr.g - tl.g) / (w - 1)) * i) + 0.5) + tl.g;
+        // edge_t[i].b = (((((float)tr.b - tl.b) / (w - 1)) * i) + 0.5) + tl.b;
+        // edge_t[i].a = (((((float)tr.a - tl.a) / (w - 1)) * i) + 0.5) + tl.a;
+
+        // edge_b[i].r = (((((float)br.r - bl.r) / (w - 1)) * i) + 0.5) + bl.r;
+        // edge_b[i].g = (((((float)br.g - bl.g) / (w - 1)) * i) + 0.5) + bl.g;
+        // edge_b[i].b = (((((float)br.b - bl.b) / (w - 1)) * i) + 0.5) + bl.b;
+        // edge_b[i].a = (((((float)br.a - bl.a) / (w - 1)) * i) + 0.5) + bl.a;
     }
 
     /* Left and right edge gradients */
     for (i = 0; i < h; i++)
     {
-        edge_l[i].r = (((((float)bl.r - tl.r) / (h - 1)) * i) + 0.5) + tl.r;
-        edge_l[i].g = (((((float)bl.g - tl.g) / (h - 1)) * i) + 0.5) + tl.g;
-        edge_l[i].b = (((((float)bl.b - tl.b) / (h - 1)) * i) + 0.5) + tl.b;
-        edge_l[i].a = (((((float)bl.a - tl.a) / (h - 1)) * i) + 0.5) + tl.a;
+        edge_l[i] = lerp_color( l, b, i / (h - 0.5));   
+        edge_r[i] = lerp_color( t, r,  i / (h - 0.5));   
 
-        edge_r[i].r = (((((float)br.r - tr.r) / (h - 1)) * i) + 0.5) + tr.r;
-        edge_r[i].g = (((((float)br.g - tr.g) / (h - 1)) * i) + 0.5) + tr.g;
-        edge_r[i].b = (((((float)br.b - tr.b) / (h - 1)) * i) + 0.5) + tr.b;
-        edge_r[i].a = (((((float)br.a - tr.a) / (h - 1)) * i) + 0.5) + tr.a;
+        // edge_l[i].r = (((((float)bl.r - tl.r) / (h - 1)) * i) + 0.5) + tl.r;
+        // edge_l[i].g = (((((float)bl.g - tl.g) / (h - 1)) * i) + 0.5) + tl.g;
+        // edge_l[i].b = (((((float)bl.b - tl.b) / (h - 1)) * i) + 0.5) + tl.b;
+        // edge_l[i].a = (((((float)bl.a - tl.a) / (h - 1)) * i) + 0.5) + tl.a;
+
+        // edge_r[i].r = (((((float)br.r - tr.r) / (h - 1)) * i) + 0.5) + tr.r;
+        // edge_r[i].g = (((((float)br.g - tr.g) / (h - 1)) * i) + 0.5) + tr.g;
+        // edge_r[i].b = (((((float)br.b - tr.b) / (h - 1)) * i) + 0.5) + tr.b;
+        // edge_r[i].a = (((((float)br.a - tr.a) / (h - 1)) * i) + 0.5) + tr.a;
     }
 
+    struct nk_color tmp;
     for (i = 0; i < h; i++)
     {
         for (j = 0; j < w; j++)
@@ -711,10 +719,12 @@ nk_defold_draw_rect_multi_color(const struct defold_context *defold,
                 }
                 else
                 {
-                    pixel.r = (((((float)edge_r[i].r - edge_l[i].r) / (w - 1)) * j) + 0.5) + edge_l[i].r;
-                    pixel.g = (((((float)edge_r[i].g - edge_l[i].g) / (w - 1)) * j) + 0.5) + edge_l[i].g;
-                    pixel.b = (((((float)edge_r[i].b - edge_l[i].b) / (w - 1)) * j) + 0.5) + edge_l[i].b;
-                    pixel.a = (((((float)edge_r[i].a - edge_l[i].a) / (w - 1)) * j) + 0.5) + edge_l[i].a;
+                    pixel = lerp_color(edge_l[i], edge_r[i],  j / (w - 0.5));
+                    
+                    // pixel.r = (((((float)edge_r[i].r - edge_l[i].r) / (w - 1)) * j) + 0.5) + edge_l[i].r;
+                    // pixel.g = (((((float)edge_r[i].g - edge_l[i].g) / (w - 1)) * j) + 0.5) + edge_l[i].g;
+                    // pixel.b = (((((float)edge_r[i].b - edge_l[i].b) / (w - 1)) * j) + 0.5) + edge_l[i].b;
+                    // pixel.a = (((((float)edge_r[i].a - edge_l[i].a) / (w - 1)) * j) + 0.5) + edge_l[i].a;
                     nk_defold_img_blendpixel(&defold->fb, x + j, y + i, pixel);
                 }
             }

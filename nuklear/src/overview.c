@@ -387,10 +387,10 @@ static int overview(struct nk_context *ctx, int left, int top)
                 if (nk_combo_begin_color(ctx, nk_rgb_cf(combo_color2), nk_vec2(200,400))) {
                     enum color_mode {COL_RGB, COL_HSV};
                     static int col_mode = COL_RGB;
-                    #ifndef DEMO_DO_NOT_USE_COLOR_PICKER
+                    //#ifndef DEMO_DO_NOT_USE_COLOR_PICKER
                     nk_layout_row_dynamic(ctx, 120, 1);
                     combo_color2 = nk_color_picker(ctx, combo_color2, NK_RGBA);
-                    #endif
+                    //#endif
 
                     nk_layout_row_dynamic(ctx, 25, 2);
                     col_mode = nk_option_label(ctx, "RGB", col_mode == COL_RGB) ? COL_RGB : col_mode;

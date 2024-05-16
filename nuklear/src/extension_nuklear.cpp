@@ -159,6 +159,27 @@ static int nuklear_Option_Label(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Layout_Tree_Push(lua_State *L)
+{
+    int treetype = luaL_checknumber(L, 1);
+    const char * treetitle = luaL_checkstring(L, 2);
+    int treemode = luaL_checknumber(L, 3);
+    nk_tree_push(&defoldfb->ctx, (enum nk_tree_type)treetype, treetitle, (enum nk_collapse_states)treemode);
+    return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Layout_Tree_Pop(lua_State *L)
+{
+    int width = luaL_checknumber(L, 1);
+    nk_tree_pop(&defoldfb->ctx);
+    return 0;
+}
+
+
+// ----------------------------
+
 static int nuklear_Layout_Row_Begin(lua_State *L)
 {
     int height = luaL_checknumber(L, 1);
@@ -187,6 +208,50 @@ static int nuklear_Layout_Row_End(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Property_Float(lua_State *L)
+{
+    const char *title = luaL_checkstring(L, 1);
+    float minval = luaL_checknumber(L, 2);
+    float value = luaL_checknumber(L, 3);
+    float maxval = luaL_checknumber(L, 4);
+    float step = luaL_checknumber(L, 5);
+    float pixelstep = luaL_checknumber(L, 6);
+    nk_property_float(&defoldfb->ctx, title, minval, &value, maxval, step, pixelstep);
+    lua_pushnumber(L, value);
+    return 1;
+}
+
+// ----------------------------
+
+static int nuklear_Property_Int(lua_State *L)
+{
+    const char *title = luaL_checkstring(L, 1);
+    int minval = luaL_checknumber(L, 2);
+    int value = luaL_checknumber(L, 3);
+    int maxval = luaL_checknumber(L, 4);
+    int step = luaL_checknumber(L, 5);
+    int pixelstep = luaL_checknumber(L, 6);
+    nk_property_int(&defoldfb->ctx, title, minval, &value, maxval, step, pixelstep);
+    lua_pushnumber(L, value);
+    return 1;
+}
+
+
+// ----------------------------
+
+static int nuklear_Slider_Int(lua_State *L)
+{
+    int minval = luaL_checknumber(L, 1);
+    int value = luaL_checknumber(L, 2);
+    int maxval = luaL_checknumber(L, 3);
+    int step = luaL_checknumber(L, 4);
+    nk_slider_int(&defoldfb->ctx, minval, &value, maxval, step);
+    lua_pushnumber(L, value);
+    return 1;
+}
+
+// ----------------------------
+
 static int nuklear_Slider_Float(lua_State *L)
 {
     float minval = luaL_checknumber(L, 1);
@@ -194,7 +259,8 @@ static int nuklear_Slider_Float(lua_State *L)
     float maxval = luaL_checknumber(L, 3);
     float step = luaL_checknumber(L, 4);
     nk_slider_float(&defoldfb->ctx, minval, &value, maxval, step);
-    return 0;
+    lua_pushnumber(L, value);
+    return 1;
 }
 
 // ----------------------------
@@ -627,14 +693,20 @@ static const luaL_reg Module_methods[] =
     {"bgcolor_window", nuklear_BGColor_Window },
     {"get_bounds_window",nuklear_Get_Bounds_Window },
 
-    {"layout_row_static", nuklear_Layout_Row_Static },
-    {"layout_row_dyn", nuklear_Layout_Row_Dynamic },
-    {"begin_window", nuklear_Begin_Window },
-
     {"label", nuklear_Label },
     {"button_label", nuklear_Button_Label },
     {"option_label", nuklear_Option_Label },
     {"slider_float", nuklear_Slider_Float },
+    {"slider_int", nuklear_Slider_Int },
+
+    {"property_float", nuklear_Property_Float },
+    {"property_int", nuklear_Property_Int },
+
+    {"layout_row_static", nuklear_Layout_Row_Static },
+    {"layout_row_dyn", nuklear_Layout_Row_Dynamic },
+
+    {"layout_tree_push", nuklear_Layout_Tree_Push },
+    {"layout_tree_pop", nuklear_Layout_Tree_Pop },
 
     {"layout_row_begin", nuklear_Layout_Row_Begin },
     {"layout_row_push", nuklear_Layout_Row_Push },

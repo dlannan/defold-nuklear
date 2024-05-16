@@ -5803,6 +5803,8 @@ NK_LIB int nk_ifloord(double x);
 NK_LIB int nk_ifloorf(float x);
 NK_LIB int nk_iceilf(float x);
 NK_LIB int nk_log10(double n);
+NK_LIB float lerp(float a, float b, float f);
+NK_LIB struct nk_color lerp_color(struct nk_color a, struct nk_color b, float f);
 
 /* util */
 enum {NK_DO_NOT_STOP_ON_NEW_LINE, NK_STOP_ON_NEW_LINE};
