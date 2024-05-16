@@ -23,8 +23,9 @@ function init(self)
 	self.fancy = 1
 
 	local font = {
-		path = "/example/fonts/Pointless.ttf",
+		path = "/example/fonts/Teachers-VariableFont_wght.ttf",
 		size = 13.0,
+		resolution = 2048,
 	}
 
 	local gui_data = {

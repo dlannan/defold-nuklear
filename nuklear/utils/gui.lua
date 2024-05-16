@@ -160,7 +160,7 @@ nuklear_gui.init = function(self, width, height, bgalpha, gui, font)
 	nuklear.init(width, height, 0, self.buffer_info.buffer, gui.theme_id, bgalpha, self.colors.bg2)
  
 	local fontdata, error = sys.load_resource(font.path)
-	nuklear.setup_font( fontdata, #fontdata, font.size, width )
+	nuklear.setup_font( fontdata, #fontdata, font.size, font.resolution )
 end
 
 --------------------------------------------------------------------------------
