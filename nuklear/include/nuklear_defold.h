@@ -51,6 +51,7 @@ struct defold_context {
     struct nk_rect scissors;
     struct defold_image fb;
     struct defold_image font_tex;
+    struct defold_image image;  // Temp image in the context to render
     struct nk_font_atlas atlas;
 };
 
@@ -59,8 +60,8 @@ NK_API struct defold_context *nk_defold_init(void *fb, void *tex_mem, const unsi
 NK_API void                  nk_defold_render(const struct defold_context *defold, const struct nk_color clear, const unsigned char enable_clear);
 NK_API void                  nk_defold_shutdown(struct defold_context *defold);
 NK_API void                  nk_defold_resize_fb(struct defold_context *defold, void *fb, const unsigned int w, const unsigned int h, const unsigned int pitch, const defold_pl pl);
-NK_API void                  nk_defold_setup_font(struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize);
-
+NK_API struct nk_font *      nk_defold_setup_font(struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize);
+NK_API void                  nk_defold_image(struct defold_context *defold, const struct nk_image *image);
 
 enum theme {THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK};
 

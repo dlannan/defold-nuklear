@@ -6764,7 +6764,7 @@ nk_font_bake_pack(struct nk_font_baker *baker,
         } while ((it = it->n) != config_iter);
     }
     *height = 0;
-    *width = (total_glyph_count > 1000) ? 1024 : 512;
+    //*width = (total_glyph_count > 1000) ? 1024 : 512;
     nk_tt_PackBegin(&baker->spc, 0, (int)*width, (int)max_height, 0, 1, alloc);
     {
         int input_i = 0;
@@ -7861,7 +7861,10 @@ nk_font_atlas_end(struct nk_font_atlas *atlas, nk_handle texture,
 #endif
     }
     for (i = 0; i < NK_CURSOR_COUNT; ++i)
+    {
         atlas->cursors[i].img.handle = texture;
+        atlas->cursors[i].img.itype = 1;
+    }
 
     atlas->temporary.free(atlas->temporary.userdata, atlas->pixel);
     atlas->pixel = 0;

@@ -1,7 +1,7 @@
 local tinsert = table.insert
 
 local nkgui = require("nuklear.utils.gui")
-
+local img1 = nil
 --------------------------------------------------------------------------------
 
 function init(self)
@@ -24,35 +24,56 @@ function init(self)
 
 	local font = {
 		path = "/example/fonts/Teachers-VariableFont_wght.ttf",
-		size = 13.0,
+		size = 16.0,
 		resolution = 2048,
 	}
 
 	local gui_data = {
 		theme_id = 3,
 		resource_path = go.get("/gui#model", "texture0"),
+		resolution = 1920,
 	}
 
-	nkgui:setup_gui( "/gui", "/camera#camera", 960 )
+	nkgui:setup_gui( "/gui", "/camera#camera", gui_data.resolution )
 
 	if(self.fancy == 0) then 	
 		-- Green theme
 		nkgui.colors.bg1 = 0xff177772
 		nkgui.colors.bg2 = 0xff29f9e5
 		nkgui.colors.fg1 = 0x800c3d46
-		nkgui:init(960, 960, 0, gui_data, font)
+		nkgui:init(gui_data.resolution, gui_data.resolution, 0, gui_data, font)
 	else 
 		gui_data.theme_id = 4
-		nkgui:init(960, 960, 255, gui_data, font)
+		nkgui:init(gui_data.resolution, gui_data.resolution, 255, gui_data, font)
 	end
 	-- self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
 	nuklear.show_cursor(1)
 	defos.set_cursor_visible(false)
+
+	local f = io.open("example/images/image1.png", "rb")
+	if(f) then 
+		local image = f:read("*a")
+		local info = png.info(image)
+		local tbytes = 3
+		if(info.colortype == 6) then bytes = 4 end 
+		
+		local buf, w, h = png.decode_rgba(image)
+		img1 = nuklear.create_image(w, h, bytes, buf)
+		
+		print(info.width)
+		print(info.height)
+		print(info.colortype)
+		print(info.bitdepth)
+		f:close()
+	end	
 end
 
 --------------------------------------------------------------------------------
 
 local function panel_func( left, top, width, height )
+
+	nuklear.fill_rect(left, top + 450, width + 30, height + 30, 0, 0xff000000)
+	
 	-- nuklear.layout_row_static(10, 400, 1)
 	nuklear.layout_space_begin(50, 2)
 	nuklear.layout_space_push(22, 0, 300, 30)
@@ -62,6 +83,11 @@ local function panel_func( left, top, width, height )
 	nuklear.layout_space_push(55, 20, 300, 30)
 	nuklear.label("text 2", 1)
 	nuklear.layout_space_end()
+
+	nuklear.layout_space_push(20, 40, 300, 300)
+	nuklear.image_color( img1, 0x00797979 )
+	nuklear.layout_space_end()
+	
 end
 
 --------------------------------------------------------------------------------
@@ -113,12 +139,13 @@ function update(self, dt)
 	if(self.fancy == 1) then fancystr = "Common Theme" end
 	local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
 	if(press == 1) then self.fancy = 1-self.fancy end
-	
+
+		
 	if(self.fancy == 1) then 
 		nkgui.colors.bg1 = 0xff177772
 		nkgui.colors.bg2 = 0xff29f9e5
 		nkgui.colors.fg1 = 0x800c3d46
-		nuklear.set_style(3, 0, 0xff177772)
+		nuklear.set_style(3, 0, 0xffffffff) --0xff177772)
 		nuklear.set_style_prop(20, 0xff000000)
 				
 		nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
@@ -138,7 +165,7 @@ function update(self, dt)
 
 		if(self.winshow == 1) then
 			self.winshow, self.winx, self.winy, self.winw, self.winh = nkgui:widget_panel("Main Panel", 
-								self.winx, self.winy, self.winw, self.winh, panel_func)
+							self.winx, self.winy, self.winw, self.winh, panel_func)
 			self.winy = self.winy - nkgui.edge_top
 		end 
 
@@ -147,8 +174,8 @@ function update(self, dt)
 		self.prev_button = button
 
 		nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
-			nuklear.layout_row_dyn(20, 1);
-			nuklear.line_chart(0x1, chart);
+			nuklear.layout_row_dyn(20, 1)
+			nuklear.line_chart(0x1, chart)
 		end)
 
 		nkgui:widget_chart_movable( posx, 400, 200, "Moving Chart", 1.0, 1.0, chart )
@@ -156,7 +183,7 @@ function update(self, dt)
 
 	else 
 		nuklear.set_style(4, 255, 0xffffffff)
-		nuklear.overview_demo(10, 170)
+		nuklear.overview_demo(10, 460)
 	end
 
 	nkgui:render()

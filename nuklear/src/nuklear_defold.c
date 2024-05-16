@@ -178,7 +178,7 @@ nk_defold_img_getpixel(const struct defold_image *img, const int x0, const int y
     unsigned char *ptr;
     unsigned int pixel;
     NK_ASSERT(img);
-    if (y0 < img->h && y0 >= 0 && x0 >= 0 && x0 < img->w)
+    if ((y0 < img->h) && (y0 >= 0) && (x0 >= 0) && (x0 < img->w))
     {
         ptr = img->pixels + (img->pitch * y0);
 
@@ -951,7 +951,26 @@ nk_defold_init(void *fb, void *tex_mem, const unsigned int w, const unsigned int
     return defold;
 }
 
-NK_API void nk_defold_setup_font( struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize)
+NK_API void   nk_defold_image(struct defold_context *defold, const struct nk_image *image)
+{
+    struct defold_image dimage;
+    if(image->itype == 0)
+    {
+        dimage.pixels = (unsigned char *)image->handle.ptr;
+        dimage.w = image->w;
+        dimage.h = image->h;
+        dimage.pitch = 4 * image->w;
+        dimage.format = NK_FONT_ATLAS_RGBA32;
+        dimage.pl = PIXEL_LAYOUT_RGBX_8888;
+        defold->image = dimage;
+    }
+    else
+    {
+        defold->image = defold->font_tex;
+    }
+}
+
+NK_API struct nk_font *nk_defold_setup_font( struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize)
 {
     const void *tex;
 
@@ -960,20 +979,22 @@ NK_API void nk_defold_setup_font( struct defold_context *defold, int w, int h, v
 
     defold->font_tex.w = w;
     defold->font_tex.h = h;
+    defold->font_tex.format = NK_FONT_ATLAS_ALPHA8;
 
     //struct nk_font *font = nk_font_atlas_add_from_file(&defold->atlas, fontpath, fontsize, NULL);
     struct nk_font *font = nk_font_atlas_add_from_memory(&defold->atlas, fontdata, (nk_size)datasize, fontsize, NULL);
     
     if(font == NULL) {
         printf("[ERROR] Cant load font file.\n");
-        return;
+        return NULL;
     }
 
     tex = nk_font_atlas_bake(&defold->atlas, &defold->font_tex.w, &defold->font_tex.h, defold->font_tex.format);
+    // printf("---------> %d    %d   %d\n",defold->font_tex.w, defold->font_tex.h, defold->font_tex.format);
     if (!tex)
     {
         free(defold);
-        return;
+        return NULL;
     }
 
     switch (defold->font_tex.format)
@@ -990,6 +1011,7 @@ NK_API void nk_defold_setup_font( struct defold_context *defold, int w, int h, v
     NK_MEMCPY(defold->font_tex.pixels, tex, defold->font_tex.pitch * defold->font_tex.h);
     nk_font_atlas_end(&defold->atlas, nk_handle_ptr(NULL), NULL);
     nk_style_set_font(&defold->ctx, &font->handle);
+    return font;
 }
 
 static void
@@ -1018,11 +1040,11 @@ nk_defold_stretch_image(const struct defold_image *dst,
                     continue;
             }
             col = nk_defold_img_getpixel(src, (int)xoff, (int)yoff);
-            if (col.r || col.g || col.b)
+            if ((col.r || col.g || col.b) && fg->a > 0x0) 
             {
-                col.r = fg->r;
-                col.g = fg->g;
-                col.b = fg->b;
+                col.r = (col.r + fg->r) * 0.5;
+                col.g = (col.g + fg->g) * 0.5;
+                col.b = (col.b + fg->b) * 0.5;
             }
             nk_defold_img_blendpixel(dst, i + (int)(dst_rect->x + 0.5f), j + (int)(dst_rect->y + 0.5f), col);
             xoff += xinc;
@@ -1134,7 +1156,8 @@ nk_defold_drawimage(const struct defold_context *defold,
     dst_rect.y = y;
     dst_rect.w = w;
     dst_rect.h = h;
-    nk_defold_stretch_image(&defold->fb, &defold->font_tex, &dst_rect, &src_rect, &defold->scissors, col);
+    nk_defold_image((struct defold_context *)defold, img);
+    nk_defold_stretch_image(&defold->fb, &defold->image, &dst_rect, &src_rect, &defold->scissors, col);
 }
 
 NK_API void

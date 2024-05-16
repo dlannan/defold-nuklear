@@ -4,6 +4,8 @@
 #include <dmsdk/sdk.h>
 #include <dmsdk/dlib/crypt.h>
 
+#include <vector>
+
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_FONT_BAKING
@@ -15,14 +17,16 @@
 
 int do_overview(struct nk_context *ctx, int left, int top);
 
-static int RES_WIDTH = 1024;
-static int RES_HEIGHT = 1024;
+static int RES_WIDTH = 2048;
+static int RES_HEIGHT = 2048;
 
 /* init gui state */
 static struct nk_context ctx;
 static struct defold_context *defoldfb; 
 static unsigned char *fb = nullptr;
 static unsigned char *tex_scratch = nullptr;
+
+static std::vector<struct nk_image> g_images;
 
 // ----------------------------
 
@@ -398,18 +402,80 @@ static int nuklear_Draw_Text(lua_State *L)
 {
     float x0 = luaL_checknumber(L, 1);
     float y0 = luaL_checknumber(L, 2);
-    float x1 = luaL_checknumber(L, 3);
-    float y1 = luaL_checknumber(L, 4);
+    float w = luaL_checknumber(L, 3);
+    float h = luaL_checknumber(L, 4);
     const char * str = luaL_checkstring(L, 5);
-    float roundimg = luaL_checknumber(L, 5);
     unsigned int rgba = luaL_checknumber(L, 6);
+    unsigned int rgbabg = luaL_checknumber(L, 7);
 
     struct nk_window *window = defoldfb->ctx.current;
     struct nk_command_buffer *out = &window->buffer;
-
-
-    //nk_draw_text
+    struct nk_rect rect = nk_rect(x0, y0, w, h);
+    nk_draw_text(out, rect, str, (int)strlen(str), defoldfb->ctx.style.font, nk_rgba_u32(rgba), nk_rgba_u32(rgbabg));
     return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Image_Color(lua_State *L)
+{
+    int imgid = luaL_checknumber(L, 1);
+    unsigned int rgba = luaL_checknumber(L, 2);
+
+    struct nk_image img = g_images[imgid];
+    //nk_image(&defoldfb->ctx, img);
+    nk_image_color(&defoldfb->ctx, img, nk_rgba_u32(rgba));
+    return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Create_Image(lua_State *L)
+{
+    unsigned short w = luaL_checknumber(L, 1);
+    unsigned short h = luaL_checknumber(L, 2);
+    unsigned short bytes = luaL_checknumber(L, 3);
+    dmScript::LuaHBuffer *buffer = dmScript::CheckBuffer(L, 4);
+    // unsigned char *data = (unsigned char *)luaL_checkstring(L, 4);
+
+    uint8_t* data = 0x0;
+    uint32_t size = 0;
+
+    dmBuffer::Result r = dmBuffer::GetBytes(buffer->m_Buffer, (void**)&data, &size);
+
+    if (r == dmBuffer::RESULT_OK) {
+
+        // By default image comes in ARGB and horizonal flipped. Needs conversion.
+        unsigned char *ptr = new unsigned char[w * h * bytes];
+        unsigned char *pptr = ptr;
+        for(int y = h-1; y >= 0; y--)
+        {
+            for(int x = 0; x < w; x++)
+            {
+                pptr[0] = data[y * w * bytes + x * bytes + 3];
+                pptr[1] = data[y * w * bytes + x * bytes + 0];
+                pptr[2] = data[y * w * bytes + x * bytes + 1];
+                pptr[3] = data[y * w * bytes + x * bytes + 2];
+                pptr += bytes;
+            }
+        }
+   
+        struct nk_image img = nk_image_ptr(ptr);
+        img.w = w;
+        img.h = h;
+        img.region[2] = w;
+        img.region[3] = h;
+        img.itype = 0;
+
+        g_images.push_back(img);
+        lua_pushnumber(L, g_images.size()-1);
+    }
+    else
+    {
+        printf("[Error] nuklear_Create_Image: Unabled to use buffer param.");
+        lua_pushnil(L);
+    }
+    return 1;
 }
 
 // ----------------------------
@@ -692,6 +758,9 @@ static const luaL_reg Module_methods[] =
     {"end_window", nuklear_End_Window }, 
     {"bgcolor_window", nuklear_BGColor_Window },
     {"get_bounds_window",nuklear_Get_Bounds_Window },
+
+    {"image_color", nuklear_Image_Color },
+    {"create_image", nuklear_Create_Image },
 
     {"label", nuklear_Label },
     {"button_label", nuklear_Button_Label },

@@ -5,15 +5,17 @@ main_collection = /example/main.collectionc
 shared_state = 1
 
 [display]
-width = 960
-height = 640
+width = 1920
+height = 1080
 high_dpi = 1
+samples = 2
 
 [project]
 title = defold-nuklear
 custom_resources = /example/fonts/
 bundle_resources = 
 dependencies#0 = https://github.com/subsoap/defos/archive/master.zip
+dependencies#1 = https://github.com/britzl/defold-png/archive/master.zip
 
 [library]
 include_dirs = nuklear
