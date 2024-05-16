@@ -45,7 +45,8 @@ function init(self)
 		nkgui:init(960, 960, 255, gui_data, font)
 	end
 	-- self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
-	nuklear.show_cursor(0)
+	nuklear.show_cursor(1)
+	defos.set_cursor_visible(false)
 end
 
 --------------------------------------------------------------------------------
