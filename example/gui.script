@@ -87,7 +87,24 @@ local function panel_func( left, top, width, height )
 	nuklear.layout_space_push(20, 40, 300, 300)
 	nuklear.image_color( img1, 0x00797979 )
 	nuklear.layout_space_end()
+
+	local res = nuklear.layout_tree_push(0, "Scene", 1)
+
+	if (res ~= 0) then 
+	nuklear.layout_row_dyn(50, 2)
+	nuklear.label("text 1", 1)	
+	nuklear.label("text 2", 1)
+	nuklear.layout_tree_pop()
+	end
 	
+	res = nuklear.layout_tree_push(0, "Cameras", 1)
+	
+	if (res ~= 0) then
+	nuklear.layout_row_dyn(50, 2)
+	nuklear.label("text 1", 1)
+	nuklear.label("text 2", 1)
+	nuklear.layout_tree_pop()
+	end
 end
 
 --------------------------------------------------------------------------------
