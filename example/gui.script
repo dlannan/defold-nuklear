@@ -16,7 +16,7 @@ function init(self)
 	self.winx = 30
 	self.winy = 300
 	self.winw = 400
-	self.winh = 300
+	self.winh = 600
 
 	self.winshow = 1
 
@@ -70,7 +70,7 @@ end
 
 --------------------------------------------------------------------------------
 
-local function panel_func( left, top, width, height )
+local function panel_func( self, left, top, width, height )
 
 	nuklear.fill_rect(left, top + 450, width + 30, height + 30, 0, 0xff000000)
 	
@@ -84,22 +84,21 @@ local function panel_func( left, top, width, height )
 	nuklear.label("text 2", 1)
 	nuklear.layout_space_end()
 
-	nuklear.layout_space_push(20, 40, 300, 300)
+	nuklear.layout_row_dyn(300, 1)
 	nuklear.image_color( img1, 0x00797979 )
-	nuklear.layout_space_end()
 
-	local res = nuklear.layout_tree_push(0, "Scene", 1)
+	self.th_scene = nuklear.layout_tree_push(1, "Scene", self.th_scene or 1)
 
-	if (res ~= 0) then 
+	if (self.th_scene ~= 0) then 
 	nuklear.layout_row_dyn(50, 2)
 	nuklear.label("text 1", 1)	
 	nuklear.label("text 2", 1)
 	nuklear.layout_tree_pop()
 	end
 	
-	res = nuklear.layout_tree_push(0, "Cameras", 1)
+	self.th_cameras = nuklear.layout_tree_push(1, "Cameras", self.th_cameras or 1)
 	
-	if (res ~= 0) then
+	if (self.th_cameras ~= 0) then
 	nuklear.layout_row_dyn(50, 2)
 	nuklear.label("text 1", 1)
 	nuklear.label("text 2", 1)

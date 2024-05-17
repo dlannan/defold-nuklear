@@ -177,9 +177,29 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
-	    if(panel_function) then panel_function(left, top, width, height) end
+	    if(panel_function) then panel_function(self, left, top, width, height) end
 	end
 	
+	local newx, newy, wide, high = nuklear.get_bounds_window()
+	nuklear.end_window()
+	return winshow, newx, newy, wide, high
+end	
+
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height, panel_function)
+
+	local y = self.edge_top + top
+	local x = left
+
+	local flags = bit.bor(self.flags.NK_WINDOW_TITLE, self.flags.NK_WINDOW_BORDER)
+
+	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
+	if( winshow == 1) then 
+		if(panel_function) then panel_function(self, left, top, width, height) end
+	end
+
 	local newx, newy, wide, high = nuklear.get_bounds_window()
 	nuklear.end_window()
 	return winshow, newx, newy, wide, high

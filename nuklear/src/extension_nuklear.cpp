@@ -5,6 +5,7 @@
 #include <dmsdk/dlib/crypt.h>
 
 #include <vector>
+#include <string>
 
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_STANDARD_IO
@@ -166,9 +167,9 @@ static int nuklear_Option_Label(lua_State *L)
 static int nuklear_Layout_Tree_Push(lua_State *L)
 {
     int treetype = luaL_checknumber(L, 1);
-    const char * treetitle = luaL_checkstring(L, 2);
+    std::string treetitle = luaL_checkstring(L, 2);
     int treemode = luaL_checknumber(L, 3);
-    int res = nk_tree_push(&defoldfb->ctx, (enum nk_tree_type)treetype, treetitle, (enum nk_collapse_states)treemode);
+    int res = nk_tree_state_push(&defoldfb->ctx, (enum nk_tree_type)treetype, treetitle.c_str(), (enum nk_collapse_states *)&treemode);
     lua_pushnumber(L, res);
     return 1;
 }
@@ -177,7 +178,7 @@ static int nuklear_Layout_Tree_Push(lua_State *L)
 
 static int nuklear_Layout_Tree_Pop(lua_State *L)
 {
-    nk_tree_pop(&defoldfb->ctx);
+    nk_tree_state_pop(&defoldfb->ctx);
     return 0;
 }
 
