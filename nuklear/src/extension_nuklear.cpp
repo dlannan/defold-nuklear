@@ -91,6 +91,26 @@ static int nuklear_Layout_Row_Dynamic(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Group_Begin(lua_State *L)
+{
+    const char *title = luaL_checkstring(L, 1);
+    int flags = luaL_checknumber(L, 2);
+    int res = nk_group_begin(&defoldfb->ctx, title, flags); 
+    lua_pushnumber(L, res);
+    return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Group_End(lua_State *L)
+{
+    nk_group_end(&defoldfb->ctx); 
+    return 0;
+}
+
+
+// ----------------------------
+
 static int nuklear_Layout_Row_Static(lua_State *L)
 {
     int height = luaL_checknumber(L, 1);
@@ -771,6 +791,9 @@ static const luaL_reg Module_methods[] =
 
     {"property_float", nuklear_Property_Float },
     {"property_int", nuklear_Property_Int },
+
+    {"group_begin", nuklear_Group_Begin },
+    {"group_end", nuklear_Group_End },
 
     {"layout_row_static", nuklear_Layout_Row_Static },
     {"layout_row_dyn", nuklear_Layout_Row_Dynamic },

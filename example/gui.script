@@ -79,11 +79,16 @@ local function panel_func( self, left, top, width, height )
 	nuklear.layout_space_push(22, 0, 300, 30)
 	nuklear.label("text 1", 1)
 
-	-- nuklear.layout_row_static(10, 400, 1)
-	nuklear.layout_space_push(55, 20, 300, 30)
-	nuklear.label("text 2", 1)
-	nuklear.layout_space_end()
+	nuklear.layout_row_dyn(100, 1)
+	if(nuklear.group_begin("Group2", nkgui.flags.NK_WINDOW_TITLE) ~= 0) then
 
+		-- nuklear.layout_row_static(10, 400, 1)
+		nuklear.layout_row_dyn(20, 1)
+		nuklear.label("text 2", 1)
+		nuklear.group_end()
+	end
+	nuklear.layout_space_end()
+	
 	nuklear.layout_row_dyn(300, 1)
 	nuklear.image_color( img1, 0x00797979 )
 
