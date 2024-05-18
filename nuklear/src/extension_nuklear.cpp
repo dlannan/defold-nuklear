@@ -173,6 +173,16 @@ static int nuklear_Button_Label(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Button_Image(lua_State *L)
+{
+    int imageid = luaL_checknumber(L, 1);
+    int res = nk_button_image(&defoldfb->ctx, g_images[imageid]);
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+// ----------------------------
+
 static int nuklear_Option_Label(lua_State *L)
 {
     const char *name = luaL_checkstring(L, 1);
@@ -785,6 +795,7 @@ static const luaL_reg Module_methods[] =
 
     {"label", nuklear_Label },
     {"button_label", nuklear_Button_Label },
+    {"button_image", nuklear_Button_Image },
     {"option_label", nuklear_Option_Label },
     {"slider_float", nuklear_Slider_Float },
     {"slider_int", nuklear_Slider_Int },

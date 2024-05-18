@@ -75,9 +75,14 @@ local function panel_func( self, left, top, width, height )
 	nuklear.fill_rect(left, top + 450, width + 30, height + 30, 0, 0xff000000)
 	
 	-- nuklear.layout_row_static(10, 400, 1)
-	nuklear.layout_space_begin(50, 2)
-	nuklear.layout_space_push(22, 0, 300, 30)
+	nuklear.layout_space_begin(30, 2)
+
+	nuklear.layout_space_push(10, 5, 60, 20)
 	nuklear.label("text 1", 1)
+	
+	nuklear.layout_space_push(70, 0, 30, 30)
+	nuklear.button_image(img1)
+	nuklear.layout_space_end()
 
 	nuklear.layout_row_dyn(100, 1)
 	if(nuklear.group_begin("Group2", nkgui.flags.NK_WINDOW_TITLE) ~= 0) then
@@ -87,7 +92,6 @@ local function panel_func( self, left, top, width, height )
 		nuklear.label("text 2", 1)
 		nuklear.group_end()
 	end
-	nuklear.layout_space_end()
 	
 	nuklear.layout_row_dyn(300, 1)
 	nuklear.image_color( img1, 0x00797979 )
