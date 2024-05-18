@@ -270,8 +270,9 @@ static int nuklear_Edit_String(lua_State *L)
     {
         value = new char[maxlen];
         memset(value, 0, maxlen);
+        strcpy(value, str);
         stringlen = new int[1];
-        stringlen[0] = 0;
+        stringlen[0] = strlen(str);
         stringdata data{value, stringlen};
         g_editstrings.insert(std::pair<uint32_t, stringdata>(strid, data));
     }
