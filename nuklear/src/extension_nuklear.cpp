@@ -104,7 +104,7 @@ static int nuklear_Group_Begin(lua_State *L)
     int flags = luaL_checknumber(L, 2);
     int res = nk_group_begin(&defoldfb->ctx, title, flags); 
     lua_pushnumber(L, res);
-    return 0;
+    return 1;
 }
 
 // ----------------------------
