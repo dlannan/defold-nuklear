@@ -932,7 +932,6 @@ nk_defold_init(void *fb, void *tex_mem, const unsigned int w, const unsigned int
     {
         defold->fb.format = NK_FONT_ATLAS_RGBA32;
         defold->fb.pitch = pitch;
-        printf("PITCH: %d\n", pitch);
     }
     else
     {
