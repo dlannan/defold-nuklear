@@ -36,6 +36,7 @@ function init(self)
 
 	nkgui.text1 = "Test1"
 	nkgui.text2 = "Test2"
+	nkgui.check1 = 0
 	nkgui:setup_gui( "/gui", "/camera#camera", gui_data.resolution )
 
 	if(self.fancy == 0) then 	
@@ -120,6 +121,9 @@ local function panel_func( self, left, top, width, height )
 	self.text1 = nuklear.edit_string(0,  self.text1, 10, 1)
 	nuklear.layout_row_dyn(24, 1)
 	self.text2 = nuklear.edit_string(1, self.text2, 10, 1)
+
+	nuklear.layout_row_dyn(24, 1)
+	self.check1 = nuklear.check_label("Test Check", self.check1)
 end
 
 --------------------------------------------------------------------------------

@@ -326,6 +326,31 @@ static int nuklear_Slider_Int(lua_State *L)
     return 1;
 }
 
+
+// ----------------------------
+
+static int nuklear_Check_Label(lua_State *L)
+{
+    const char *text = luaL_checkstring(L, 1);
+    int check = luaL_checknumber(L, 2);
+    int res = nk_check_label(&defoldfb->ctx, text, check);
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+// ----------------------------
+
+static int nuklear_Check_Flags_Label(lua_State *L)
+{
+    const char *text = luaL_checkstring(L, 1);
+    int flags = luaL_checknumber(L, 2);
+    int check = luaL_checknumber(L, 3);
+    int res = nk_check_flags_label(&defoldfb->ctx, text, flags, check);
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+
 // ----------------------------
 
 static int nuklear_Slider_Float(lua_State *L)
@@ -840,6 +865,9 @@ static const luaL_reg Module_methods[] =
     {"option_label", nuklear_Option_Label },
     {"slider_float", nuklear_Slider_Float },
     {"slider_int", nuklear_Slider_Int },
+
+    {"check_label", nuklear_Check_Label},
+    {"check_flags_label", nuklear_Check_Flags_Label},
 
     {"edit_string", nuklear_Edit_String },
 
