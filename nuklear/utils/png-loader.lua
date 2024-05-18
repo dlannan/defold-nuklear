@@ -15,8 +15,7 @@ local function load(filename)
         if(res.type == "rgb") then res.format = resource.TEXTURE_FORMAT_RGB; rgbcount = 3 end
 
         imgid = nuklear.create_image(res.width, res.height, rgbcount, res.buffer)    
-        pprint(res)
-        print(string.format("w: %d  h: %d  color: %d", res.width, res.height, rgbcount) )
+        -- print(string.format("w: %d  h: %d  color: %d", res.width, res.height, rgbcount) )
     end
 
     return imgid
