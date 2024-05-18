@@ -429,7 +429,16 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
                 value = action.value * evt_dir,
             } )
         end
-    end
+	end
+	if( action_id == hash("text") )  then 
+		tinsert(self.evt_queue, { 
+			evt = "text", 
+			button = 1, 
+			x = mousex, 
+			y = mousey, 
+			value = action.text,
+		} )
+	end
     
     if(evt_insert == true) then 
         if action.pressed == true then 
@@ -480,6 +489,8 @@ nuklear_gui.update = function(self, caller, dt)
         elseif (v.evt == "wheel") then 
             print(v.value)
 			nuklear.input_scroll( 0, v.value )
+		elseif (v.evt == "text") then 
+			nuklear.input_char( string.byte(v.value ) )
 		end
 	end
 	nuklear.input_end()

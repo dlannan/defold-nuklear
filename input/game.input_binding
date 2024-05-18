@@ -22,3 +22,7 @@ mouse_trigger {
   input: MOUSE_WHEEL_DOWN
   action: "wheel_down"
 }
+text_trigger {
+  input: TEXT
+  action: "text"
+}

@@ -34,6 +34,8 @@ function init(self)
 		resolution = 1920,
 	}
 
+	nkgui.text1 = "Test1"
+	nkgui.text2 = "Test2"
 	nkgui:setup_gui( "/gui", "/camera#camera", gui_data.resolution )
 
 	if(self.fancy == 0) then 	
@@ -99,20 +101,25 @@ local function panel_func( self, left, top, width, height )
 	self.th_scene = nuklear.layout_tree_push(1, "Scene", self.th_scene or 1)
 
 	if (self.th_scene ~= 0) then 
-	nuklear.layout_row_dyn(50, 2)
-	nuklear.label("text 1", 1)	
-	nuklear.label("text 2", 1)
-	nuklear.layout_tree_pop()
+		nuklear.layout_row_dyn(50, 2)
+		nuklear.label("text 1", 1)	
+		nuklear.label("text 2", 1)
+		nuklear.layout_tree_pop()
 	end
 	
 	self.th_cameras = nuklear.layout_tree_push(1, "Cameras", self.th_cameras or 1)
 	
 	if (self.th_cameras ~= 0) then
-	nuklear.layout_row_dyn(50, 2)
-	nuklear.label("text 1", 1)
-	nuklear.label("text 2", 1)
-	nuklear.layout_tree_pop()
+		nuklear.layout_row_dyn(50, 2)
+		nuklear.label("text 1", 1)
+		nuklear.label("text 2", 1)
+		nuklear.layout_tree_pop()
 	end
+
+	nuklear.layout_row_dyn(24, 1)
+	self.text1 = nuklear.edit_string(0,  self.text1, 10, 1)
+	nuklear.layout_row_dyn(24, 1)
+	self.text2 = nuklear.edit_string(1, self.text2, 10, 1)
 end
 
 --------------------------------------------------------------------------------
@@ -171,6 +178,8 @@ function update(self, dt)
 		nkgui.colors.bg2 = 0xff29f9e5
 		nkgui.colors.fg1 = 0x800c3d46
 		nuklear.set_style(3, 0, 0xffffffff) --0xff177772)
+		nuklear.set_style_prop(17, nkgui.colors.fg1)
+		nuklear.set_style_prop(27, nkgui.colors.fg1)
 		nuklear.set_style_prop(20, 0xff000000)
 				
 		nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )

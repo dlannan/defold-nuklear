@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_STANDARD_IO
@@ -28,6 +29,12 @@ static unsigned char *fb = nullptr;
 static unsigned char *tex_scratch = nullptr;
 
 static std::vector<struct nk_image> g_images;
+
+typedef struct stringdata {
+    char *  value;
+    int  *  length;
+} stringdata;
+static std::map<uint32_t, stringdata> g_editstrings;
 
 // ----------------------------
 
@@ -239,6 +246,39 @@ static int nuklear_Layout_Row_End(lua_State *L)
 {
     nk_layout_row_end(&defoldfb->ctx);
     return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Edit_String(lua_State *L)
+{
+    uint32_t strid = luaL_checknumber(L, 1);
+    const char *str  = luaL_checkstring(L, 2);
+    const int maxlen = luaL_checknumber(L, 3);
+    int filter = luaL_checknumber(L, 4);
+
+    char *value = NULL;
+    int *stringlen = NULL;
+
+    // try to get the edit buffer
+    if (auto search = g_editstrings.find(strid); search != g_editstrings.end())
+    {
+        value = search->second.value;
+        stringlen = search->second.length;
+    }
+    else
+    {
+        value = new char[maxlen];
+        memset(value, 0, maxlen);
+        stringlen = new int[1];
+        stringlen[0] = 0;
+        stringdata data{value, stringlen};
+        g_editstrings.insert(std::pair<uint32_t, stringdata>(strid, data));
+    }
+
+    nk_edit_string(&defoldfb->ctx, NK_EDIT_SIMPLE, value, stringlen, maxlen, nk_filter_default);
+    lua_pushstring(L, value);
+    return 1;
 }
 
 // ----------------------------
@@ -799,6 +839,8 @@ static const luaL_reg Module_methods[] =
     {"option_label", nuklear_Option_Label },
     {"slider_float", nuklear_Slider_Float },
     {"slider_int", nuklear_Slider_Int },
+
+    {"edit_string", nuklear_Edit_String },
 
     {"property_float", nuklear_Property_Float },
     {"property_int", nuklear_Property_Int },
