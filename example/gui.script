@@ -1,6 +1,7 @@
 local tinsert = table.insert
 
 local nkgui = require("nuklear.utils.gui")
+local pngloader = require("nuklear.utils.png-loader")
 local img1 = nil
 --------------------------------------------------------------------------------
 
@@ -53,22 +54,7 @@ function init(self)
 	nuklear.show_cursor(1)
 	defos.set_cursor_visible(false)
 
-	local f = io.open("example/images/image1.png", "rb")
-	if(f) then 
-		local image = f:read("*a")
-		local info = png.info(image)
-		local tbytes = 3
-		if(info.colortype == 6) then bytes = 4 end 
-		
-		local buf, w, h = png.decode_rgba(image)
-		img1 = nuklear.create_image(w, h, bytes, buf)
-		
-		print(info.width)
-		print(info.height)
-		print(info.colortype)
-		print(info.bitdepth)
-		f:close()
-	end	
+	img1 = pngloader.load("/example/images/image1.png")
 end
 
 --------------------------------------------------------------------------------

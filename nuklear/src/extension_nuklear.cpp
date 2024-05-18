@@ -532,20 +532,14 @@ static int nuklear_Create_Image(lua_State *L)
     unsigned short w = luaL_checknumber(L, 1);
     unsigned short h = luaL_checknumber(L, 2);
     unsigned short bytes = luaL_checknumber(L, 3);
-    dmScript::LuaHBuffer *buffer = dmScript::CheckBuffer(L, 4);
-    // unsigned char *data = (unsigned char *)luaL_checkstring(L, 4);
+    unsigned char *data = (unsigned char *)luaL_checkstring(L, 4);
 
-    uint8_t* data = 0x0;
-    uint32_t size = 0;
-
-    dmBuffer::Result r = dmBuffer::GetBytes(buffer->m_Buffer, (void**)&data, &size);
-
-    if (r == dmBuffer::RESULT_OK) {
-
+    if (data != nullptr) 
+    {
         // By default image comes in ARGB and horizonal flipped. Needs conversion.
         unsigned char *ptr = new unsigned char[w * h * bytes];
         unsigned char *pptr = ptr;
-        for(int y = h-1; y >= 0; y--)
+        for(int y = 0; y < h; y++)
         {
             for(int x = 0; x < w; x++)
             {

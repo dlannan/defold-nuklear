@@ -12,10 +12,9 @@ samples = 2
 
 [project]
 title = defold-nuklear
-custom_resources = /example/fonts/
+custom_resources = /example/fonts/,/example/images/
 bundle_resources = 
 dependencies#0 = https://github.com/subsoap/defos/archive/master.zip
-dependencies#1 = https://github.com/britzl/defold-png/archive/master.zip
 
 [library]
 include_dirs = nuklear
