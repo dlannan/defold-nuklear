@@ -60,6 +60,7 @@ end
 
 return {
     load = load,
+    loadbuffer = loadbuffer,
 }
 
 ----------------------------
