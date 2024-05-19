@@ -90,6 +90,16 @@ static int nuklear_BGColor_Window(lua_State *L)
     return 1;
 }
 
+static int nuklear_Tooltip(lua_State *L)
+{
+    const char *text = luaL_checkstring(L, 1);
+    struct nk_rect bounds;
+    bounds = nk_widget_bounds(&defoldfb->ctx);
+    if (nk_input_is_mouse_hovering_rect(&defoldfb->ctx.input, bounds))
+        nk_tooltip(&defoldfb->ctx, text);
+    return 0;
+}
+
 // ----------------------------
 
 static int nuklear_Layout_Row_Dynamic(lua_State *L)
@@ -870,6 +880,8 @@ static const luaL_reg Module_methods[] =
     {"set_style", nuklear_Set_Style}, 
     {"set_style_prop", nuklear_Set_Style_Prop}, 
     {"show_cursor", nuklear_Show_Cursor},
+
+    {"tooltip", nuklear_Tooltip },
 
     {"overview_demo", nuklear_overview_demo },
 

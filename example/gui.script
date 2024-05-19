@@ -217,6 +217,7 @@ function update(self, dt)
 
 		nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
 			nuklear.layout_row_dyn(20, 1)
+			nuklear.tooltip("This chart is a chart!!!")
 			nuklear.line_chart(0x1, chart)
 		end)
 
