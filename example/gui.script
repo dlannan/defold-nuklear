@@ -162,6 +162,7 @@ local function update_chart(dt)
 end
 
 --------------------------------------------------------------------------------
+local ctr = 0
 
 function update(self, dt)
 
@@ -217,7 +218,9 @@ function update(self, dt)
 
 		nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
 			nuklear.layout_row_dyn(20, 1)
-			nuklear.tooltip("This chart is a chart!!!")
+			local hovered = nuklear.is_widget_hovered()
+			if(hovered == 1) then ctr = ctr + 1 else ctr = 1 end 
+			if(ctr > 100) then nuklear.tooltip("This chart is a chart!!!") end
 			nuklear.line_chart(0x1, chart)
 		end)
 

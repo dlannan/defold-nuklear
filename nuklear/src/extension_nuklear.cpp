@@ -637,6 +637,15 @@ static int nuklear_Input_End(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Is_Widget_Hovered(lua_State *L)
+{
+    int res = nk_widget_is_hovered(&defoldfb->ctx);    
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+// ----------------------------
+
 static int nuklear_Input_Motion(lua_State *L)
 {
     float motionx = luaL_checknumber(L, 1);
@@ -935,6 +944,8 @@ static const luaL_reg Module_methods[] =
     { "line_chart", nuklear_Line_Chart },
     { "input_begin", nuklear_Input_Begin },
     { "input_end", nuklear_Input_End },
+
+    { "is_widget_hovered", nuklear_Is_Widget_Hovered},
 
     { "input_motion", nuklear_Input_Motion },
     { "input_key", nuklear_Input_Key },
