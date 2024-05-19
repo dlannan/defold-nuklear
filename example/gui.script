@@ -3,6 +3,7 @@ local tinsert = table.insert
 local nkgui = require("nuklear.utils.gui")
 local pngloader = require("nuklear.utils.png-loader")
 local img1 = nil
+local img2 = nil
 --------------------------------------------------------------------------------
 
 function init(self)
@@ -55,6 +56,7 @@ function init(self)
 	defos.set_cursor_visible(false)
 
 	img1 = pngloader.load("/example/images/image1.png")
+	img2 = pngloader.loadbuffer("example/images/image2.png")
 end
 
 --------------------------------------------------------------------------------
@@ -82,8 +84,9 @@ local function panel_func( self, left, top, width, height )
 		nuklear.group_end()
 	end
 	
-	nuklear.layout_row_dyn(300, 1)
+	nuklear.layout_row_dyn(300, 2)
 	nuklear.image_color( img1, 0x00797979 )
+	nuklear.image_color( img2, 0x00797979 )
 
 	self.th_scene = nuklear.layout_tree_push(1, "Scene", self.th_scene or 1)
 
