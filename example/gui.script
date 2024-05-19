@@ -24,10 +24,17 @@ function init(self)
 
 	self.fancy = 1
 
-	local font = {
-		path = "/example/fonts/Teachers-VariableFont_wght.ttf",
-		size = 16.0,
-		resolution = 2048,
+	self.fonts = {
+		text1 = {
+			path = "/example/fonts/Teachers-VariableFont_wght.ttf",
+			size = 16.0,
+			resolution = 2048,
+		},
+		fa = {
+			path = "/example/fonts/fontawesome-webfont.ttf",
+			size = 16.0, 
+			resolution = 2048
+		},
 	}
 
 	local gui_data = {
@@ -36,9 +43,9 @@ function init(self)
 		resolution = 1920,
 	}
 
-	nkgui.text1 = "Test1"
-	nkgui.text2 = "Test2"
-	nkgui.check1 = 0
+	self.text1 = "Test1"
+	self.text2 = "Test2"
+	self.check1 = 0
 	nkgui:setup_gui( "/gui", "/camera#camera", gui_data.resolution )
 
 	if(self.fancy == 0) then 	
@@ -46,11 +53,15 @@ function init(self)
 		nkgui.colors.bg1 = 0xff177772
 		nkgui.colors.bg2 = 0xff29f9e5
 		nkgui.colors.fg1 = 0x800c3d46
-		nkgui:init(gui_data.resolution, gui_data.resolution, 0, gui_data, font)
+		nkgui:init(gui_data.resolution, gui_data.resolution, 0, gui_data, self.font)
 	else 
 		gui_data.theme_id = 4
-		nkgui:init(gui_data.resolution, gui_data.resolution, 255, gui_data, font)
+		nkgui:init(gui_data.resolution, gui_data.resolution, 255, gui_data, self.font)
 	end
+
+	nkgui.add_fonts( self.fonts )
+	nuklear.set_font( self.fonts.text1.fontid )
+
 	-- self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
 	nuklear.show_cursor(1)
 	defos.set_cursor_visible(false)
@@ -101,7 +112,9 @@ local function panel_func( self, left, top, width, height )
 	
 	if (self.th_cameras ~= 0) then
 		nuklear.layout_row_dyn(50, 2)
-		nuklear.label("text 1", 1)
+		nuklear.set_font( self.fonts.fa.fontid )
+		nuklear.label(" ", 1)
+		nuklear.set_font( self.fonts.text1.fontid )
 		nuklear.label("text 2", 1)
 		nuklear.layout_tree_pop()
 	end
@@ -192,7 +205,7 @@ function update(self, dt)
 
 		if(self.winshow == 1) then
 			self.winshow, self.winx, self.winy, self.winw, self.winh = nkgui:widget_panel("Main Panel", 
-							self.winx, self.winy, self.winw, self.winh, panel_func)
+							self.winx, self.winy, self.winw, self.winh, panel_func, self)
 			self.winy = self.winy - nkgui.edge_top
 		end 
 

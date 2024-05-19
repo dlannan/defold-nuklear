@@ -13,6 +13,7 @@
 #define NK_INCLUDE_FONT_BAKING
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_INCLUDE_SOFTWARE_FONT
+#define STB_TRUETYPE_IMPLEMENTATION
 
 #include "nuklear.h"
 #include "nuklear_defold.h"
@@ -29,6 +30,7 @@ static unsigned char *fb = nullptr;
 static unsigned char *tex_scratch = nullptr;
 
 static std::vector<struct nk_image> g_images;
+static std::vector<struct nk_font *> g_fonts;
 
 typedef struct stringdata {
     char *  value;
@@ -813,14 +815,36 @@ static int nuklear_Show_Cursor(lua_State *L)
     return 0;
 }
 
-static int nuklear_Setup_Font(lua_State *L)
+static int nuklear_Begin_Fonts(lua_State *L)
+{
+    nk_defold_begin_fonts(defoldfb);
+    return 0;
+}
+
+static int nuklear_End_Fonts(lua_State *L)
+{
+    nk_defold_end_fonts(defoldfb);
+    return 0;
+}
+
+static int nuklear_Add_Font(lua_State *L)
 {
     const char * fontdata = luaL_checkstring(L, 1);
     int datasize = luaL_checknumber(L, 2);
     float fontsize = luaL_checknumber(L, 3);
     int fontres = luaL_checknumber(L, 4);
     //printf("DATASIZE: %d FONTSIZE: %g   FONTDATA: %lu\n", datasize, fontsize, (unsigned long)fontdata);
-    nk_defold_setup_font(defoldfb, fontres, fontres, (void *)fontdata, datasize, fontsize);
+    struct nk_font * font = nk_defold_add_font(defoldfb, fontres, fontres, (void *)fontdata, datasize, fontsize);
+    g_fonts.push_back(font);
+    lua_pushnumber(L, g_fonts.size() -1 );
+    return 1;
+}
+
+static int nuklear_Set_Font(lua_State *L)
+{
+    int fontid = luaL_checknumber(L, 1);
+    struct nk_font * font = g_fonts[fontid];
+    nk_style_set_font(&defoldfb->ctx, &font->handle);
     return 0;
 }
 
@@ -837,7 +861,10 @@ static void nuklear_ExtensionShutdown()
 static const luaL_reg Module_methods[] =
 {
     {"init", nuklear_Init},
-    {"setup_font", nuklear_Setup_Font},
+    {"begin_fonts", nuklear_Begin_Fonts},
+    {"end_fonts", nuklear_End_Fonts},
+    {"add_font", nuklear_Add_Font},
+    {"set_font", nuklear_Set_Font},
     {"set_style", nuklear_Set_Style}, 
     {"set_style_prop", nuklear_Set_Style_Prop}, 
     {"show_cursor", nuklear_Show_Cursor},

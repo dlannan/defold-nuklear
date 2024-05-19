@@ -151,21 +151,27 @@ nuklear_gui.init = function(self, width, height, bgalpha, gui, font)
  		num_mip_maps = 1
  	}
 
-	self.font = font
-
     -- self.edge_top = (self.window.width-self.window.height) / 2
     -- if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(width, height, 0, self.buffer_info.buffer, gui.theme_id, bgalpha, self.colors.bg2)
- 
-	local fontdata, error = sys.load_resource(font.path)
-	nuklear.setup_font( fontdata, #fontdata, font.size, font.resolution )
-end
+ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.widget_panel = function (self, title, left, top, width, height, panel_function)
+nuklear_gui.add_fonts = function( fonts )
+	nuklear.begin_fonts()
+	for k,font in pairs(fonts) do
+		local fontdata, error = sys.load_resource(font.path)
+		fonts[k].fontid = nuklear.add_font( fontdata, #fontdata, font.size, font.resolution )
+	end
+	nuklear.end_fonts()
+end 
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.widget_panel = function (self, title, left, top, width, height, panel_function, ctx)
 
 	local y = self.edge_top + top
 	local x = left
@@ -177,7 +183,7 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
-	    if(panel_function) then panel_function(self, left, top, width, height) end
+	    if(panel_function) then panel_function(ctx, left, top, width, height) end
 	end
 	
 	local newx, newy, wide, high = nuklear.get_bounds_window()
@@ -188,7 +194,7 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height, panel_function)
+nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height, panel_function, ctx)
 
 	local y = self.edge_top + top
 	local x = left
@@ -197,7 +203,7 @@ nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
-		if(panel_function) then panel_function(self, left, top, width, height) end
+		if(panel_function) then panel_function(ctx, left, top, width, height) end
 	end
 
 	local newx, newy, wide, high = nuklear.get_bounds_window()

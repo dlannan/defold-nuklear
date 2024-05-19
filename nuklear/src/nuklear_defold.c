@@ -969,12 +969,20 @@ NK_API void   nk_defold_image(struct defold_context *defold, const struct nk_ima
     }
 }
 
-NK_API struct nk_font *nk_defold_setup_font( struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize)
+NK_API void nk_defold_begin_fonts( struct defold_context *defold )
 {
-    const void *tex;
-
     nk_font_atlas_init_default(&defold->atlas);
     nk_font_atlas_begin(&defold->atlas);
+}
+
+NK_API void nk_defold_end_fonts( struct defold_context *defold )
+{
+    nk_font_atlas_end(&defold->atlas, nk_handle_ptr(NULL), NULL);
+}
+
+NK_API struct nk_font *nk_defold_add_font( struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize)
+{
+    const void *tex;
 
     defold->font_tex.w = w;
     defold->font_tex.h = h;
@@ -1008,8 +1016,6 @@ NK_API struct nk_font *nk_defold_setup_font( struct defold_context *defold, int 
 
     /* Store the font texture in tex scratch memory */
     NK_MEMCPY(defold->font_tex.pixels, tex, defold->font_tex.pitch * defold->font_tex.h);
-    nk_font_atlas_end(&defold->atlas, nk_handle_ptr(NULL), NULL);
-    nk_style_set_font(&defold->ctx, &font->handle);
     return font;
 }
 
