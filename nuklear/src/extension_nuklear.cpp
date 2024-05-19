@@ -48,7 +48,7 @@ static int nuklear_Begin_Window(lua_State *L)
     int width = luaL_checknumber(L, 4);
     int height = luaL_checknumber(L, 5);
     int flags = luaL_checknumber(L, 6);
-    
+   
     // Flags example: NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_CLOSABLE
     int res = nk_begin(&defoldfb->ctx, name, nk_rect(left, top, width, height), flags);
 
@@ -84,8 +84,10 @@ static int nuklear_BGColor_Window(lua_State *L)
 
     struct nk_style *style = &defoldfb->ctx.style;
     struct nk_style_window* win = &style->window;
-    win->background = nk_rgba_u32(color);
-    return 0;
+    nk_color old = win->fixed_background.data.color;
+    win->fixed_background.data.color = nk_rgba_u32(color);
+    lua_pushnumber( L, nk_color_u32(old) );
+    return 1;
 }
 
 // ----------------------------
