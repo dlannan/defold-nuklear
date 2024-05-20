@@ -551,17 +551,20 @@ static int nuklear_Create_Image(lua_State *L)
     if (data != nullptr) 
     {
         // By default image comes in ARGB and horizonal flipped. Needs conversion.
-        unsigned char *ptr = new unsigned char[w * h * bytes];
+        unsigned char *ptr = new unsigned char[w * h * 4];
         unsigned char *pptr = ptr;
         for(int y = 0; y < h; y++)
         {
             for(int x = 0; x < w; x++)
             {
-                pptr[0] = data[y * w * bytes + x * bytes + 3];
+                if(bytes == 3) 
+                    pptr[0] = 0xff;
+                else
+                    pptr[0] = data[y * w * bytes + x * bytes + 3];
                 pptr[1] = data[y * w * bytes + x * bytes + 0];
                 pptr[2] = data[y * w * bytes + x * bytes + 1];
                 pptr[3] = data[y * w * bytes + x * bytes + 2];
-                pptr += bytes;
+                pptr += 4;
             }
         }
    

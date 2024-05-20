@@ -68,6 +68,7 @@ function init(self)
 
 	img1 = pngloader.load("/example/images/image1.png")
 	img2 = pngloader.loadbuffer("example/images/image2.png")
+	img3 = pngloader.loadbuffer("example/images/icon.png")
 end
 
 --------------------------------------------------------------------------------
@@ -95,9 +96,10 @@ local function panel_func( self, left, top, width, height )
 		nuklear.group_end()
 	end
 	
-	nuklear.layout_row_dyn(300, 2)
+	nuklear.layout_row_dyn(300, 3)
 	nuklear.image_color( img1, 0x00797979 )
 	nuklear.image_color( img2, 0x00797979 )
+	nuklear.image_color( img3, 0x00797979 )
 
 	self.th_scene = nuklear.layout_tree_push(1, "Scene", self.th_scene or 1)
 
