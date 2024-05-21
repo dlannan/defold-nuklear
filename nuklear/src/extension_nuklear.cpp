@@ -649,6 +649,15 @@ static int nuklear_Is_Widget_Hovered(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Is_Any_Window_Hovered(lua_State *L)
+{
+    int res = nk_window_is_any_hovered(&defoldfb->ctx);   
+    lua_pushnumber(L, res);
+    return 1;     
+}
+
+// ----------------------------
+
 static int nuklear_Input_Motion(lua_State *L)
 {
     float motionx = luaL_checknumber(L, 1);
@@ -949,6 +958,7 @@ static const luaL_reg Module_methods[] =
     { "input_end", nuklear_Input_End },
 
     { "is_widget_hovered", nuklear_Is_Widget_Hovered},
+    { "is_any_window_hovered", nuklear_Is_Any_Window_Hovered},
 
     { "input_motion", nuklear_Input_Motion },
     { "input_key", nuklear_Input_Key },
