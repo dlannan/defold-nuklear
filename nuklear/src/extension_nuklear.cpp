@@ -868,6 +868,8 @@ static int nuklear_Add_Font(lua_State *L)
     int fontres = luaL_checknumber(L, 4);
     //printf("DATASIZE: %d FONTSIZE: %g   FONTDATA: %lu\n", datasize, fontsize, (unsigned long)fontdata);
     struct nk_font * font = nk_defold_add_font(defoldfb, fontres, fontres, (void *)fontdata, datasize, fontsize);
+    
+    tex_scratch = defoldfb->font_tex.pixels;
     g_fonts.push_back(font);
     lua_pushnumber(L, g_fonts.size() -1 );
     return 1;
