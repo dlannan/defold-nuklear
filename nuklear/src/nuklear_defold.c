@@ -1015,6 +1015,10 @@ NK_API struct nk_font *nk_defold_add_font( struct defold_context *defold, int w,
     };
 
     /* Store the font texture in tex scratch memory */
+    // Always recreate pixels everytime atlas is generated
+    if(defold->font_tex.pixels) free(defold->font_tex.pixels);
+    defold->font_tex.pixels = new unsigned char[defold->font_tex.pitch * defold->font_tex.h];
+
     NK_MEMCPY(defold->font_tex.pixels, tex, defold->font_tex.pitch * defold->font_tex.h);
     return font;
 }
