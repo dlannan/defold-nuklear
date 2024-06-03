@@ -416,10 +416,8 @@ static int nuklear_Stroke_Line(lua_State *L)
     float line_thickness = luaL_checknumber(L, 5);
     unsigned int rgba = luaL_checknumber(L, 6);
 
-    struct nk_window *window = defoldfb->ctx.current;
-    struct nk_command_buffer *out = &window->buffer;
-
-    nk_stroke_line( out, x0, y0, x1, y1, line_thickness, nk_rgba_u32(rgba));
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx); 
+    nk_stroke_line( canvas, x0, y0, x1, y1, line_thickness, nk_rgba_u32(rgba));
     return 0;
 }
 
@@ -435,10 +433,8 @@ static int nuklear_Stroke_Rect(lua_State *L)
     float thickness = luaL_checknumber(L, 6);
     unsigned int rgba = luaL_checknumber(L, 7);
 
-    struct nk_window *window = defoldfb->ctx.current;
-    struct nk_command_buffer *out = &window->buffer;
-
-    nk_stroke_rect( out, nk_rect(x0, y0, x1, y1), roundimg, thickness, nk_rgba_u32(rgba));
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx);  
+    nk_stroke_rect( canvas, nk_rect(x0, y0, x1, y1), roundimg, thickness, nk_rgba_u32(rgba));
     return 0;
 }
 
@@ -453,10 +449,8 @@ static int nuklear_Stroke_Circle(lua_State *L)
     float thickness = luaL_checknumber(L, 5);
     unsigned int rgba = luaL_checknumber(L, 6);
 
-    struct nk_window *window = defoldfb->ctx.current;
-    struct nk_command_buffer *out = &window->buffer;
-
-    nk_stroke_circle( out, nk_rect(x0, y0, x1, y1), thickness, nk_rgba_u32(rgba));
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx);  
+    nk_stroke_circle( canvas, nk_rect(x0, y0, x1, y1), thickness, nk_rgba_u32(rgba));
     return 0;
 }
 
@@ -471,10 +465,8 @@ static int nuklear_Fill_Rect(lua_State *L)
     float roundimg = luaL_checknumber(L, 5);
     unsigned int rgba = luaL_checknumber(L, 6);
 
-    struct nk_window *window = defoldfb->ctx.current;
-    struct nk_command_buffer *out = &window->buffer;
-
-    nk_fill_rect( out, nk_rect(x0, y0, x1, y1), roundimg, nk_rgba_u32(rgba));
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx);    
+    nk_fill_rect( canvas, nk_rect(x0, y0, x1, y1), roundimg, nk_rgba_u32(rgba));
     return 0;
 }
 
@@ -546,10 +538,9 @@ static int nuklear_Draw_Text(lua_State *L)
     unsigned int rgba = luaL_checknumber(L, 6);
     unsigned int rgbabg = luaL_checknumber(L, 7);
 
-    struct nk_window *window = defoldfb->ctx.current;
-    struct nk_command_buffer *out = &window->buffer;
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx);   
     struct nk_rect rect = nk_rect(x0, y0, w, h);
-    nk_draw_text(out, rect, str, (int)strlen(str), defoldfb->ctx.style.font, nk_rgba_u32(rgba), nk_rgba_u32(rgbabg));
+    nk_draw_text(canvas, rect, str, (int)strlen(str), defoldfb->ctx.style.font, nk_rgba_u32(rgba), nk_rgba_u32(rgbabg));
     return 0;
 }
 
@@ -628,10 +619,9 @@ static int nuklear_Stroke_Curve(lua_State *L)
     float line_thickness = luaL_checknumber(L, 9);
     unsigned int rgba = luaL_checknumber(L, 10);
 
-    struct nk_window *window = defoldfb->ctx.current;
-    struct nk_command_buffer *out = &window->buffer;
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx);  
 
-    nk_stroke_curve( out, ax, ay, ctrl0x, ctrl0y, ctrl1x, ctrl1y, bx, by, line_thickness, nk_rgba_u32(rgba));
+    nk_stroke_curve( canvas, ax, ay, ctrl0x, ctrl0y, ctrl1x, ctrl1y, bx, by, line_thickness, nk_rgba_u32(rgba));
     return 0;
 }
 
