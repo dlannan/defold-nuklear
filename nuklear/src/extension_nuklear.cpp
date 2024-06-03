@@ -638,6 +638,17 @@ static int nuklear_Input_End(lua_State *L)
     return 0;
 }
 
+
+// ----------------------------
+
+static int nuklear_Is_Window_Minimized(lua_State *L)
+{
+    const char * name = luaL_checkstring(L, 1);
+    int res = nk_window_is_collapsed(&defoldfb->ctx, name);    
+    lua_pushnumber(L, res);
+    return 1;
+}
+
 // ----------------------------
 
 static int nuklear_Is_Widget_Hovered(lua_State *L)
@@ -959,6 +970,7 @@ static const luaL_reg Module_methods[] =
     { "input_begin", nuklear_Input_Begin },
     { "input_end", nuklear_Input_End },
 
+    { "is_window_minimized", nuklear_Is_Window_Minimized},
     { "is_widget_hovered", nuklear_Is_Widget_Hovered},
     { "is_any_window_hovered", nuklear_Is_Any_Window_Hovered},
 

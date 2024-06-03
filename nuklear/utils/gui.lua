@@ -177,8 +177,9 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 	local x = left
 
     local flags = bit.bor(self.flags.NK_WINDOW_TITLE, self.flags.NK_WINDOW_BORDER)
-    flags = bit.bor(flags, self.flags.NK_WINDOW_MOVABLE)
-    flags = bit.bor(flags, self.flags.NK_WINDOW_CLOSABLE)
+	flags = bit.bor(flags, self.flags.NK_WINDOW_MOVABLE)
+	flags = bit.bor(flags, self.flags.NK_WINDOW_MINIMIZABLE)
+    -- flags = bit.bor(flags, self.flags.NK_WINDOW_CLOSABLE)
     flags = bit.bor(flags, self.flags.NK_WINDOW_SCALABLE)
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)

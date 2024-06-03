@@ -206,13 +206,16 @@ function update(self, dt)
 		posy = math.cos(sec) * 100 + 200
 		nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
 
-		if(self.winshow == 1) then
+		-- if(self.winshow == 1) then
 			local old = nuklear.bgcolor_window(0xffffffff)
 			self.winshow, self.winx, self.winy, self.winw, self.winh = nkgui:widget_panel("Main Panel", 
 							self.winx, self.winy, self.winw, self.winh, panel_func, self)
 			self.winy = self.winy - nkgui.edge_top
 			nuklear.bgcolor_window(old)
-		end 
+
+			local minimized = nuklear.is_window_minimized("Main Panel")
+			if(minimized ~= 0) then pprint("Main Panel Minimized") end
+		--end 
 
 		local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
 		if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
