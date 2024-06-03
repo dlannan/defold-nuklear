@@ -189,7 +189,7 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 	
 	local newx, newy, wide, high = nuklear.get_bounds_window()
 	nuklear.end_window()
-	return winshow, newx, newy, wide, high
+	return { show=winshow, x=newx, y=newy, w=wide, h=high }
 end	
 
 

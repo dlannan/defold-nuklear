@@ -15,11 +15,20 @@ function init(self)
 	msg.post("@render:", "clear_color", {color = vmath.vector4(0, 0, 0, 1)})
 	-- size of texture when scaled to nearest power of two
 
-	self.winx = 30
-	self.winy = 300
-	self.winw = 400
-	self.winh = 600
+	self.win1 = {
+		x = 30,
+		y = 300,
+		w = 400,
+		h = 600,
+	}
 
+	self.win2 = {
+		x = 30,
+		y = 300,
+		w = 800,
+		h = 600,
+	}
+	
 	self.winshow = 1
 
 	self.fancy = 1
@@ -75,7 +84,7 @@ end
 
 local function panel_func( self, left, top, width, height )
 
-	nuklear.fill_rect(left, top + 450, width + 30, height + 30, 0, 0xff000000)
+	nuklear.fill_rect(left, top, width + 30, height + 30, 0, 0xff000000)
 	
 	-- nuklear.layout_row_static(10, 400, 1)
 	nuklear.layout_space_begin(30, 2)
@@ -129,6 +138,47 @@ local function panel_func( self, left, top, width, height )
 	nuklear.layout_row_dyn(24, 1)
 	self.check1 = nuklear.check_label("Test Check", self.check1)
 end
+
+--------------------------------------------------------------------------------
+local names = { "Lines", "Columns", "Mixed" }
+local selected = 1
+local function tab_panel_func( self, left, top, width, height )
+
+	nuklear.style_push_vec2( "window.spacing", 0, 0 )
+	nuklear.style_push_float( "button.rounding", 0 )
+	nuklear.layout_row_begin(20, 3)
+
+	local wwidth = 100
+	for i=1, 3 do 
+		nuklear.layout_row_push( wwidth )
+		if(selected == i) then 
+			nuklear.button_label_active( names[i] )
+		else
+			local res = nuklear.button_label( names[i] )
+			if(res == 1) then selected = i end
+		end
+	end
+	nuklear.style_pop_float()
+
+	nuklear.layout_row_dyn(340, 1)
+	if(nuklear.group_begin("Group2", nkgui.flags.NK_WINDOW_BORDER) ~= 0) then
+
+		nuklear.style_pop_vec2()
+		
+		-- nuklear.layout_row_static(10, 400, 1)
+		for id = 1, 10 do
+			nuklear.layout_row_dyn(20, 2)
+			nuklear.label("Obj"..id, 1)
+			nuklear.label("timeline", 1)
+		end
+		
+		nuklear.group_end()
+	else 
+		nuklear.style_pop_vec2()
+	end
+end
+
+
 
 --------------------------------------------------------------------------------
 
@@ -207,16 +257,22 @@ function update(self, dt)
 		nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
 
 		-- if(self.winshow == 1) then
-			local old = nuklear.bgcolor_window(0xffffffff)
-			self.winshow, self.winx, self.winy, self.winw, self.winh = nkgui:widget_panel("Main Panel", 
-							self.winx, self.winy, self.winw, self.winh, panel_func, self)
-			self.winy = self.winy - nkgui.edge_top
-			nuklear.bgcolor_window(old)
+		local old = nuklear.bgcolor_window(0xff000000)
+		self.win1 = nkgui:widget_panel("Main Panel", self.win1.x, self.win1.y, self.win1.w, self.win1.h, panel_func, self)
+		--self.win1.y = self.win1.y - nkgui.edge_top
 
-			local minimized = nuklear.is_window_minimized("Main Panel")
-			if(minimized ~= 0) then pprint("Main Panel Minimized") end
+		local minimized = nuklear.is_window_minimized("Main Panel")
+		if(minimized ~= 0) then pprint("Main Panel Minimized") end
 		--end 
 
+		self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
+		-- self.win2.y = self.win2.y - nkgui.edge_top
+
+		minimized = nuklear.is_window_minimized("Tab Panel")
+		if(minimized ~= 0) then pprint("Tab Panel Minimized") end			
+
+		nuklear.bgcolor_window(old)
+		
 		local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
 		if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
 		self.prev_button = button

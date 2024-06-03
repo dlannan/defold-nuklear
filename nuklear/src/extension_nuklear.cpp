@@ -194,6 +194,20 @@ static int nuklear_Button_Label(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Button_Label_Active(lua_State *L)
+{
+    const char *name = luaL_checkstring(L, 1);
+    /* active tab gets highlighted */
+    struct nk_style_item button_color = defoldfb->ctx.style.button.normal;
+    defoldfb->ctx.style.button.normal = defoldfb->ctx.style.button.active;
+    int res = nk_button_label(&defoldfb->ctx, name);
+    defoldfb->ctx.style.button.normal = button_color;
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+// ----------------------------
+
 static int nuklear_Button_Image(lua_State *L)
 {
     int imageid = luaL_checknumber(L, 1);
@@ -849,6 +863,77 @@ static int nuklear_Set_Style_Prop(lua_State *L)
     return 0;
 }
 
+static int nuklear_Style_Push_Vec2(lua_State *L)
+{
+    std::string prop = luaL_checkstring(L, 1);
+    float vec2x = luaL_checknumber(L, 2);
+    float vec2y = luaL_checknumber(L, 3);
+
+    struct nk_vec2 * propHandle = nullptr;
+    if(prop == "window.spacing") {
+        propHandle = &defoldfb->ctx.style.window.spacing;
+    }
+
+    if(propHandle != nullptr)
+        nk_style_push_vec2(&defoldfb->ctx, propHandle, nk_vec2(vec2x, vec2y));
+    return 0;
+}
+
+static int nuklear_Style_Push_Float(lua_State *L)
+{
+    std::string prop = luaL_checkstring(L, 1);
+    float val = luaL_checknumber(L, 2);
+
+    float * propHandle = nullptr;
+    if(prop == "button.rounding") {
+        propHandle = &defoldfb->ctx.style.button.rounding;
+    }
+
+    if(propHandle != nullptr)
+        nk_style_push_float(&defoldfb->ctx, propHandle, val);
+    return 0;
+}
+
+static int nuklear_Style_Pop_Vec2(lua_State *L)
+{
+    nk_style_pop_vec2(&defoldfb->ctx);
+    return 0;
+}
+
+static int nuklear_Style_Pop_Float(lua_State *L)
+{
+    nk_style_pop_float(&defoldfb->ctx);
+    return 0;
+}
+
+static int nuklear_Widget_Bounds(lua_State *L)
+{
+    struct nk_rect bounds = nk_widget_bounds(&defoldfb->ctx);
+    lua_pushnumber(L, bounds.x);
+    lua_pushnumber(L, bounds.y);
+    lua_pushnumber(L, bounds.w);
+    lua_pushnumber(L, bounds.h);
+    return 4;
+}
+
+// static int nuklear_Widget_GetState(lua_State *L)
+// {
+//     struct nk_rect bounds = nk_widget_bounds(&defoldfb->ctx);
+//     enum nk_widget_layout_states state = nk_widget(&bounds, &defoldfb->ctx);
+//     lua_pushnumber(L, (int)state);
+//     return 1;
+// }
+
+// static int nuklear_Widget_SetState(lua_State *L)
+// {
+//     int state = luaL_checknumber(L, 1);
+//     struct nk_rect bounds = nk_widget_bounds(&defoldfb->ctx);
+//     enum nk_widget_layout_states temp = nk_widget(&bounds, &defoldfb->ctx);
+//     defoldfb->ctx.last_widget_state = state;
+//     return 0;
+// }
+
+
 static int nuklear_Show_Cursor(lua_State *L)
 {
     int show = luaL_checknumber(L, 1);
@@ -907,15 +992,23 @@ static void nuklear_ExtensionShutdown()
 static const luaL_reg Module_methods[] =
 {
     {"init", nuklear_Init},
+    {"show_cursor", nuklear_Show_Cursor},
+
     {"begin_fonts", nuklear_Begin_Fonts},
     {"end_fonts", nuklear_End_Fonts},
     {"add_font", nuklear_Add_Font},
     {"set_font", nuklear_Set_Font},
+
     {"set_style", nuklear_Set_Style}, 
     {"set_style_prop", nuklear_Set_Style_Prop}, 
-    {"show_cursor", nuklear_Show_Cursor},
+    {"style_push_vec2", nuklear_Style_Push_Vec2},
+    {"style_push_float", nuklear_Style_Push_Float},
+    {"style_pop_vec2", nuklear_Style_Pop_Vec2},
+    {"style_pop_float", nuklear_Style_Pop_Float},
 
     {"tooltip", nuklear_Tooltip },
+
+    {"widget_bounds", nuklear_Widget_Bounds},
 
     {"overview_demo", nuklear_overview_demo },
 
@@ -930,6 +1023,7 @@ static const luaL_reg Module_methods[] =
 
     {"label", nuklear_Label },
     {"button_label", nuklear_Button_Label },
+    {"button_label_active", nuklear_Button_Label_Active },
     {"button_image", nuklear_Button_Image },
     {"option_label", nuklear_Option_Label },
     {"slider_float", nuklear_Slider_Float },
