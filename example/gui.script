@@ -168,10 +168,13 @@ local function tab_panel_func( self, left, top, width, height )
 		
 		-- nuklear.layout_row_static(10, 400, 1)
 		for id = 1, 10 do
-			nuklear.layout_row_dyn(20, 2)
+			nuklear.layout_row_dyn(20, 3)
 			label_select[id] = nuklear.selectable_label("Obj"..id, 1, label_select[id])
-			--nuklear.label("timeline", 1)
+
 			local x, y, w, h = nuklear.widget_bounds()
+			nuklear.draw_text( x, y, 100, h, "text"..id, 0xffffffff, 0x00000000 )
+			--nuklear.label("timeline", 1)
+			
 			-- nuklear.fill_rect(x, y, w, y, 0, 0xffff00ff)
 			nuklear.stroke_line(x, y, x + w, y, 4, 0xffff00ff)
 		end

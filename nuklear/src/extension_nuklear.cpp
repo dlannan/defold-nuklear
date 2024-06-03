@@ -1064,6 +1064,7 @@ static const luaL_reg Module_methods[] =
     {"stroke_rect", nuklear_Stroke_Rect},
     {"stroke_curve", nuklear_Stroke_Curve},
     {"fill_rect", nuklear_Fill_Rect },
+    {"draw_text", nuklear_Draw_Text },
 
     { "line_chart", nuklear_Line_Chart },
     { "input_begin", nuklear_Input_Begin },
