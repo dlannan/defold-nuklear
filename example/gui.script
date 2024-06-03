@@ -142,6 +142,7 @@ end
 --------------------------------------------------------------------------------
 local names = { "Lines", "Columns", "Mixed" }
 local selected = 1
+local label_select = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 local function tab_panel_func( self, left, top, width, height )
 
 	nuklear.style_push_vec2( "window.spacing", 0, 0 )
@@ -168,7 +169,7 @@ local function tab_panel_func( self, left, top, width, height )
 		-- nuklear.layout_row_static(10, 400, 1)
 		for id = 1, 10 do
 			nuklear.layout_row_dyn(20, 2)
-			nuklear.label("Obj"..id, 1)
+			label_select[id] = nuklear.selectable_label("Obj"..id, 1, label_select[id])
 			nuklear.label("timeline", 1)
 		end
 		

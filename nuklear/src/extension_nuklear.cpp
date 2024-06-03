@@ -194,6 +194,19 @@ static int nuklear_Button_Label(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Selectable_Label(lua_State *L)
+{
+    const char *name = luaL_checkstring(L, 1);
+    int style = luaL_checknumber(L, 2);
+    int value = luaL_checknumber(L, 3);
+    nk_selectable_label(&defoldfb->ctx, name, style, &value);
+    lua_pushnumber(L, value);
+    return 1;
+}
+
+
+// ----------------------------
+
 static int nuklear_Button_Label_Active(lua_State *L)
 {
     const char *name = luaL_checkstring(L, 1);
@@ -1023,6 +1036,8 @@ static const luaL_reg Module_methods[] =
 
     {"label", nuklear_Label },
     {"button_label", nuklear_Button_Label },
+    {"selectable_label", nuklear_Selectable_Label },
+
     {"button_label_active", nuklear_Button_Label_Active },
     {"button_image", nuklear_Button_Image },
     {"option_label", nuklear_Option_Label },
