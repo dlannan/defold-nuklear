@@ -684,6 +684,27 @@ static int nuklear_Is_Window_Minimized(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Is_Widget_Mouse_Clicked(lua_State *L)
+{
+    int buttons = luaL_checknumber(L,1);
+    int res = nk_widget_is_mouse_clicked(&defoldfb->ctx, (enum nk_buttons)buttons);    
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+// ----------------------------
+
+static int nuklear_Is_Widget_Mouse_Down(lua_State *L)
+{
+    int buttons = luaL_checknumber(L,1);
+    int down = luaL_checknumber(L,2);
+    int res = nk_widget_has_mouse_click_down(&defoldfb->ctx, (enum nk_buttons)buttons, down);    
+    lua_pushnumber(L, res);
+    return 1;
+}
+
+// ----------------------------
+
 static int nuklear_Is_Widget_Hovered(lua_State *L)
 {
     int res = nk_widget_is_hovered(&defoldfb->ctx);    
@@ -1090,6 +1111,8 @@ static const luaL_reg Module_methods[] =
 
     {"is_window_minimized", nuklear_Is_Window_Minimized},
     {"is_widget_hovered", nuklear_Is_Widget_Hovered},
+    {"is_widget_mouse_clicked", nuklear_Is_Widget_Mouse_Clicked},
+    {"is_widget_mouse_down", nuklear_Is_Widget_Mouse_Down},
     {"is_any_window_hovered", nuklear_Is_Any_Window_Hovered},
 
     {"input_motion", nuklear_Input_Motion },
