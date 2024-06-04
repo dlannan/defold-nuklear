@@ -129,6 +129,22 @@ static int nuklear_Group_End(lua_State *L)
     return 0;
 }
 
+static int nuklear_Push_Scissor(lua_State *L)
+{
+    float left = luaL_checknumber(L, 1);
+    float top = luaL_checknumber(L, 2);
+    float width = luaL_checknumber(L, 3);
+    float height = luaL_checknumber(L, 4);
+
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&defoldfb->ctx);  
+
+    if(left == -1.0f || top == -1.0f || width == -1.0f || height == -1.0f)
+        nk_push_scissor(canvas, nk_null_rect);
+    else
+        nk_push_scissor(canvas, nk_rect(left, top, width, height));
+    return 0;
+}
+
 
 // ----------------------------
 
@@ -1045,6 +1061,8 @@ static const luaL_reg Module_methods[] =
     {"group_begin", nuklear_Group_Begin },
     {"group_end", nuklear_Group_End },
 
+    {"push_scissor", nuklear_Push_Scissor},
+
     {"layout_row_static", nuklear_Layout_Row_Static },
     {"layout_row_dyn", nuklear_Layout_Row_Dynamic },
 
@@ -1066,21 +1084,21 @@ static const luaL_reg Module_methods[] =
     {"fill_rect", nuklear_Fill_Rect },
     {"draw_text", nuklear_Draw_Text },
 
-    { "line_chart", nuklear_Line_Chart },
-    { "input_begin", nuklear_Input_Begin },
-    { "input_end", nuklear_Input_End },
+    {"line_chart", nuklear_Line_Chart },
+    {"input_begin", nuklear_Input_Begin },
+    {"input_end", nuklear_Input_End },
 
-    { "is_window_minimized", nuklear_Is_Window_Minimized},
-    { "is_widget_hovered", nuklear_Is_Widget_Hovered},
-    { "is_any_window_hovered", nuklear_Is_Any_Window_Hovered},
+    {"is_window_minimized", nuklear_Is_Window_Minimized},
+    {"is_widget_hovered", nuklear_Is_Widget_Hovered},
+    {"is_any_window_hovered", nuklear_Is_Any_Window_Hovered},
 
-    { "input_motion", nuklear_Input_Motion },
-    { "input_key", nuklear_Input_Key },
-    { "input_button", nuklear_Input_Button },
-    { "input_scroll", nuklear_Input_Scroll },
-    { "input_char", nuklear_Input_Char },
-    { "input_utf", nuklear_Input_Glyph },
-    { "input_unicode", nuklear_Input_Unicode },
+    {"input_motion", nuklear_Input_Motion },
+    {"input_key", nuklear_Input_Key },
+    {"input_button", nuklear_Input_Button },
+    {"input_scroll", nuklear_Input_Scroll },
+    {"input_char", nuklear_Input_Char },
+    {"input_utf", nuklear_Input_Glyph },
+    {"input_unicode", nuklear_Input_Unicode },
 
     {"input_get_grabbed", nuklear_Input_Get_Grabbed },
 
