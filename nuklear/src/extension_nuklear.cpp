@@ -817,18 +817,18 @@ static int nuklear_Render(lua_State *L)
 
     nk_defold_render( defoldfb, nk_rgb(r,g,b), clear);
 
-    uint8_t* bytes = 0x0;
-    uint32_t size = 0;
+    // uint8_t* bytes = 0x0;
+    // uint32_t size = 0;
 
-    dmBuffer::Result res = dmBuffer::GetBytes(buffer, (void**)&bytes, &size);
-    if (res == dmBuffer::RESULT_OK) {
-        for (int i = 0; i < size; ++i)
-        {
-            bytes[i] = defoldfb->fb.pixels[i];            
-        }
-    } else {
-        printf("[Error] Invalid buffer GetBytes operation.\n");
-    }    
+    // dmBuffer::Result res = dmBuffer::GetBytes(buffer, (void**)&bytes, &size);
+    // if (res == dmBuffer::RESULT_OK) {
+    //     for (int i = 0; i < size; ++i)
+    //     {
+    //         bytes[i] = defoldfb->fb.pixels[i];            
+    //     }
+    // } else {
+    //     printf("[Error] Invalid buffer GetBytes operation.\n");
+    // }    
     return 0;
 }
 
