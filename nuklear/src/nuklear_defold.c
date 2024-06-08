@@ -553,7 +553,7 @@ nk_defold_stroke_rect(const struct defold_context *defold,
         nk_defold_stroke_line(defold, x, y, x + w, y, line_thickness, col);
         nk_defold_stroke_line(defold, x, y + h, x + w, y + h, line_thickness, col);
         nk_defold_stroke_line(defold, x, y, x, y + h, line_thickness, col);
-        nk_defold_stroke_line(defold, x + w, y, x + w, y + h, line_thickness, col);
+        nk_defold_stroke_line(defold, x + w - 1, y, x + w - 1, y + h, line_thickness, col);
     }
     else
     {
