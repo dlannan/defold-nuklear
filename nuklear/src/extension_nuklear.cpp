@@ -698,7 +698,7 @@ static int nuklear_Is_Widget_Mouse_Down(lua_State *L)
 {
     int buttons = luaL_checknumber(L,1);
     int down = luaL_checknumber(L,2);
-    int res = nk_input_has_mouse_click_down_in_rect(&ctx->input, (enum nk_buttons)buttons, bounds, down);
+    int res = nk_widget_has_mouse_click_down(&defoldfb->ctx, (enum nk_buttons)buttons, down);
     lua_pushnumber(L, res);
     return 1;
 }

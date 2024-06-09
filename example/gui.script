@@ -180,8 +180,8 @@ local function tab_panel_func( self, left, top, width, height )
 			
 			-- nuklear.fill_rect(x, y, w, y, 0, 0xffff00ff)
 			nuklear.stroke_line(x, y, x + w, y, 4, 0xffff00ff)
-			local click = nuklear.is_widget_mouse_clicked( 0x0, x, y, x + w, y, 4 )
-			local down = nuklear.is_widget_mouse_down( 0x0, 1, x, y, x + w, y, 4 )
+			local click = nuklear.is_widget_mouse_clicked( 0x0 )
+			local down = nuklear.is_widget_mouse_down( 0x0, 1 )
 			if(down == 1) then pprint("click: "..click.."  down:"..down.."   id: "..id) end
 
 			nuklear.push_scissor(-1, -1, -1, -1)
