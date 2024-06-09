@@ -81,6 +81,7 @@ function init(self)
 end
 
 --------------------------------------------------------------------------------
+imagehit = 0
 
 local function panel_func( self, left, top, width, height )
 
@@ -105,8 +106,11 @@ local function panel_func( self, left, top, width, height )
 		nuklear.group_end()
 	end
 	
-	nuklear.layout_row_dyn(300, 3)
-	nuklear.image_color( img1, 0x00797979 )
+	imagehit = nuklear.selectable_image_label( "Test", img1, 2, imagehit )
+	if(imagehit == 1) then 
+		pprint("Image hit: "..imagehit) 
+	end
+	nuklear.layout_row_dyn(300, 2)
 	nuklear.image_color( img2, 0x00797979 )
 	nuklear.image_color( img3, 0x00797979 )
 

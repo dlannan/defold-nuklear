@@ -1051,9 +1051,9 @@ nk_defold_stretch_image(const struct defold_image *dst,
             col = nk_defold_img_getpixel(src, (int)xoff, (int)yoff);
             if ((col.r || col.g || col.b) && fg->a > 0x0) 
             {
-                col.r = (col.r + fg->r) * 0.5;
-                col.g = (col.g + fg->g) * 0.5;
-                col.b = (col.b + fg->b) * 0.5;
+                col.r = (col.r * (0xff - fg->a) + fg->r * fg->a) / 255;
+                col.g = (col.g * (0xff - fg->a) + fg->g * fg->a) / 255;
+                col.b = (col.b * (0xff - fg->a) + fg->b * fg->a) / 255;
             }
             nk_defold_img_blendpixel(dst, i + (int)(dst_rect->x + 0.5f), j + (int)(dst_rect->y + 0.5f), col);
             xoff += xinc;

@@ -220,6 +220,19 @@ static int nuklear_Selectable_Label(lua_State *L)
     return 1;
 }
 
+// ----------------------------
+
+static int nuklear_Selectable_Image_Label(lua_State *L)
+{
+    const char *name = luaL_checkstring(L, 1);
+    int imageid = luaL_checknumber(L, 2);
+    int style = luaL_checknumber(L, 3);
+    int value = luaL_checknumber(L, 4);
+    nk_selectable_image_label(&defoldfb->ctx,  g_images[imageid], name, style, &value);
+    lua_pushnumber(L, value);
+    return 1;
+}
+
 
 // ----------------------------
 
@@ -1067,6 +1080,7 @@ static const luaL_reg Module_methods[] =
     {"label", nuklear_Label },
     {"button_label", nuklear_Button_Label },
     {"selectable_label", nuklear_Selectable_Label },
+    {"selectable_image_label", nuklear_Selectable_Image_Label },
 
     {"button_label_active", nuklear_Button_Label_Active },
     {"button_image", nuklear_Button_Image },

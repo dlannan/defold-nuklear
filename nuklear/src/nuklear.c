@@ -14701,6 +14701,7 @@ nk_draw_selectable(struct nk_command_buffer *out,
     struct nk_text text;
     text.padding = style->padding;
 
+    struct nk_color select_color = nk_rgba(255,255,255,0);
     /* select correct colors/images */
     if (!active) {
         if (state & NK_WIDGET_STATE_ACTIVED) {
@@ -14713,6 +14714,9 @@ nk_draw_selectable(struct nk_command_buffer *out,
             background = &style->normal;
             text.text = style->text_normal;
         }
+
+        struct nk_color tmp = background->data.color;
+        select_color = nk_rgba(tmp.r,tmp.g,tmp.b,200);
     } else {
         if (state & NK_WIDGET_STATE_ACTIVED) {
             background = &style->pressed_active;
@@ -14724,17 +14728,19 @@ nk_draw_selectable(struct nk_command_buffer *out,
             background = &style->normal_active;
             text.text = style->text_normal_active;
         }
+        struct nk_color tmp = background->data.color;
+        select_color = nk_rgba(tmp.r,tmp.g,tmp.b,0);
     }
     /* draw selectable background and text */
     if (background->type == NK_STYLE_ITEM_IMAGE) {
-        nk_draw_image(out, *bounds, &background->data.image, nk_white);
+        nk_draw_image(out, *bounds, &background->data.image, select_color);
         text.background = nk_rgba(0,0,0,0);
     } else {
         nk_fill_rect(out, *bounds, style->rounding, background->data.color);
         text.background = background->data.color;
     }
     if (icon) {
-        if (img) nk_draw_image(out, *icon, img, nk_white);
+        if (img) nk_draw_image(out, *icon, img, select_color);
         else nk_draw_symbol(out, sym, *icon, text.background, text.text, 1, font);
     }
     nk_widget_text(out, *bounds, string, len, &text, align, font);
