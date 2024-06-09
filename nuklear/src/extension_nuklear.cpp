@@ -913,6 +913,9 @@ static int nuklear_Style_Push_Vec2(lua_State *L)
     if(prop == "window.spacing") {
         propHandle = &defoldfb->ctx.style.window.spacing;
     }
+    if(prop == "window.padding") {
+        propHandle = &defoldfb->ctx.style.window.padding;
+    }
 
     if(propHandle != nullptr)
         nk_style_push_vec2(&defoldfb->ctx, propHandle, nk_vec2(vec2x, vec2y));
