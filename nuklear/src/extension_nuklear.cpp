@@ -687,11 +687,7 @@ static int nuklear_Is_Window_Minimized(lua_State *L)
 static int nuklear_Is_Widget_Mouse_Clicked(lua_State *L)
 {
     int buttons = luaL_checknumber(L,1);
-    float x = luaL_checknumber(L, 2);
-    float y = luaL_checknumber(L, 3);
-    float w = luaL_checknumber(L, 4);
-    float h = luaL_checknumber(L, 5);        
-    int res = nk_input_mouse_clicked(&defoldfb->ctx.input, (enum nk_buttons)buttons, nk_rect(x, y, w, h));    
+    int res = nk_widget_is_mouse_clicked(&defoldfb->ctx, (enum nk_buttons)buttons);    
     lua_pushnumber(L, res);
     return 1;
 }
@@ -702,11 +698,7 @@ static int nuklear_Is_Widget_Mouse_Down(lua_State *L)
 {
     int buttons = luaL_checknumber(L,1);
     int down = luaL_checknumber(L,2);
-    float x = luaL_checknumber(L, 3);
-    float y = luaL_checknumber(L, 4);
-    float w = luaL_checknumber(L, 5);
-    float h = luaL_checknumber(L, 6);    
-    int res = nk_input_has_mouse_click_down_in_rect(&defoldfb->ctx.input, (enum nk_buttons)buttons, nk_rect(x, y, w, h), down);
+    int res = nk_input_has_mouse_click_down_in_rect(&ctx->input, (enum nk_buttons)buttons, bounds, down);
     lua_pushnumber(L, res);
     return 1;
 }
