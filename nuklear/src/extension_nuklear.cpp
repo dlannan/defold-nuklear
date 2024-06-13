@@ -396,6 +396,67 @@ static int nuklear_Slider_Int(lua_State *L)
     return 1;
 }
 
+// ----------------------------
+
+static int nuklear_Combo(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 1);
+    luaL_checktype(L, 1, LUA_TTABLE);
+    int value = luaL_checknumber(L, 2);
+    int height = luaL_checknumber(L, 3);
+    int sizex = luaL_checknumber(L, 4);
+    int sizey = luaL_checknumber(L, 5);
+
+    // Build string table for combo
+    int string_table_len = lua_objlen(L, 1);
+    const char *string_table[string_table_len];
+
+    // Iterate indices and set float buffer with correct lookups
+    lua_pushnil(L);
+    size_t idx = 0;
+    // Build a number array matching the buffer. They are all assumed to be type float (for the time being)
+    while( lua_next( L, 1 ) != 0) {
+        string_table[idx++] = lua_tostring( L, -1 );
+        lua_pop( L, 1 );
+    }
+    
+    value = nk_combo(&defoldfb->ctx, string_table, string_table_len, value, height, nk_vec2(sizex, sizey));
+    lua_pushnumber(L, value);
+    return 1;
+}
+
+
+// ----------------------------
+
+static int nuklear_Combo_End(lua_State *L)
+{
+    nk_combo_end(&defoldfb->ctx);
+    return 0;
+}
+
+
+// ----------------------------
+
+static int nuklear_Combo_Begin_Color(lua_State *L)
+{
+    unsigned int rgba = luaL_checknumber(L, 1);
+    int sizex = luaL_checknumber(L, 2);
+    int sizey = luaL_checknumber(L, 3);
+    nk_combo_begin_color(&defoldfb->ctx, nk_rgba_u32(rgba), nk_vec2(sizex,sizey));
+    return 0;
+}
+
+// ----------------------------
+
+static int nuklear_Combo_Begin_Label(lua_State *L)
+{
+    const char *buffer = luaL_checkstring(L, 1);
+    int sizex = luaL_checknumber(L, 2);
+    int sizey = luaL_checknumber(L, 3);
+
+    nk_combo_begin_label(&defoldfb->ctx, buffer, nk_vec2(sizex,sizey));
+    return 0;
+}
 
 // ----------------------------
 
@@ -1087,6 +1148,11 @@ static const luaL_reg Module_methods[] =
     {"option_label", nuklear_Option_Label },
     {"slider_float", nuklear_Slider_Float },
     {"slider_int", nuklear_Slider_Int },
+
+    {"combo", nuklear_Combo },
+    {"combo_end", nuklear_Combo_End },
+    {"combo_begin_color", nuklear_Combo_Begin_Color },
+    {"combo_begin_label", nuklear_Combo_Begin_Label },
 
     {"check_label", nuklear_Check_Label},
     {"check_flags_label", nuklear_Check_Flags_Label},

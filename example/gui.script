@@ -147,6 +147,9 @@ end
 local names = { "Lines", "Columns", "Mixed" }
 local selected = 1
 local label_select = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+local combo_tbl = {"Item1", "Item2", "Item3", "Item4" }
+local combo_select = 1
+
 local function tab_panel_func( self, left, top, width, height )
 
 	nuklear.style_push_vec2( "window.spacing", 0, 0 )
@@ -163,38 +166,50 @@ local function tab_panel_func( self, left, top, width, height )
 			if(res == 1) then selected = i end
 		end
 	end
+	nuklear.layout_row_end()
 	nuklear.style_pop_float()
+	nuklear.style_pop_vec2()
+	
+	if(selected == 1) then 
 
-	nuklear.layout_row_dyn(340, 1)
-	if(nuklear.group_begin("Group2", nkgui.flags.NK_WINDOW_BORDER) ~= 0) then
-
-		nuklear.style_pop_vec2()
-		
-		-- nuklear.layout_row_static(10, 400, 1)
-		for id = 1, 10 do
+		nuklear.layout_row_dyn(340, 1)
+		if(nuklear.group_begin("Group2", nkgui.flags.NK_WINDOW_BORDER) ~= 0) then
 			
-			nuklear.layout_row_dyn(20, 3)
-			label_select[id] = nuklear.selectable_label("Obj"..id, 1, label_select[id])
+			-- nuklear.layout_row_static(10, 400, 1)
+			for id = 1, 10 do
+				
+				nuklear.layout_row_dyn(20, 3)
+				label_select[id] = nuklear.selectable_label("Obj"..id, 1, label_select[id])
 
-			local x, y, w, h = nuklear.widget_bounds()
-			nuklear.draw_text( x, y, 100, h, "text"..id, 0xffffffff, 0x00000000 )
-			--nuklear.label("timeline", 1)
+				local x, y, w, h = nuklear.widget_bounds()
+				nuklear.draw_text( x, y, 100, h, "text"..id, 0xffffffff, 0x00000000 )
+				--nuklear.label("timeline", 1)
 
-			nuklear.push_scissor(x, y, w/2, 2)
+				nuklear.push_scissor(x, y, w/2, 2)
+				
+				-- nuklear.fill_rect(x, y, w, y, 0, 0xffff00ff)
+				nuklear.stroke_line(x, y, x + w, y, 4, 0xffff00ff)
+				local click = nuklear.is_widget_mouse_clicked( 0x0 )
+				local down = nuklear.is_widget_mouse_down( 0x0, 1 )
+				if(down == 1) then pprint("click: "..click.."  down:"..down.."   id: "..id) end
+
+				nuklear.push_scissor(-1, -1, -1, -1)
+			end
 			
-			-- nuklear.fill_rect(x, y, w, y, 0, 0xffff00ff)
-			nuklear.stroke_line(x, y, x + w, y, 4, 0xffff00ff)
-			local click = nuklear.is_widget_mouse_clicked( 0x0 )
-			local down = nuklear.is_widget_mouse_down( 0x0, 1 )
-			if(down == 1) then pprint("click: "..click.."  down:"..down.."   id: "..id) end
-
-			nuklear.push_scissor(-1, -1, -1, -1)
+			nuklear.group_end()
 		end
-		
-		nuklear.group_end()
-	else 
-		nuklear.style_pop_vec2()
 	end
+
+	if(selected == 2) then 
+		nuklear.layout_row_dyn(40, 1)
+		nuklear.label("Tab 2", 2)
+		nuklear.layout_row_dyn(30, 1)
+		combo_select = nuklear.combo( combo_tbl, combo_select, 25, 200, 200 )
+	end
+	if(selected == 3) then 
+		nuklear.layout_row_dyn(340, 1)
+		nuklear.label("Tab 3", 2)
+	end	
 end
 
 
