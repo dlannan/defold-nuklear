@@ -22,14 +22,8 @@ function init(self)
 	msg.post("@render:", "use_camera_projection")
 	msg.post("/camera#camera", "acquire_camera_focus")
 
-	-- Gui info needed for rendering. These can be tweaked to change rendering quality
-	local gui_data = {
-		theme_id = 3,
-		resolution = 1920,
-		clear_alpha = 0,
-	}
-		
-	nkgui:init( "/camera#camera", gui_data)
+	local scale_texture = 1.0
+	nkgui:init( "/camera#camera", scale_texture)
 	
 	self.resized = nil
 	window.set_listener(window_callback)

@@ -949,11 +949,26 @@ static int nuklear_Init(lua_State *L)
         printf("[Error] Invalid buffer GetBytes operation.\n");
     }    
 
-    // fb = new unsigned char[width * height * 4];
+    if(tex_scratch) delete [] tex_scratch;
     tex_scratch = new unsigned char[width * height * 4];
+    
+    if(defoldfb) nk_defold_shutdown(defoldfb);
     defoldfb = nk_defold_init(fb, tex_scratch, width, height, width * 4, (defold_pl)layout); 
-
     return 0;  
+}
+
+static int nuklear_Window_Resize(lua_State *L)
+{
+    DM_LUA_STACK_CHECK(L, 0);
+
+    const unsigned int w = luaL_checknumber(L, 1);
+    const unsigned int h = luaL_checknumber(L, 2);
+    defold_pl layout = (defold_pl)luaL_checknumber(L, 3);
+
+    if(layout != 0) layout = PIXEL_LAYOUT_RGBX_8888;
+
+    nk_defold_resize_fb(defoldfb, fb , w, h, w * 4, layout);
+    return 0;
 }
 
 static int nuklear_Set_Style(lua_State *L)
@@ -1100,11 +1115,18 @@ static void nuklear_ExtensionShutdown()
     delete [] tex_scratch;
 }
 
+static int nuklear_Shutdown(lua_State *L)
+{
+    nk_defold_shutdown(defoldfb);
+    return 0;
+}
 
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] =
 {
     {"init", nuklear_Init},
+    {"shutdown", nuklear_Shutdown},
+    {"window_resize", nuklear_Window_Resize},
     {"show_cursor", nuklear_Show_Cursor},
 
     {"begin_fonts", nuklear_Begin_Fonts},

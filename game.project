@@ -7,8 +7,9 @@ shared_state = 1
 [display]
 width = 1920
 height = 1080
-high_dpi = 1
+high_dpi = 0
 samples = 2
+fullscreen = 0
 
 [project]
 title = defold-nuklear

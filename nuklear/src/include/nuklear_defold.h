@@ -64,6 +64,7 @@ NK_API void                  nk_defold_begin_fonts( struct defold_context *defol
 NK_API void                  nk_defold_end_fonts( struct defold_context *defold );
 NK_API struct nk_font *      nk_defold_add_font(struct defold_context *defold, int w, int h, void *fontdata, int datasize, float fontsize);
 NK_API void                  nk_defold_image(struct defold_context *defold, const struct nk_image *image);
+NK_API void                  nk_defold_scissor(struct defold_context *defold, const float x, const float y, const float w, const float h);
 
 enum theme {THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK};
 

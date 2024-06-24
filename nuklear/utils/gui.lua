@@ -6,18 +6,24 @@ local tinsert = table.insert
 
 --------------------------------------------------------------------------------
 local nuklear_gui = {
+
 	themes = themes,
     colors = themes.colors,
+	fonts = {},
+
+	gui_data = nil,
+
     res  = {
         width = 960,
         height = 960, 
         channels = 4,
+		resolution = 960,
     }, 
     camera = {
         url = "/camera#camera",
 	},
 	window = {
-		width = 960,
+		width = nil,
 		height = 640,
 		offx = 0, 
 		offy = 0,
@@ -38,6 +44,11 @@ local nuklear_gui = {
 
 --------------------------------------------------------------------------------
 -- Helpers
+
+local function getTopDisplayEdge(vertFOV, panel_distance, gui_resolution)
+	local visible_vertical = math.tan(vertFOV /2) * panel_distance * gui_resolution * 2.0
+	return ( gui_resolution - visible_vertical ) * 0.5
+end
 
 local function getCamDistToSeeSize(FOV, size)
 	return (size/2) / math.tan(FOV/2)
@@ -96,29 +107,51 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
+nuklear_gui.window_resized = function(self, data)
+
+	self.mouse = { x = 0, y = 0 }
+	self.evt_queue = {}
+	self.updates = {}
+
+	self:init()
+
+	self:reload_fonts()
+	nuklear.set_font( self.first_font.fontid )
+end
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 
 	self.camera.url = camera_url or self.camera.url
 
+	local newwidth, newheight = window.get_size()
 	-- Trying to fit width of gui quad into exact position 
-	self.window.width, self.window.height = window.get_size()
-	local aspect = self.window.width/self.window.height
-	local vertFOV = go.get(camera_url, "fov")
+	self.window.width = newwidth
+	self.window.height = newheight
+
+	local res = self.window.width * scale_texture
+	if( self.window.height * scale_texture > res) then 
+		res = self.window.height * scale_texture
+	end
+
+	self.res.resolution = res -- bit.lshift(1, bit_count)
+	local gui_resolution = self.res.resolution
+
+	local aspect = newwidth/newheight
+	local vertFOV = go.get(self.camera.url, "fov")
 	local horizFOV = getHorizFOV(vertFOV, aspect)
-	local aspectFOV = horizFOV
-	local aspectScale = 1.0
+	local aspectFOV = horizFOV / vertFOV
 	--if( aspect < 1.0) then aspectScale = 0.95 end
 
-	--local panel_distance = math.atan(go.get("/camera#camera", "fov") * aspect * 0.5)
-	local panel_distance = getCamDistToSeeSize(aspectFOV, aspectScale)
+	local panel_distance = getCamDistToSeeSize(horizFOV, 1.0)
 	go.set_position(vmath.vector3(0,0,-panel_distance), gui_quad)
 
-	local visible_vertical = math.tan(vertFOV /2) * panel_distance * 2.0 * gui_resolution
-	self.edge_top = ( gui_resolution - visible_vertical ) * 0.5
+	self.edge_top = getTopDisplayEdge(vertFOV, panel_distance, gui_resolution)
 	if(aspect < 1.0) then self.edge_top = 0 end
 
-	self.window.scalex = (gui_resolution / self.window.width)
-	self.window.scaley = (gui_resolution / self.window.height)
+	self.window.scalex = 1.0 -- gui_resolution / newwidth
+	self.window.scaley = 1.0 -- aspectYScale
 	self.window.offx = 0
 end
 
@@ -132,50 +165,78 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.init = function(self, camera, gui)
+nuklear_gui.shutdown = function(self)
 
-	self:setup_gui( "/nuklear_gui", camera, gui.resolution )
+	nuklear.shutdown()
+end
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.init = function(self, camera, texture_scale)
+
+	texture_scale = texture_scale or 1.0
+	self:setup_gui( "/nuklear_gui", camera, texture_scale )
 	
 	self.winctr = 0
-	self.res.width = gui.resolution
-	self.res.height = gui.resolution
+	self.res.width = self.res.resolution
+	self.res.height = self.res.resolution
 
 	self.resource_path = go.get("/nuklear_gui#model", "texture0")
  
  	self.buffer_info = {
-		buffer = buffer.create(gui.resolution * gui.resolution, {{
+		buffer = buffer.create(self.res.resolution * self.res.resolution, {{
             name = hash("rgba"), 
             type = buffer.VALUE_TYPE_UINT8, 
             count = self.res.channels
         }}),
-		width = gui.resolution,
-		height = gui.resolution,
+		width = self.res.resolution,
+		height = self.res.resolution,
  		channels = self.res.channels,
  		premultiply_alpha = true
  	}
  
  	self.header = {
-		width = gui.resolution, 
-		height = gui.resolution, 
+		width = self.res.resolution, 
+		height = self.res.resolution, 
  		type = resource.TEXTURE_TYPE_2D, 
  		format = resource.TEXTURE_FORMAT_RGBA, 
  		num_mip_maps = 1
  	}
 
+	if(self.new_resource_path) then 
+		resource.release(self.new_resource_path)
+	end
+	self.new_resource_path = "/nuklear_gui.texturec"
+	local newres = resource.create_texture(self.new_resource_path, self.header)
+
     -- self.edge_top = (self.window.width-self.window.height) / 2
     -- if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
-	nuklear.init(gui.resolution, gui.resolution, 0, self.buffer_info.buffer)
+	nuklear.init(self.res.resolution, self.res.resolution, 0, self.buffer_info.buffer)
  end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.add_fonts = function( fonts )
+nuklear_gui.add_fonts = function( self, fonts )
+	self.first_font = nil
 	nuklear.begin_fonts()
 	for k,font in pairs(fonts) do
 		local fontdata, error = sys.load_resource(font.path)
-		fonts[k].fontid = nuklear.add_font( fontdata, #fontdata, font.size, font.resolution )
+		font.fontid = nuklear.add_font( fontdata, #fontdata, font.size, font.resolution )
+		self.fonts[k] = font
+		if(self.first_font == nil) then self.first_font = font end
+	end
+	nuklear.end_fonts()
+end 
+
+--------------------------------------------------------------------------------
+
+nuklear_gui.reload_fonts = function( self )
+	nuklear.begin_fonts()
+	for k,font in pairs(self.fonts) do
+		local fontdata, error = sys.load_resource(font.path)
+		font.fontid = nuklear.add_font( fontdata, #fontdata, font.size, font.resolution )
 	end
 	nuklear.end_fonts()
 end 
@@ -184,7 +245,7 @@ end
 
 nuklear_gui.widget_panel = function (self, title, left, top, width, height, panel_function, ctx)
 
-	local y = self.edge_top + top
+	local y =  self.edge_top + top
 	local x = left
 
     local flags = bit.bor(self.flags.NK_WINDOW_TITLE, self.flags.NK_WINDOW_BORDER)
@@ -200,7 +261,7 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 	
 	local newx, newy, wide, high = nuklear.get_bounds_window()
 	nuklear.end_window()
-	return { show=winshow, x=newx, y=newy, w=wide, h=high }
+	return { show=winshow, x=newx, y=newy - self.edge_top, w=wide, h=high }
 end	
 
 
@@ -220,7 +281,7 @@ nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height
 
 	local newx, newy, wide, high = nuklear.get_bounds_window()
 	nuklear.end_window()
-	return winshow, newx, newy, wide, high
+	return winshow, newx, newy - self.edge_top , wide, high
 end	
 
 --------------------------------------------------------------------------------
@@ -480,7 +541,7 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
     end
 	
     -- Mouse movement update events
-	local xdiff = mousex -self.mouse.x 
+	local xdiff = mousex - self.mouse.x 
 	local ydiff = mousey - self.mouse.y 
 	if( xdiff ~= 0 or ydiff ~= 0 ) then 
 		tinsert(self.evt_queue, { evt = "motion", x = mousex, y = mousey } )
@@ -499,13 +560,15 @@ nuklear_gui.update = function(self, caller, dt)
 	local events = #self.evt_queue
 	nuklear.input_begin()
 	for k,v in pairs(self.evt_queue) do 
+		local mx = v.x * self.window.scalex
+		local my = v.y * self.window.scaley
+
 		if(v.evt == "button") then 
-			nuklear.input_button( v.button, v.x, v.y, v.down )
+			nuklear.input_button( v.button, mx, my, v.down )
         elseif (v.evt == "motion") then 
-			if(v.evt.down == 1) then nuklear.input_button( 0, v.x, v.y, 1 ) end
-			nuklear.input_motion( v.x, v.y )
+			if(v.evt.down == 1) then nuklear.input_button( 0, mx, my, 1 ) end
+			nuklear.input_motion( mx, my )
         elseif (v.evt == "wheel") then 
-            print(v.value)
 			nuklear.input_scroll( 0, v.value )
 		elseif (v.evt == "text") then 
 			nuklear.input_char( string.byte(v.value ) )

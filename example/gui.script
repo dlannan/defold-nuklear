@@ -52,7 +52,7 @@ function init(self)
 	self.text2 = "Test2"
 	self.check1 = 0
 	
-	nkgui.add_fonts( self.fonts )
+	nkgui:add_fonts( self.fonts )
 	nuklear.set_font( self.fonts.text1.fontid )
 
 	-- self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
@@ -68,7 +68,8 @@ end
 imagehit = 0
 
 local function panel_func( self, left, top, width, height )
-
+	
+	nuklear.set_font( self.fonts.text1.fontid )
 	nuklear.fill_rect(left, top, width + 30, height + 30, 0, 0xff000000)
 	
 	-- nuklear.layout_row_static(10, 400, 1)
@@ -279,6 +280,7 @@ function update(self, dt)
 			--end 
 
 			self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
+			self.win2.x  = self.win2.x - 800
 			-- self.win2.y = self.win2.y - nkgui.edge_top
 
 			minimized = nuklear.is_window_minimized("Tab Panel")
