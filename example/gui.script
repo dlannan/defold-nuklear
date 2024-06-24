@@ -51,11 +51,12 @@ function init(self)
 	self.text1 = "Test1"
 	self.text2 = "Test2"
 	self.check1 = 0
+
+	-- Init is now done in the nuklear_gui gameobject script
 	
 	nkgui:add_fonts( self.fonts )
 	nuklear.set_font( self.fonts.text1.fontid )
 
-	-- self.winshow = nkgui:widget_panel("Main Panel", 30, 300, 400, 300, panel_func)
 	nuklear.show_cursor(1)
 	defos.set_cursor_visible(false)
 
@@ -280,6 +281,7 @@ function update(self, dt)
 			--end 
 
 			self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
+			-- Restore this, or it can accumulate. 
 			self.win2.x  = self.win2.x - 800
 			-- self.win2.y = self.win2.y - nkgui.edge_top
 

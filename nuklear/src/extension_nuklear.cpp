@@ -129,6 +129,8 @@ static int nuklear_Group_End(lua_State *L)
     return 0;
 }
 
+// ----------------------------
+
 static int nuklear_Push_Scissor(lua_State *L)
 {
     float left = luaL_checknumber(L, 1);
@@ -145,6 +147,18 @@ static int nuklear_Push_Scissor(lua_State *L)
     return 0;
 }
 
+// ----------------------------
+
+static int nuklear_Window_Scissor(lua_State *L)
+{
+    float left = luaL_checknumber(L, 1);
+    float top = luaL_checknumber(L, 2);
+    float width = luaL_checknumber(L, 3);
+    float height = luaL_checknumber(L, 4);
+
+    nk_defold_scissor(defoldfb, left, top, width, height);
+    return 0;
+}
 
 // ----------------------------
 
@@ -951,7 +965,7 @@ static int nuklear_Init(lua_State *L)
 
     if(tex_scratch) delete [] tex_scratch;
     tex_scratch = new unsigned char[width * height * 4];
-    
+
     if(defoldfb) nk_defold_shutdown(defoldfb);
     defoldfb = nk_defold_init(fb, tex_scratch, width, height, width * 4, (defold_pl)layout); 
     return 0;  
@@ -1127,6 +1141,7 @@ static const luaL_reg Module_methods[] =
     {"init", nuklear_Init},
     {"shutdown", nuklear_Shutdown},
     {"window_resize", nuklear_Window_Resize},
+    {"window_scissor", nuklear_Window_Scissor},
     {"show_cursor", nuklear_Show_Cursor},
 
     {"begin_fonts", nuklear_Begin_Fonts},

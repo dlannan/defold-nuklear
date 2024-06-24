@@ -114,6 +114,7 @@ nuklear_gui.window_resized = function(self, data)
 	self.updates = {}
 
 	self:init()
+	nuklear.window_scissor(0, 0, data.width, data.height)
 
 	self:reload_fonts()
 	nuklear.set_font( self.first_font.fontid )
@@ -135,22 +136,24 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 		res = self.window.height * scale_texture
 	end
 
-	self.res.resolution = res -- bit.lshift(1, bit_count)
+	self.res.resolution = { w = self.window.width * scale_texture, h = self.window.height * scale_texture }
 	local gui_resolution = self.res.resolution
 
 	local aspect = newwidth/newheight
 	local vertFOV = go.get(self.camera.url, "fov")
 	local horizFOV = getHorizFOV(vertFOV, aspect)
+	pprint(horizFOV.."   "..self.res.resolution.w)
 	local aspectFOV = horizFOV / vertFOV
 	--if( aspect < 1.0) then aspectScale = 0.95 end
 
 	local panel_distance = getCamDistToSeeSize(horizFOV, 1.0)
 	go.set_position(vmath.vector3(0,0,-panel_distance), gui_quad)
+	go.set_scale(vmath.vector3(1.0, 1.0/aspect, 1.0), gui_quad)
 
-	self.edge_top = getTopDisplayEdge(vertFOV, panel_distance, gui_resolution)
+	self.edge_top = 0 --getTopDisplayEdge(vertFOV, panel_distance, gui_resolution.h)
 	if(aspect < 1.0) then self.edge_top = 0 end
 
-	self.window.scalex = 1.0 -- gui_resolution / newwidth
+	self.window.scalex = 1.0 -- gui_resolution.w / newwidth
 	self.window.scaley = 1.0 -- aspectYScale
 	self.window.offx = 0
 end
@@ -178,26 +181,26 @@ nuklear_gui.init = function(self, camera, texture_scale)
 	self:setup_gui( "/nuklear_gui", camera, texture_scale )
 	
 	self.winctr = 0
-	self.res.width = self.res.resolution
-	self.res.height = self.res.resolution
+	self.res.width = self.res.resolution.w
+	self.res.height = self.res.resolution.h
 
 	self.resource_path = go.get("/nuklear_gui#model", "texture0")
  
  	self.buffer_info = {
-		buffer = buffer.create(self.res.resolution * self.res.resolution, {{
+		buffer = buffer.create(self.res.resolution.w * self.res.resolution.h, {{
             name = hash("rgba"), 
             type = buffer.VALUE_TYPE_UINT8, 
             count = self.res.channels
         }}),
-		width = self.res.resolution,
-		height = self.res.resolution,
+		width = self.res.resolution.w,
+		height = self.res.resolution.h,
  		channels = self.res.channels,
  		premultiply_alpha = true
  	}
  
  	self.header = {
-		width = self.res.resolution, 
-		height = self.res.resolution, 
+		width = self.res.resolution.w, 
+		height = self.res.resolution.h, 
  		type = resource.TEXTURE_TYPE_2D, 
  		format = resource.TEXTURE_FORMAT_RGBA, 
  		num_mip_maps = 1
@@ -213,7 +216,7 @@ nuklear_gui.init = function(self, camera, texture_scale)
     -- if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
-	nuklear.init(self.res.resolution, self.res.resolution, 0, self.buffer_info.buffer)
+	nuklear.init(self.res.resolution.w, self.res.resolution.h, 0, self.buffer_info.buffer)
  end
 
 --------------------------------------------------------------------------------
