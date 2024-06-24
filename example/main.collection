@@ -1,8 +1,28 @@
 name: "main"
+instances {
+  id: "nuklear_gui"
+  prototype: "/nuklear/assets/nuklear_gui.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "camera"
-  children: "gui"
+  children: "nuklear_gui"
   data: "embedded_components {\n"
   "  id: \"camera\"\n"
   "  type: \"camera\"\n"
@@ -45,7 +65,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "gui"
+  id: "main"
   data: "components {\n"
   "  id: \"gui\"\n"
   "  component: \"/example/gui.script\"\n"
@@ -63,34 +83,11 @@ embedded_instances {
   "  property_decls {\n"
   "  }\n"
   "}\n"
-  "embedded_components {\n"
-  "  id: \"model\"\n"
-  "  type: \"model\"\n"
-  "  data: \"mesh: \\\"/builtins/assets/meshes/quad.dae\\\"\\n"
-  "material: \\\"/example/materials/model.material\\\"\\n"
-  "textures: \\\"/example/images/image1.png\\\"\\n"
-  "skeleton: \\\"\\\"\\n"
-  "animations: \\\"\\\"\\n"
-  "default_animation: \\\"\\\"\\n"
-  "name: \\\"{{NAME}}\\\"\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
   ""
   position {
     x: 0.0
     y: 0.0
-    z: -0.8
+    z: 0.0
   }
   rotation {
     x: 0.0

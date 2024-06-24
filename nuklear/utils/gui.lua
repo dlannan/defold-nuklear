@@ -1,14 +1,13 @@
 
 local tf = require("nuklear.utils.transforms")
+local themes = require("nuklear.utils.themes")
+
 local tinsert = table.insert 
 
 --------------------------------------------------------------------------------
 local nuklear_gui = {
-    colors = {
-        bg1     = 0xffffffff,
-        bg2     = 0xff111111, 
-        fg1     = 0xffffffff,
-    },
+	themes = themes,
+    colors = themes.colors,
     res  = {
         width = 960,
         height = 960, 
@@ -32,7 +31,9 @@ local nuklear_gui = {
     },
 	
     evt_queue = {},
-    prev_button = 0,
+	prev_button = 0,
+
+	updates = {},
 }
 
 --------------------------------------------------------------------------------
@@ -122,30 +123,40 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, gui_resolution )
 end
 
 --------------------------------------------------------------------------------
+-- Queue your nkgui calls for update. This allows multiple nuklear scripts to render 
+--   different layers or obejcts
+nuklear_gui.queue_update = function(self, ctx, delta, func ) 
+	
+	tinsert(nuklear_gui.updates, { ctx = ctx, delta = delta, func = func } )
+end 
 
-nuklear_gui.init = function(self, width, height, bgalpha, gui, font)
+--------------------------------------------------------------------------------
 
+nuklear_gui.init = function(self, camera, gui)
+
+	self:setup_gui( "/nuklear_gui", camera, gui.resolution )
+	
 	self.winctr = 0
-    self.res.width = width
-    self.res.height = height
+	self.res.width = gui.resolution
+	self.res.height = gui.resolution
 
- 	self.resource_path = gui.resource_path
+	self.resource_path = go.get("/nuklear_gui#model", "texture0")
  
  	self.buffer_info = {
- 		buffer = buffer.create(width * height, {{
+		buffer = buffer.create(gui.resolution * gui.resolution, {{
             name = hash("rgba"), 
             type = buffer.VALUE_TYPE_UINT8, 
             count = self.res.channels
         }}),
- 		width = width,
- 		height = height,
+		width = gui.resolution,
+		height = gui.resolution,
  		channels = self.res.channels,
  		premultiply_alpha = true
  	}
  
  	self.header = {
- 		width = width, 
- 		height = height, 
+		width = gui.resolution, 
+		height = gui.resolution, 
  		type = resource.TEXTURE_TYPE_2D, 
  		format = resource.TEXTURE_FORMAT_RGBA, 
  		num_mip_maps = 1
@@ -155,7 +166,7 @@ nuklear_gui.init = function(self, width, height, bgalpha, gui, font)
     -- if(self.window.height >= self.window.width) then self.edge_top = 0 end
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
-	nuklear.init(width, height, 0, self.buffer_info.buffer, gui.theme_id, bgalpha, self.colors.bg2)
+	nuklear.init(gui.resolution, gui.resolution, 0, self.buffer_info.buffer)
  end
 
 --------------------------------------------------------------------------------

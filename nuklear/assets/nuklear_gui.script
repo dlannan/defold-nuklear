@@ -1,0 +1,70 @@
+
+local nkgui = require("nuklear.utils.gui")
+
+function window_callback(self, event, data)
+	if event == window.WINDOW_EVENT_FOCUS_LOST then
+		print("window.WINDOW_EVENT_FOCUS_LOST")
+	elseif event == window.WINDOW_EVENT_FOCUS_GAINED then
+		print("window.WINDOW_EVENT_FOCUS_GAINED")
+	elseif event == window.WINDOW_EVENT_ICONFIED then
+		print("window.WINDOW_EVENT_ICONFIED")
+	elseif event == window.WINDOW_EVENT_DEICONIFIED then
+		print("window.WINDOW_EVENT_DEICONIFIED")
+	elseif event == window.WINDOW_EVENT_RESIZED then
+		self.resized = data
+		print("Window resized: ", data.width, data.height)
+	end
+end
+
+function init(self)
+
+	msg.post(".", "acquire_input_focus")
+	msg.post("@render:", "use_camera_projection")
+	msg.post("/camera#camera", "acquire_camera_focus")
+
+	-- Gui info needed for rendering. These can be tweaked to change rendering quality
+	local gui_data = {
+		theme_id = 3,
+		resolution = 1920,
+		clear_alpha = 0,
+	}
+		
+	nkgui:init( "/camera#camera", gui_data)
+	
+	self.resized = nil
+	window.set_listener(window_callback)
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+
+	if(self.resized) then 
+		nkgui:window_resized(self.resized)
+		self.resized = nil
+	end
+	
+	for k,gui_update in ipairs(nkgui.updates) do
+		nkgui:update(gui_update.ctx, gui_update.delta)
+		gui_update.func( gui_update.ctx, gui_update.delta )
+	end
+	nkgui.updates = {}
+	nkgui:render()
+end
+
+function on_message(self, message_id, message, sender)
+
+end
+
+function on_input(self, action_id, action)
+	local handled = nkgui:handle_input(self, action_id, action)
+	return handled
+end
+
+function on_reload(self)
+
+end

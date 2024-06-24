@@ -6,7 +6,7 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_INCLUDE_SOFTWARE_FONT
 
-#include "nuklear.h"
+#include "include/nuklear.h"
 
 /* ===============================================================
  *

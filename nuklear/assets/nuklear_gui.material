@@ -1,7 +1,7 @@
 name: "model"
 tags: "particle"
-vertex_program: "/builtins/materials/model.vp"
-fragment_program: "/example/materials/model.fp"
+vertex_program: "/nuklear/assets/nuklear_gui.vp"
+fragment_program: "/nuklear/assets/nuklear_gui.fp"
 vertex_space: VERTEX_SPACE_WORLD
 vertex_constants {
   name: "mtx_worldview"

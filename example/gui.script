@@ -1,6 +1,7 @@
 local tinsert = table.insert
 
 local nkgui = require("nuklear.utils.gui")
+
 local pngloader = require("nuklear.utils.png-loader")
 local img1 = nil
 local img2 = nil
@@ -8,13 +9,10 @@ local img2 = nil
 
 function init(self)
 
-	msg.post(".", "acquire_input_focus")
-	msg.post("@render:", "use_camera_projection")
-	msg.post("/camera#camera", "acquire_camera_focus")
-	
 	msg.post("@render:", "clear_color", {color = vmath.vector4(0, 0, 0, 1)})
 	-- size of texture when scaled to nearest power of two
 
+	-- Window with pictures in it
 	self.win1 = {
 		x = 30,
 		y = 300,
@@ -22,17 +20,21 @@ function init(self)
 		h = 600,
 	}
 
+	-- Window with tabs
 	self.win2 = {
 		x = 30,
 		y = 300,
 		w = 800,
 		h = 600,
 	}
-	
+
+	-- Show the window that can be toggled
 	self.winshow = 1
 
+	-- Use the tech theme
 	self.fancy = 1
 
+	-- Load in two fonts to use
 	self.fonts = {
 		text1 = {
 			path = "/example/fonts/Teachers-VariableFont_wght.ttf",
@@ -46,28 +48,10 @@ function init(self)
 		},
 	}
 
-	local gui_data = {
-		theme_id = 3,
-		resource_path = go.get("/gui#model", "texture0"),
-		resolution = 1920,
-	}
-
 	self.text1 = "Test1"
 	self.text2 = "Test2"
 	self.check1 = 0
-	nkgui:setup_gui( "/gui", "/camera#camera", gui_data.resolution )
-
-	if(self.fancy == 0) then 	
-		-- Green theme
-		nkgui.colors.bg1 = 0xff177772
-		nkgui.colors.bg2 = 0xff29f9e5
-		nkgui.colors.fg1 = 0x800c3d46
-		nkgui:init(gui_data.resolution, gui_data.resolution, 0, gui_data, self.font)
-	else 
-		gui_data.theme_id = 4
-		nkgui:init(gui_data.resolution, gui_data.resolution, 255, gui_data, self.font)
-	end
-
+	
 	nkgui.add_fonts( self.fonts )
 	nuklear.set_font( self.fonts.text1.fontid )
 
@@ -210,6 +194,8 @@ local function tab_panel_func( self, left, top, width, height )
 		nuklear.layout_row_dyn(340, 1)
 		nuklear.label("Tab 3", 2)
 	end	
+
+	nkgui.do_update = nuklear_update
 end
 
 
@@ -244,7 +230,6 @@ local function update_chart(dt)
 		end 
 		chart[2] = new_value
 	end
-	
 end
 
 --------------------------------------------------------------------------------
@@ -252,90 +237,81 @@ local ctr = 0
 
 function update(self, dt)
 
-	nkgui:update(self, dt)
-	update_chart(dt)
+	nkgui:queue_update(self, dt, function(self, dt)
+		update_chart(dt)
 
-	local sec = os.clock()
-	local hr = tonumber(os.date("%H")) / 24
-	local min = tonumber(os.date("%M")) / 60
-	local datetime = os.date("%X %p")
+		local sec = os.clock()
+		local hr = tonumber(os.date("%H")) / 24
+		local min = tonumber(os.date("%M")) / 60
+		local datetime = os.date("%X %p")
 
-	local fancystr = "Tech Theme"
-	if(self.fancy == 1) then fancystr = "Common Theme" end
-	local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
-	if(press == 1) then self.fancy = 1-self.fancy end
+		local fancystr = "Tech Theme"
+		if(self.fancy == 1) then fancystr = "Common Theme" end
+		local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
+		if(press == 1) then self.fancy = 1-self.fancy end
 
-		
-	if(self.fancy == 1) then 
-		nkgui.colors.bg1 = 0xff177772
-		nkgui.colors.bg2 = 0xff29f9e5
-		nkgui.colors.fg1 = 0x800c3d46
-		nuklear.set_style(3, 0, 0xffffffff) --0xff177772)
-		nuklear.set_style_prop(17, nkgui.colors.fg1)
-		nuklear.set_style_prop(27, nkgui.colors.fg1)
-		nuklear.set_style_prop(20, 0xff000000)
-				
-		nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
-		nkgui:widget_text_movable( 50, 100, 20, "Test Node 1", " ", 1.0, 1.0 )
-		
-		local posx = math.sin(sec) * 100 + 480
-		nkgui:widget_text_movable( posx, 150, 660-posx, "Moving Handle", " ", 1.0, 1.0 )
+			
+		if(self.fancy == 1) then 
+			nkgui.themes.tech()
+			
+			nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
+			nkgui:widget_text_movable( 50, 100, 20, "Test Node 1", " ", 1.0, 1.0 )
+			
+			local posx = math.sin(sec) * 100 + 480
+			nkgui:widget_text_movable( posx, 150, 660-posx, "Moving Handle", " ", 1.0, 1.0 )
 
-		posx = math.sin(sec) * 100 + 480
-		nkgui:widget_text_movable( posx, 190, 20, "Moving Widget", " ", 1.0, 1.0 )
+			posx = math.sin(sec) * 100 + 480
+			nkgui:widget_text_movable( posx, 190, 20, "Moving Widget", " ", 1.0, 1.0 )
 
-		local posy = math.sin(sec) * 100 + 200
-		nkgui:widget_text(10, posy, "Moving Text", datetime, hr, min )
+			local posy = math.sin(sec) * 100 + 200
+			nkgui:widget_text(10, posy, "Moving Text", datetime, hr, min )
 
-		posy = math.cos(sec) * 100 + 200
-		nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
+			posy = math.cos(sec) * 100 + 200
+			nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
 
-		-- if(self.winshow == 1) then
-		local old = nuklear.bgcolor_window(0xff000000)
-		self.win1 = nkgui:widget_panel("Main Panel", self.win1.x, self.win1.y, self.win1.w, self.win1.h, panel_func, self)
-		--self.win1.y = self.win1.y - nkgui.edge_top
+			-- if(self.winshow == 1) then
+			local old = nuklear.bgcolor_window(0xff000000)
+			self.win1 = nkgui:widget_panel("Main Panel", self.win1.x, self.win1.y, self.win1.w, self.win1.h, panel_func, self)
+			--self.win1.y = self.win1.y - nkgui.edge_top
 
-		local minimized = nuklear.is_window_minimized("Main Panel")
-		if(minimized ~= 0) then pprint("Main Panel Minimized") end
-		--end 
+			local minimized = nuklear.is_window_minimized("Main Panel")
+			if(minimized ~= 0) then pprint("Main Panel Minimized") end
+			--end 
 
-		self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
-		-- self.win2.y = self.win2.y - nkgui.edge_top
+			self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
+			-- self.win2.y = self.win2.y - nkgui.edge_top
 
-		minimized = nuklear.is_window_minimized("Tab Panel")
-		if(minimized ~= 0) then pprint("Tab Panel Minimized") end			
+			minimized = nuklear.is_window_minimized("Tab Panel")
+			if(minimized ~= 0) then pprint("Tab Panel Minimized") end			
 
-		nuklear.bgcolor_window(old)
-		
-		local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
-		if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
-		self.prev_button = button
+			nuklear.bgcolor_window(old)
+			
+			local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
+			if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
+			self.prev_button = button
 
-		nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
-			nuklear.layout_row_dyn(20, 1)
-			local hovered = nuklear.is_widget_hovered()
-			if(hovered == 1) then ctr = ctr + 1 else ctr = 1 end 
-			if(ctr > 100) then nuklear.tooltip("This chart is a chart!!!") end
-			nuklear.line_chart(0x1, chart)
-		end)
+			nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
+				nuklear.layout_row_dyn(20, 1)
+				local hovered = nuklear.is_widget_hovered()
+				if(hovered == 1) then ctr = ctr + 1 else ctr = 1 end 
+				if(ctr > 100) then nuklear.tooltip("This chart is a chart!!!") end
+				nuklear.line_chart(0x1, chart)
+			end)
 
-		nkgui:widget_chart_movable( posx, 400, 200, "Moving Chart", 1.0, 1.0, chart )
-		nkgui:widget_chart(600, posy + 300, "Moving Chart", hr, min, chart )
+			nkgui:widget_chart_movable( posx, 400, 200, "Moving Chart", 1.0, 1.0, chart )
+			nkgui:widget_chart(600, posy + 300, "Moving Chart", hr, min, chart )
 
-	else 
-		nuklear.set_style(4, 255, 0xffffffff)
-		nuklear.overview_demo(10, 460)
-	end
-
-	nkgui:render()
+		else 
+			nkgui.themes.default()
+			nuklear.overview_demo(10, 460)
+		end
+	end)
 end
 
 --------------------------------------------------------------------------------
 
 function on_input(self, action_id, action)
 
-	local handled = nkgui:handle_input(self, action_id, action)
-	return handled
 end
 
 --------------------------------------------------------------------------------

@@ -28,8 +28,8 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_INCLUDE_SOFTWARE_FONT
 
-#include "nuklear.h"
-#include "nuklear_defold.h"
+#include "include/nuklear.h"
+#include "include/nuklear_defold.h"
 
 #include <math.h>
 

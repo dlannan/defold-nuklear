@@ -15,8 +15,8 @@
 #define NK_INCLUDE_SOFTWARE_FONT
 #define STB_TRUETYPE_IMPLEMENTATION
 
-#include "nuklear.h"
-#include "nuklear_defold.h"
+#include "include/nuklear.h"
+#include "include/nuklear_defold.h"
 
 int do_overview(struct nk_context *ctx, int left, int top);
 
@@ -929,8 +929,6 @@ static int nuklear_Init(lua_State *L)
     int height = luaL_checknumber(L, 2);
     int layout = luaL_checknumber(L, 3);
     dmBuffer::HBuffer buffer = dmScript::CheckBufferUnpack(L, 4);
-    int theme = luaL_checknumber(L, 5);
-    int bgalpha = luaL_checknumber(L, 6);
 
     RES_WIDTH = width;
     RES_HEIGHT = height;
@@ -954,8 +952,6 @@ static int nuklear_Init(lua_State *L)
     // fb = new unsigned char[width * height * 4];
     tex_scratch = new unsigned char[width * height * 4];
     defoldfb = nk_defold_init(fb, tex_scratch, width, height, width * 4, (defold_pl)layout); 
-
-    nk_defold_set_style(&defoldfb->ctx, (enum theme)theme, bgalpha, txtcolor);
 
     return 0;  
 }
