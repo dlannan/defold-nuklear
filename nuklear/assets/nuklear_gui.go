@@ -26,7 +26,7 @@ embedded_components {
   "  material: \"/nuklear/assets/nuklear_gui.material\"\n"
   "  textures {\n"
   "    sampler: \"tex0\"\n"
-  "    texture: \"/example/images/image1.png\"\n"
+  "    texture: \"/nuklear/assets/image1.png\"\n"
   "  }\n"
   "}\n"
   ""
