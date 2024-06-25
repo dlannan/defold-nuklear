@@ -567,7 +567,7 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.update = function(self, caller, dt)
+nuklear_gui.update = function(self)
 
 	if(self.init_done == false) then return end
 	local events = #self.evt_queue
