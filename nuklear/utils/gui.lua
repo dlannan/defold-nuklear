@@ -160,24 +160,10 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 end
 
 --------------------------------------------------------------------------------
--- Queue your nkgui calls for update. This allows multiple nuklear scripts to render 
---   different layers or obejcts
-nuklear_gui.queue_update = function(self, ctx, delta, func ) 
-	
-	tinsert(nuklear_gui.updates, { ctx = ctx, delta = delta, func = func } )
-end 
-
---------------------------------------------------------------------------------
 
 nuklear_gui.shutdown = function(self)
 
 	nuklear.shutdown()
-end
-
---------------------------------------------------------------------------------
-
-nuklear_gui.queue_init = function( self, ctx, initfunc )
-	tinsert(self.inits, { ctx = ctx, func = initfunc } )
 end
 
 --------------------------------------------------------------------------------
@@ -224,15 +210,6 @@ nuklear_gui.init = function(self, camera, texture_scale)
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(self.res.resolution.w, self.res.resolution.h, 0, self.buffer_info.buffer)
-
-	-- TODO: Nasty hack. Need to fix
-	self.init_done = false 
-	timer.delay(0, false, function()
-		for k,initfunc in ipairs(self.inits) do 
-			initfunc.func( initfunc.ctx )
-		end
-		self.init_done = true
-	end)
 end
 
 --------------------------------------------------------------------------------
@@ -282,7 +259,6 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 	nuklear.end_window()
 	return { show=winshow, x=newx, y=newy - self.edge_top, w=wide, h=high }
 end	
-
 
 --------------------------------------------------------------------------------
 

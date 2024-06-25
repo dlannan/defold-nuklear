@@ -21,9 +21,6 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("@render:", "use_camera_projection")
 	msg.post("/camera#camera", "acquire_camera_focus")
-
-	local scale_texture = 1.0
-	nkgui:init( "/camera#camera", scale_texture)
 	
 	self.resized = nil
 	window.set_listener(window_callback)
@@ -41,13 +38,6 @@ function update(self, dt)
 		nkgui:window_resized(self.resized)
 		self.resized = nil
 	end
-	
-	for k,gui_update in ipairs(nkgui.updates) do
-		nkgui:update(gui_update.ctx, gui_update.delta)
-		gui_update.func( gui_update.ctx, gui_update.delta )
-	end
-	nkgui.updates = {}
-	nkgui:render()
 end
 
 function on_message(self, message_id, message, sender)

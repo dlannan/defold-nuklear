@@ -52,14 +52,15 @@ function init(self)
 	self.text2 = "Test2"
 	self.check1 = 0
 
-	nkgui:queue_init( self, function( self )
-		-- Init is now done in the nuklear_gui gameobject script
-		nkgui:add_fonts( self.fonts )
-		nuklear.set_font( self.fonts.text1.fontid )
+	local scale_texture = 1.0
+	nkgui:init( "/camera#camera", scale_texture)
+	
+	-- Init is now done in the nuklear_gui gameobject script
+	nkgui:add_fonts( self.fonts )
+	nuklear.set_font( self.fonts.text1.fontid )
 
-		nuklear.show_cursor(1)
-		defos.set_cursor_visible(false)
-	end)
+	nuklear.show_cursor(1)
+	defos.set_cursor_visible(false)
 
 	img1 = pngloader.load("/example/images/image1.png")
 	img2 = pngloader.loadbuffer("example/images/image2.png")
@@ -240,77 +241,78 @@ local ctr = 0
 
 function update(self, dt)
 
-	nkgui:queue_update(self, dt, function(self, dt)
-		update_chart(dt)
+	update_chart(dt)
+	nkgui:update()
 
-		local sec = os.clock()
-		local hr = tonumber(os.date("%H")) / 24
-		local min = tonumber(os.date("%M")) / 60
-		local datetime = os.date("%X %p")
+	local sec = os.clock()
+	local hr = tonumber(os.date("%H")) / 24
+	local min = tonumber(os.date("%M")) / 60
+	local datetime = os.date("%X %p")
 
-		local fancystr = "Tech Theme"
-		if(self.fancy == 1) then fancystr = "Common Theme" end
-		local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
-		if(press == 1) then self.fancy = 1-self.fancy end
+	local fancystr = "Tech Theme"
+	if(self.fancy == 1) then fancystr = "Common Theme" end
+	local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
+	if(press == 1) then self.fancy = 1-self.fancy end
 
-			
-		if(self.fancy == 1) then 
-			nkgui.themes.tech()
-			
-			nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
-			nkgui:widget_text_movable( 50, 100, 20, "Test Node 1", " ", 1.0, 1.0 )
-			
-			local posx = math.sin(sec) * 100 + 480
-			nkgui:widget_text_movable( posx, 150, 660-posx, "Moving Handle", " ", 1.0, 1.0 )
+		
+	if(self.fancy == 1) then 
+		nkgui.themes.tech()
+		
+		nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
+		nkgui:widget_text_movable( 50, 100, 20, "Test Node 1", " ", 1.0, 1.0 )
+		
+		local posx = math.sin(sec) * 100 + 480
+		nkgui:widget_text_movable( posx, 150, 660-posx, "Moving Handle", " ", 1.0, 1.0 )
 
-			posx = math.sin(sec) * 100 + 480
-			nkgui:widget_text_movable( posx, 190, 20, "Moving Widget", " ", 1.0, 1.0 )
+		posx = math.sin(sec) * 100 + 480
+		nkgui:widget_text_movable( posx, 190, 20, "Moving Widget", " ", 1.0, 1.0 )
 
-			local posy = math.sin(sec) * 100 + 200
-			nkgui:widget_text(10, posy, "Moving Text", datetime, hr, min )
+		local posy = math.sin(sec) * 100 + 200
+		nkgui:widget_text(10, posy, "Moving Text", datetime, hr, min )
 
-			posy = math.cos(sec) * 100 + 200
-			nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
+		posy = math.cos(sec) * 100 + 200
+		nkgui:widget_text(250, posy, "Moving Text", "with bars", math.sin(sec) * 0.5 + 0.5, math.cos(sec) * 0.5 + 0.5 )
 
-			-- if(self.winshow == 1) then
-			local old = nuklear.bgcolor_window(0xff000000)
-			self.win1 = nkgui:widget_panel("Main Panel", self.win1.x, self.win1.y, self.win1.w, self.win1.h, panel_func, self)
-			--self.win1.y = self.win1.y - nkgui.edge_top
+		-- if(self.winshow == 1) then
+		local old = nuklear.bgcolor_window(0xff000000)
+		self.win1 = nkgui:widget_panel("Main Panel", self.win1.x, self.win1.y, self.win1.w, self.win1.h, panel_func, self)
+		--self.win1.y = self.win1.y - nkgui.edge_top
 
-			local minimized = nuklear.is_window_minimized("Main Panel")
-			if(minimized ~= 0) then pprint("Main Panel Minimized") end
-			--end 
+		local minimized = nuklear.is_window_minimized("Main Panel")
+		if(minimized ~= 0) then pprint("Main Panel Minimized") end
+		--end 
 
-			self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
-			-- Restore this, or it can accumulate. 
-			self.win2.x  = self.win2.x - 800
-			-- self.win2.y = self.win2.y - nkgui.edge_top
+		self.win2 = nkgui:widget_panel("Tab Panel", self.win2.x + 800, self.win2.y, self.win2.w, self.win2.h, tab_panel_func, self)
+		-- Restore this, or it can accumulate. 
+		self.win2.x  = self.win2.x - 800
+		-- self.win2.y = self.win2.y - nkgui.edge_top
 
-			minimized = nuklear.is_window_minimized("Tab Panel")
-			if(minimized ~= 0) then pprint("Tab Panel Minimized") end			
+		minimized = nuklear.is_window_minimized("Tab Panel")
+		if(minimized ~= 0) then pprint("Tab Panel Minimized") end			
 
-			nuklear.bgcolor_window(old)
-			
-			local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
-			if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
-			self.prev_button = button
+		nuklear.bgcolor_window(old)
+		
+		local button = nkgui:widget_button("Show Panel", 30, 250, 150, 30)
+		if(button == 1 and button ~= self.prev_button) then self.winshow = 1-self.winshow end
+		self.prev_button = button
 
-			nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
-				nuklear.layout_row_dyn(20, 1)
-				local hovered = nuklear.is_widget_hovered()
-				if(hovered == 1) then ctr = ctr + 1 else ctr = 1 end 
-				if(ctr > 100) then nuklear.tooltip("This chart is a chart!!!") end
-				nuklear.line_chart(0x1, chart)
-			end)
+		nkgui:widget_panel("Chart", 600, 300, 200, 80, function( left,top,width, height)
+			nuklear.layout_row_dyn(20, 1)
+			local hovered = nuklear.is_widget_hovered()
+			if(hovered == 1) then ctr = ctr + 1 else ctr = 1 end 
+			if(ctr > 100) then nuklear.tooltip("This chart is a chart!!!") end
+			nuklear.line_chart(0x1, chart)
+		end)
 
-			nkgui:widget_chart_movable( posx, 400, 200, "Moving Chart", 1.0, 1.0, chart )
-			nkgui:widget_chart(600, posy + 300, "Moving Chart", hr, min, chart )
+		nkgui:widget_chart_movable( posx, 400, 200, "Moving Chart", 1.0, 1.0, chart )
+		nkgui:widget_chart(600, posy + 300, "Moving Chart", hr, min, chart )
 
-		else 
-			nkgui.themes.default()
-			nuklear.overview_demo(10, 460)
-		end
-	end)
+	else 
+		nkgui.themes.default()
+		nuklear.overview_demo(10, 460)
+	end
+
+	nkgui:render()
 end
 
 --------------------------------------------------------------------------------
