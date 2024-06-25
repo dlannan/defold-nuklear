@@ -225,9 +225,14 @@ nuklear_gui.init = function(self, camera, texture_scale)
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(self.res.resolution.w, self.res.resolution.h, 0, self.buffer_info.buffer)
 
-	for k,initfunc in ipairs(self.inits) do 
-		initfunc.func( initfunc.ctx )
-	end
+	-- TODO: Nasty hack. Need to fix
+	self.init_done = false 
+	timer.delay(0.1, false, function()
+		for k,initfunc in ipairs(self.inits) do 
+			initfunc.func( initfunc.ctx )
+		end
+		self.init_done = true
+	end)
 end
 
 --------------------------------------------------------------------------------
@@ -465,6 +470,7 @@ end
 --------------------------------------------------------------------------------
 
 nuklear_gui.render = function(self)
+	if(self.init_done == false) then return end
     nuklear.render(0,0,0,0 , self.buffer_info.buffer)
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	self.winctr = 0
@@ -571,6 +577,7 @@ end
 
 nuklear_gui.update = function(self, caller, dt)
 
+	if(self.init_done == false) then return end
 	local events = #self.evt_queue
 	nuklear.input_begin()
 	for k,v in pairs(self.evt_queue) do 
