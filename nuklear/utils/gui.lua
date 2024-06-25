@@ -227,7 +227,7 @@ nuklear_gui.init = function(self, camera, texture_scale)
 
 	-- TODO: Nasty hack. Need to fix
 	self.init_done = false 
-	timer.delay(0.1, false, function()
+	timer.delay(0, false, function()
 		for k,initfunc in ipairs(self.inits) do 
 			initfunc.func( initfunc.ctx )
 		end
@@ -286,21 +286,23 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height, panel_function, ctx)
+nuklear_gui.widget_panel_fixed = function (self, title, left, top, width, height, flags, panel_function, ctx)
 
 	local y = self.edge_top + top
 	local x = left
 
-	local flags = bit.bor(self.flags.NK_WINDOW_TITLE, self.flags.NK_WINDOW_BORDER)
+	flags = flags or 0
+	-- flags = bit.bor(flags, self.flags.NK_WINDOW_BORDER)
+	flags = bit.bor(flags, self.flags.NK_WINDOW_NO_SCROLLBAR)
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
-		if(panel_function) then panel_function(ctx, left, top, width, height) end
+        if(panel_function) then panel_function(ctx, left, top, width, height) end
 	end
 
 	local newx, newy, wide, high = nuklear.get_bounds_window()
 	nuklear.end_window()
-	return winshow, newx, newy - self.edge_top , wide, high
+	return winshow, newx, newy, wide, high
 end	
 
 --------------------------------------------------------------------------------
@@ -354,6 +356,20 @@ nuklear_gui.widget_text = function (self, left, top, text, value, lvl1, lvl2)
 	nuklear.end_window()
 	self.winctr = self.winctr + 1
 end	
+
+--------------------------------------------------------------------------------
+nuklear_gui.faicon_tooltip = function( self, ctx, obj, align) 
+    local hovered = nuklear.is_widget_hovered()
+    if(hovered == 1) then obj.hoverctr = (obj.hoverctr or 0) + 1 else obj.hoverctr = 0 end 		
+    if(obj.hoverctr > 100) then 
+        nuklear.set_font( ctx.fonts.text1.fontid )
+        nuklear.tooltip(obj.name)
+        nuklear.set_font( ctx.fonts.fa.fontid )
+    end 
+    local res = nuklear.button_label(obj.faicon, 1)
+    return res
+end
+
 
 --------------------------------------------------------------------------------
 

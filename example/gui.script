@@ -59,11 +59,11 @@ function init(self)
 
 		nuklear.show_cursor(1)
 		defos.set_cursor_visible(false)
-
-		img1 = pngloader.load("/example/images/image1.png")
-		img2 = pngloader.loadbuffer("example/images/image2.png")
-		img3 = pngloader.loadbuffer("example/images/icon.png")
 	end)
+
+	img1 = pngloader.load("/example/images/image1.png")
+	img2 = pngloader.loadbuffer("example/images/image2.png")
+	img3 = pngloader.loadbuffer("example/images/icon.png")
 end
 
 --------------------------------------------------------------------------------
