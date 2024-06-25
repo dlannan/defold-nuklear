@@ -40,6 +40,7 @@ local nuklear_gui = {
 	prev_button = 0,
 
 	updates = {},
+	inits = {},
 }
 
 --------------------------------------------------------------------------------
@@ -175,6 +176,12 @@ end
 
 --------------------------------------------------------------------------------
 
+nuklear_gui.queue_init = function( self, ctx, initfunc )
+	tinsert(self.inits, { ctx = ctx, func = initfunc } )
+end
+
+--------------------------------------------------------------------------------
+
 nuklear_gui.init = function(self, camera, texture_scale)
 
 	texture_scale = texture_scale or 1.0
@@ -217,7 +224,11 @@ nuklear_gui.init = function(self, camera, texture_scale)
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(self.res.resolution.w, self.res.resolution.h, 0, self.buffer_info.buffer)
- end
+
+	for k,initfunc in ipairs(self.inits) do 
+		initfunc.func( initfunc.ctx )
+	end
+end
 
 --------------------------------------------------------------------------------
 

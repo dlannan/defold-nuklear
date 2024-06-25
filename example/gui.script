@@ -52,17 +52,18 @@ function init(self)
 	self.text2 = "Test2"
 	self.check1 = 0
 
-	-- Init is now done in the nuklear_gui gameobject script
-	
-	nkgui:add_fonts( self.fonts )
-	nuklear.set_font( self.fonts.text1.fontid )
+	nkgui:queue_init( self, function( self )
+		-- Init is now done in the nuklear_gui gameobject script
+		nkgui:add_fonts( self.fonts )
+		nuklear.set_font( self.fonts.text1.fontid )
 
-	nuklear.show_cursor(1)
-	defos.set_cursor_visible(false)
+		nuklear.show_cursor(1)
+		defos.set_cursor_visible(false)
 
-	img1 = pngloader.load("/example/images/image1.png")
-	img2 = pngloader.loadbuffer("example/images/image2.png")
-	img3 = pngloader.loadbuffer("example/images/icon.png")
+		img1 = pngloader.load("/example/images/image1.png")
+		img2 = pngloader.loadbuffer("example/images/image2.png")
+		img3 = pngloader.loadbuffer("example/images/icon.png")
+	end)
 end
 
 --------------------------------------------------------------------------------
