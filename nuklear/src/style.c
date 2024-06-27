@@ -17,6 +17,12 @@ void nk_defold_set_style_prop(struct nk_context *ctx, unsigned int prop, unsigne
     nk_style_from_table(ctx, ctx->style.table);
 }
 
+
+unsigned int nk_defold_get_style_prop(struct nk_context *ctx, unsigned int prop)
+{
+    return nk_color_u32(ctx->style.table[prop]);
+}
+
 void nk_defold_set_style(struct nk_context *ctx, enum theme theme, int bgalpha, unsigned int txtcolor)
 {
     struct nk_color table[NK_COLOR_COUNT];

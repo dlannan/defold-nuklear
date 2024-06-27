@@ -471,6 +471,15 @@ static int nuklear_Combo_Begin_Label(lua_State *L)
     nk_combo_begin_label(&defoldfb->ctx, buffer, nk_vec2(sizex,sizey));
     return 0;
 }
+// ----------------------------
+
+static int nuklear_Picker_Color(lua_State *L)
+{
+    unsigned int rgba = luaL_checknumber(L, 1);
+    nk_colorf color = nk_color_picker(&defoldfb->ctx, nk_color_cf(nk_rgba_u32(rgba)), NK_RGBA);
+    lua_pushnumber(L, nk_color_u32(nk_rgba_cf(color)));
+    return 1;
+}
 
 // ----------------------------
 
@@ -1002,6 +1011,14 @@ static int nuklear_Set_Style_Prop(lua_State *L)
     return 0;
 }
 
+static int nuklear_Get_Style_Prop(lua_State *L)
+{
+    unsigned int prop = luaL_checknumber(L, 1);
+    unsigned int color = nk_defold_get_style_prop(&defoldfb->ctx, prop);
+    lua_pushnumber(L, color);
+    return 1;
+}
+
 static int nuklear_Style_Push_Vec2(lua_State *L)
 {
     std::string prop = luaL_checkstring(L, 1);
@@ -1151,6 +1168,7 @@ static const luaL_reg Module_methods[] =
 
     {"set_style", nuklear_Set_Style}, 
     {"set_style_prop", nuklear_Set_Style_Prop}, 
+    {"get_style_prop", nuklear_Get_Style_Prop}, 
     {"style_push_vec2", nuklear_Style_Push_Vec2},
     {"style_push_float", nuklear_Style_Push_Float},
     {"style_pop_vec2", nuklear_Style_Pop_Vec2},
@@ -1186,6 +1204,8 @@ static const luaL_reg Module_methods[] =
     {"combo_end", nuklear_Combo_End },
     {"combo_begin_color", nuklear_Combo_Begin_Color },
     {"combo_begin_label", nuklear_Combo_Begin_Label },
+
+    {"picker_color", nuklear_Picker_Color},
 
     {"check_label", nuklear_Check_Label},
     {"check_flags_label", nuklear_Check_Flags_Label},

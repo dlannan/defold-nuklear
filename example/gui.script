@@ -53,6 +53,8 @@ function init(self)
 	self.text2 = "Test2"
 	self.check1 = 0
 
+	self.winwidth, self.winheight = window.get_size()
+
 	local scale_texture = 1.0
 	nkgui:init( "/camera#camera", scale_texture)
 	
@@ -255,6 +257,8 @@ function update(self, dt)
 	local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
 	if(press == 1) then self.fancy = 1-self.fancy end
 
+	-- Show the theme editor to play with the theme while running
+	nkgui.themes.theme_panel( nkgui, self.fonts.text1, self.winwidth - 310, 10, 300, 500, false )
 		
 	if(self.fancy == 1) then 
 		nkgui.themes.tech()
