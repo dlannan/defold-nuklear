@@ -310,7 +310,7 @@ function update(self, dt)
 
 	else 
 		nkgui.themes.default()
-		nuklear.overview_demo(10, 460)
+		nuklear.overview_demo(10, 10)
 	end
 
 	nkgui:render()

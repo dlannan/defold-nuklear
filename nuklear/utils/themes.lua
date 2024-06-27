@@ -1,5 +1,36 @@
 -- A util for makin themes. Create a theme, and then add it to the theme pool
 
+local indexes = {
+    NK_COLOR_TEXT                = 0,
+    NK_COLOR_WINDOW              = 1,
+    NK_COLOR_HEADER              = 2,
+    NK_COLOR_BORDER              = 3,
+    NK_COLOR_BUTTON              = 4,
+    NK_COLOR_BUTTON_HOVER        = 5,
+    NK_COLOR_BUTTON_ACTIVE       = 6,
+    NK_COLOR_TOGGLE              = 7,
+    NK_COLOR_TOGGLE_HOVER        = 8,
+    NK_COLOR_TOGGLE_CURSOR       = 9,
+    NK_COLOR_SELECT              = 10,
+    NK_COLOR_SELECT_ACTIVE       = 11,
+    NK_COLOR_SLIDER              = 12,
+    NK_COLOR_SLIDER_CURSOR       = 13, 
+    NK_COLOR_SLIDER_CURSOR_HOVER = 14,
+    NK_COLOR_SLIDER_CURSOR_ACTIVE = 15,
+    NK_COLOR_PROPERTY            = 16, 
+    NK_COLOR_EDIT                = 17,
+    NK_COLOR_EDIT_CURSOR         = 18,
+    NK_COLOR_COMBO               = 19,
+    NK_COLOR_CHART               = 20,
+    NK_COLOR_CHART_COLOR         = 21,
+    NK_COLOR_CHART_COLOR_HIGHLIGHT = 22,
+    NK_COLOR_SCROLLBAR           = 23,
+    NK_COLOR_SCROLLBAR_CURSOR    = 24,
+    NK_COLOR_SCROLLBAR_CURSOR_HOVER = 25,
+    NK_COLOR_SCROLLBAR_CURSOR_ACTIVE = 26,
+    NK_COLOR_TAB_HEADER          = 27,
+}
+
 local colors = {
     cyan        = 0xff119da4,
     cerulean    = 0xff0c7489,
@@ -45,80 +76,93 @@ local themes = {
 
         nuklear.set_style(3, 0, colors.white)                 -- Set which style index to use (0->5)
 
-        -- nuklear.set_style_prop(0, colors.white)            -- text color 
-        -- nuklear.set_style_prop(1, colors.techalpha)        -- bg color 
+        -- nuklear.set_style_prop(indexes.NK_COLOR_TEXT, colors.techfg1)            -- text color 
+        -- nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, colors.techalpha)        -- bg color 
 
-        -- nuklear.set_style_prop(2, colors.paynes_gray)      -- header color 
-        -- nuklear.set_style_prop(3, colors.white)            -- border color 
+        nuklear.set_style_prop(indexes.NK_COLOR_HEADER, colors.techfg1)      -- header color 
+        -- nuklear.set_style_prop(indexes.NK_COLOR_BORDER, colors.white)            -- border color 
 
-        -- nuklear.set_style_prop(4, colors.gunmetal)         -- button color
-        -- nuklear.set_style_prop(5, colors.cadet_gray)       -- button hover color
-        -- nuklear.set_style_prop(6, colors.light_blue)       -- button active color
+        nuklear.set_style_prop(indexes.NK_COLOR_BUTTON, colors.gunmetal)         -- button color
+        nuklear.set_style_prop(indexes.NK_COLOR_BUTTON_HOVER, colors.cadet_gray)       -- button hover color
+        nuklear.set_style_prop(indexes.NK_COLOR_BUTTON_ACTIVE, colors.paynes_gray)       -- button active color
 
-        -- nuklear.set_style_prop(7, colors.paynes_gray)      -- toggle color
-        -- nuklear.set_style_prop(8, colors.cadet_gray)       -- toggle hover color
-        -- nuklear.set_style_prop(9, colors.light_blue)       -- toggle active color
+        nuklear.set_style_prop(indexes.NK_COLOR_TOGGLE, colors.paynes_gray)      -- toggle color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_TOGGLE_HOVER, colors.cadet_gray)       -- toggle hover color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_TOGGLE_CURSOR, colors.light_blue)       -- toggle active color
 
-        -- nuklear.set_style_prop(10, colors.paynes_dark)     -- select color
-        -- nuklear.set_style_prop(11, colors.light_blue)      -- select active color
+        nuklear.set_style_prop(indexes.NK_COLOR_SELECT, colors.techfg1)                -- select color
+        nuklear.set_style_prop(indexes.NK_COLOR_SELECT_ACTIVE, colors.paynes_dark)        -- select active color
         
-        -- nuklear.set_style_prop(12, colors.paynes_gray)     -- slider color
-        -- nuklear.set_style_prop(13, colors.cadet_gray)      -- slider cursor
-        -- nuklear.set_style_prop(14, colors.paynes_gray)     -- slider hover
-        -- nuklear.set_style_prop(15, colors.paynes_gray)     -- slider active
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER, colors.paynes_gray)     -- slider color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR, colors.cadet_gray)      -- slider cursor
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_HOVER, colors.paynes_gray)     -- slider hover
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_ACTIVE, colors.paynes_gray)     -- slider active
 
-        -- nuklear.set_style_prop(16, colors.paynes_gray)     -- property color
+        nuklear.set_style_prop(indexes.NK_COLOR_PROPERTY, colors.paynes_gray)     -- property color
 
-        nuklear.set_style_prop(17, colors.techfg1)            -- edit color 
-        -- nuklear.set_style_prop(18, colors.light_blue)      -- edit cursor color
+        nuklear.set_style_prop(indexes.NK_COLOR_EDIT, colors.techfg1)            -- edit color 
+        -- nuklear.set_style_prop(indexes.NK_COLOR_EDIT_CURSOR, colors.light_blue)      -- edit cursor color
 
-        -- nuklear.set_style_prop(19, colors.paynes_gray)     -- combo color
+        nuklear.set_style_prop(indexes.NK_COLOR_COMBO, colors.techfg1)     -- combo color
         
-        nuklear.set_style_prop(20, colors.tech_black)         -- chart bg color
-        -- nuklear.set_style_prop(21, colors.tech_black)      -- chart color
-        -- nuklear.set_style_prop(22, colors.tech_black)      -- chart color highlight
+        nuklear.set_style_prop(indexes.NK_COLOR_CHART, colors.tech_black)         -- chart bg color
+        nuklear.set_style_prop(indexes.NK_COLOR_CHART_COLOR, colors.tech_black)      -- chart color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_CHART_COLOR_HIGHLIGHT, colors.tech_black)      -- chart color highlight
 
-        -- nuklear.set_style_prop(23, colors.tech_black)      -- scrollbar color
-        -- nuklear.set_style_prop(24, colors.tech_black)      -- scrollbar cursor color
-        -- nuklear.set_style_prop(25, colors.tech_black)      -- scrollbar cursor hover color
-        -- nuklear.set_style_prop(26, colors.tech_black)      -- scrollbar cursor active color
+        nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR, colors.tech_black)      -- scrollbar color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR_CURSOR, colors.tech_black)      -- scrollbar cursor color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR_CURSOR_HOVER, colors.tech_black)      -- scrollbar cursor hover color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR_CURSOR_ACTIVE, colors.tech_black)      -- scrollbar cursor active color
 
-        nuklear.set_style_prop(27, colors.techfg1)         -- tab header color 
+        nuklear.set_style_prop(indexes.NK_COLOR_TAB_HEADER, colors.techfg1)         -- tab header color 
     end,
 
     gray_blue = function()
 
         nuklear.set_style(3, 0, colors.white)              -- text color
-
-        nuklear.set_style_prop(1, 0xe0253237)              -- bg color 
-
-        nuklear.set_style_prop(2, colors.paynes_gray)      -- header color 
-        nuklear.set_style_prop(3, colors.light_blue)       -- border color 
-
-        nuklear.set_style_prop(4, colors.gunmetal)         -- button color
-        nuklear.set_style_prop(5, colors.cadet_gray)       -- button hover color
-        nuklear.set_style_prop(6, colors.light_blue)       -- button active color
-
-        nuklear.set_style_prop(7, colors.paynes_gray)      -- toggle color
-        nuklear.set_style_prop(8, colors.cadet_gray)       -- toggle hover color
-        nuklear.set_style_prop(9, colors.light_blue)       -- toggle active color
-
-        nuklear.set_style_prop(10, colors.paynes_dark)     -- select color
-        nuklear.set_style_prop(11, colors.light_blue)      -- select active color
         
-        nuklear.set_style_prop(12, colors.paynes_gray)     -- slider color
-        nuklear.set_style_prop(13, colors.cadet_gray)      -- slider cursor
-        nuklear.set_style_prop(14, colors.paynes_gray)     -- slider hover
-        nuklear.set_style_prop(15, colors.paynes_gray)     -- slider active
+        nuklear.set_style_prop(indexes.NK_COLOR_TEXT, colors.white)
+        nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, 0xe0253237)              -- bg color 
 
-        nuklear.set_style_prop(16, colors.paynes_gray)     -- property color
+        nuklear.set_style_prop(indexes.NK_COLOR_HEADER, colors.paynes_gray)      -- header color 
+        nuklear.set_style_prop(indexes.NK_COLOR_BORDER, colors.light_blue)       -- border color 
 
-        nuklear.set_style_prop(17, colors.paynes_gray)     -- edit color 
-        nuklear.set_style_prop(18, colors.light_blue)      -- edit cursor color
+        nuklear.set_style_prop(indexes.NK_COLOR_BUTTON, colors.gunmetal)         -- button color
+        nuklear.set_style_prop(indexes.NK_COLOR_BUTTON_HOVER, colors.cadet_gray)       -- button hover color
+        nuklear.set_style_prop(indexes.NK_COLOR_BUTTON_ACTIVE, colors.light_blue)       -- button active color
 
-        nuklear.set_style_prop(19, colors.paynes_gray)     -- combo color
+        nuklear.set_style_prop(indexes.NK_COLOR_TOGGLE, colors.paynes_gray)      -- toggle color
+        nuklear.set_style_prop(indexes.NK_COLOR_TOGGLE_HOVER, colors.cadet_gray)       -- toggle hover color
+        nuklear.set_style_prop(indexes.NK_COLOR_TOGGLE_CURSOR, colors.light_blue)       -- toggle active color
+
+        nuklear.set_style_prop(indexes.NK_COLOR_SELECT, colors.paynes_dark)     -- select color
+        nuklear.set_style_prop(indexes.NK_COLOR_SELECT_ACTIVE, colors.light_blue)      -- select active color
         
-        nuklear.set_style_prop(27, colors.paynes_gray)     -- tab header color 
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER, colors.paynes_gray)     -- slider color
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR, colors.cadet_gray)      -- slider cursor
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_HOVER, colors.paynes_gray)     -- slider hover
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_ACTIVE, colors.paynes_gray)     -- slider active
+
+        nuklear.set_style_prop(indexes.NK_COLOR_PROPERTY, colors.paynes_gray)     -- property color
+
+        nuklear.set_style_prop(indexes.NK_COLOR_EDIT, colors.paynes_gray)     -- edit color 
+        nuklear.set_style_prop(indexes.NK_COLOR_EDIT_CURSOR, colors.light_blue)      -- edit cursor color
+
+        nuklear.set_style_prop(indexes.NK_COLOR_COMBO, colors.paynes_gray)     -- combo color
+
+        -- nuklear.set_style_prop(indexes.NK_COLOR_COMBO, colors.paynes_gray)     -- combo color
+
+        -- nuklear.set_style_prop(indexes.NK_COLOR_CHART, colors.tech_black)      -- chart bg color
+        
+        -- nuklear.set_style_prop(indexes.NK_COLOR_CHART_COLOR, colors.tech_black)      -- chart color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_CHART_COLOR_HIGHLIGHT, colors.tech_black)      -- chart color highlight
+
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR, colors.tech_black)      -- scrollbar color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR_CURSOR, colors.tech_black)      -- scrollbar cursor color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBAR_CURSOR_HOVER, colors.tech_black)      -- scrollbar cursor hover color
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SCROLLBARCURSOR_ACTIVE, colors.tech_black)      -- scrollbar cursor active color
+        
+        nuklear.set_style_prop(indexes.NK_COLOR_TAB_HEADER, colors.paynes_gray)     -- tab header color 
     end,
 }
 
