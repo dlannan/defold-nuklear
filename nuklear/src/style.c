@@ -8,24 +8,28 @@
 #include "include/nuklear.h"
 #include "include/nuklear_defold.h"
 
+static struct nk_color g_table[5][NK_COLOR_COUNT];
+static unsigned int g_lasttheme = 0;
+
 void nk_defold_set_style_prop(struct nk_context *ctx, unsigned int prop, unsigned int color)
 {
-    // This is extremely inefficient, because it sets the whole table for each property change. 
-    //  However considering there are only 28 entires, it is not overall that bad.
-    // WARNING: It modified the "current" set theme.
-    ctx->style.table[prop] = nk_rgba_u32(color); 
-    nk_style_from_table(ctx, ctx->style.table);
+    g_table[g_lasttheme][prop] = nk_rgba_u32(color); 
 }
 
+void nk_defold_set_style_table(struct nk_context *ctx) 
+{
+    nk_style_from_table(ctx, g_table[g_lasttheme]);
+}
 
 unsigned int nk_defold_get_style_prop(struct nk_context *ctx, unsigned int prop)
 {
-    return nk_color_u32(ctx->style.table[prop]);
+    return nk_color_u32(g_table[g_lasttheme][prop]);
 }
 
 void nk_defold_set_style(struct nk_context *ctx, enum theme theme, int bgalpha, unsigned int txtcolor)
 {
-    struct nk_color table[NK_COLOR_COUNT];
+    g_lasttheme = (unsigned int)theme;
+    struct nk_color *table = g_table[theme];
     if (theme == THEME_WHITE) {
         table[NK_COLOR_TEXT] = nk_rgba(70, 70, 70, 255);
         if(txtcolor != 0)

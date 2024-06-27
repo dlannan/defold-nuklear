@@ -68,6 +68,8 @@ function init(self)
 	img1 = pngloader.load("/example/images/image1.png")
 	img2 = pngloader.loadbuffer("example/images/image2.png")
 	img3 = pngloader.loadbuffer("example/images/icon.png")
+
+	nkgui.themes.tech()
 end
 
 --------------------------------------------------------------------------------
@@ -255,13 +257,16 @@ function update(self, dt)
 	local fancystr = "Tech Theme"
 	if(self.fancy == 1) then fancystr = "Common Theme" end
 	local press = nkgui:widget_button(fancystr, 500, 10, 150, 30)
-	if(press == 1) then self.fancy = 1-self.fancy end
+	if(press == 1) then 
+		self.fancy = 1-self.fancy 
+		if(self.fancy == 1) then nkgui.themes.tech() end
+		if(self.fancy == 0) then nkgui.themes.default() end
+	end
 
 	-- Show the theme editor to play with the theme while running
 	nkgui.themes.theme_panel( nkgui, self.fonts.text1, self.winwidth - 310, 10, 300, 500, false )
 		
 	if(self.fancy == 1) then 
-		nkgui.themes.tech()
 		
 		nkgui:widget_text(0, 0, "App Time:", datetime, hr, min )
 		nkgui:widget_text_movable( 50, 100, 20, "Test Node 1", " ", 1.0, 1.0 )
@@ -313,7 +318,6 @@ function update(self, dt)
 		nkgui:widget_chart(600, posy + 300, "Moving Chart", hr, min, chart )
 
 	else 
-		nkgui.themes.default()
 		nuklear.overview_demo(10, 10)
 	end
 

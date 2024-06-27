@@ -71,4 +71,5 @@ enum theme {THEME_BLACK, THEME_WHITE, THEME_RED, THEME_BLUE, THEME_DARK};
 NK_API void nk_defold_set_style(struct nk_context *ctx, enum theme theme, int bgalpha, unsigned int txtcolor);
 NK_API void nk_defold_set_style_prop(struct nk_context *ctx, unsigned int prop, unsigned int color);
 NK_API unsigned int nk_defold_get_style_prop(struct nk_context *ctx, unsigned int prop);
+NK_API void nk_defold_set_style_table(struct nk_context *ctx);
 #endif

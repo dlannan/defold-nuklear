@@ -210,6 +210,13 @@ nuklear_gui.init = function(self, camera, texture_scale)
  
 	resource.set_texture(self.resource_path, self.header, self.buffer_info.buffer)
 	nuklear.init(self.res.resolution.w, self.res.resolution.h, 0, self.buffer_info.buffer)
+
+	-- Prep editor theme with index 0 theme 
+	nuklear.set_style( 0, 0, self.themes.colors.white )
+	for k,v in pairs(self.themes.indexes) do
+		self.themes.editor_theme[v] = nuklear.get_style_prop(v) 
+	end
+
 end
 
 --------------------------------------------------------------------------------

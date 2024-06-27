@@ -1003,6 +1003,12 @@ static int nuklear_Set_Style(lua_State *L)
     return 0;
 }
 
+static int nuklear_Set_Style_Table(lua_State *L)
+{
+    nk_defold_set_style_table(&defoldfb->ctx);
+    return 0;
+}
+
 static int nuklear_Set_Style_Prop(lua_State *L)
 {
     unsigned int prop = luaL_checknumber(L, 1);
@@ -1168,6 +1174,7 @@ static const luaL_reg Module_methods[] =
 
     {"set_style", nuklear_Set_Style}, 
     {"set_style_prop", nuklear_Set_Style_Prop}, 
+    {"set_style_table", nuklear_Set_Style_Table}, 
     {"get_style_prop", nuklear_Get_Style_Prop}, 
     {"style_push_vec2", nuklear_Style_Push_Vec2},
     {"style_push_float", nuklear_Style_Push_Float},
