@@ -72,6 +72,8 @@ local themes = {
 
     colors = colors,
 
+    theme_names = { "default", "custom", "tech", "gray_blue" },
+    
     default = function()
 
         nuklear.set_style(4, 255, 0xffffffff)
@@ -110,8 +112,8 @@ local themes = {
         
         nuklear.set_style_prop(indexes.NK_COLOR_SLIDER, colors.paynes_gray)     -- slider color
         -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR, colors.cadet_gray)      -- slider cursor
-        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_HOVER, colors.paynes_gray)     -- slider hover
-        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_ACTIVE, colors.paynes_gray)     -- slider active
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR_HOVER, colors.paynes_gray)     -- slider hover
+        -- nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR_ACTIVE, colors.paynes_gray)     -- slider active
 
         nuklear.set_style_prop(indexes.NK_COLOR_PROPERTY, colors.paynes_gray)     -- property color
 
@@ -156,8 +158,8 @@ local themes = {
         
         nuklear.set_style_prop(indexes.NK_COLOR_SLIDER, colors.paynes_gray)     -- slider color
         nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR, colors.cadet_gray)      -- slider cursor
-        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_HOVER, colors.paynes_gray)     -- slider hover
-        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_ACTIVE, colors.paynes_gray)     -- slider active
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR_HOVER, colors.paynes_gray)     -- slider hover
+        nuklear.set_style_prop(indexes.NK_COLOR_SLIDER_CURSOR_ACTIVE, colors.paynes_gray)     -- slider active
 
         nuklear.set_style_prop(indexes.NK_COLOR_PROPERTY, colors.paynes_gray)     -- property color
 
@@ -183,11 +185,6 @@ local themes = {
         nuklear.set_style_table()
     end,
 }
-
-local theme_names = {}
-for k,v in pairs(themes) do
-    table.insert(theme_names, tostring(k))
-end
 
 -----------------------------------------------------------------------------------
 -- Theme editor panel. Load, Save and Modify your theme. 
@@ -219,8 +216,7 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
         --nuklear.fill_rect(left, top, width + 30, height + 30, 0, 0x000001ff)
 
         nuklear.layout_row_dyn(30, 1)
-        local select_theme = tonumber(nuklear.combo( theme_names, self.theme_select or 0, 25, 200, 200 ))
-        pprint("Index: "..select_theme)
+        local select_theme = tonumber(nuklear.combo( themes.theme_names, self.theme_select or 2, 25, 200, 200 ))
     
         nuklear.layout_row_dyn(30, 1)
         local select_index = nuklear.combo( theme_index_keys, self.theme_index_select or 0, 25, 200, 200 )
@@ -239,14 +235,14 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
         end
         
         nuklear.layout_row_dyn(30, 1)
-        local set_style = nuklear.button_label_active( "Reset Style" )
+        local set_style = nuklear.button_label_active( "Apply Style" )
         if(set_style == 1) then 
-            nuklear.set_style( self.theme_select, 0, 0xff000000)
+            nuklear.set_style_table()
         end
 
         if(select_theme ~= self.theme_select) then 
             self.theme_select = select_theme
-            nuklear.set_style( self.theme_select or 0, 0, 0xff000000)
+            themes[themes.theme_names[self.theme_select+1]]()
         end
 
         nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, bg_current)
