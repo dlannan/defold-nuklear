@@ -216,10 +216,10 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
         --nuklear.fill_rect(left, top, width + 30, height + 30, 0, 0x000001ff)
 
         nuklear.layout_row_dyn(30, 1)
-        local select_theme = tonumber(nuklear.combo( themes.theme_names, self.theme_select or 2, 25, 200, 200 ))
+        local select_theme = tonumber(nuklear.combo( themes.theme_names, self.theme_select or 2, 25, 280, 200 ))
     
         nuklear.layout_row_dyn(30, 1)
-        local select_index = nuklear.combo( theme_index_keys, self.theme_index_select or 0, 25, 200, 200 )
+        local select_index = nuklear.combo( theme_index_keys, self.theme_index_select or 0, 25, 280, 200 )
         if(select_index ~= self.theme_index_select) then 
         
             local indexcol = nuklear.get_style_prop(select_index)
@@ -227,8 +227,7 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
             self.theme_index_select = select_index
         end 
                 
-        nuklear.layout_row_dyn(200, 1)
-        local index_color = nuklear.picker_color( self.theme_index_color or 0xffffffff )
+        local index_color = nuklear.picker_color_complex( self.theme_index_color or 0xffffffff )
         if (index_color ~= self.theme_index_color) then 
             self.theme_index_color = index_color
             nuklear.set_style_prop(self.theme_index_select,  self.theme_index_color)

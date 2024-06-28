@@ -483,6 +483,44 @@ static int nuklear_Picker_Color(lua_State *L)
 
 // ----------------------------
 
+static int nuklear_Picker_Color_Complex(lua_State *L)
+{
+    unsigned int rgba = luaL_checknumber(L, 1);
+    nk_colorf combo_color2 = nk_color_cf(nk_rgba_u32(rgba));
+
+    enum color_mode {COL_RGB, COL_HSV};
+    static int col_mode = COL_RGB;
+    //#ifndef DEMO_DO_NOT_USE_COLOR_PICKER
+    nk_layout_row_dynamic(&defoldfb->ctx, 120, 1);
+    combo_color2 = nk_color_picker(&defoldfb->ctx, combo_color2, NK_RGBA);
+    //#endif
+
+    nk_layout_row_dynamic(&defoldfb->ctx, 25, 2);
+    col_mode = nk_option_label(&defoldfb->ctx, "RGB", col_mode == COL_RGB) ? COL_RGB : col_mode;
+    col_mode = nk_option_label(&defoldfb->ctx, "HSV", col_mode == COL_HSV) ? COL_HSV : col_mode;
+
+    nk_layout_row_dynamic(&defoldfb->ctx, 25, 1);
+    if (col_mode == COL_RGB) {
+        combo_color2.r = nk_propertyf(&defoldfb->ctx, "#R:", 0, combo_color2.r, 1.0f, 0.01f,0.005f);
+        combo_color2.g = nk_propertyf(&defoldfb->ctx, "#G:", 0, combo_color2.g, 1.0f, 0.01f,0.005f);
+        combo_color2.b = nk_propertyf(&defoldfb->ctx, "#B:", 0, combo_color2.b, 1.0f, 0.01f,0.005f);
+        combo_color2.a = nk_propertyf(&defoldfb->ctx, "#A:", 0, combo_color2.a, 1.0f, 0.01f,0.005f);
+    } else {
+        float hsva[4];
+        nk_colorf_hsva_fv(hsva, combo_color2);
+        hsva[0] = nk_propertyf(&defoldfb->ctx, "#H:", 0, hsva[0], 1.0f, 0.01f,0.05f);
+        hsva[1] = nk_propertyf(&defoldfb->ctx, "#S:", 0, hsva[1], 1.0f, 0.01f,0.05f);
+        hsva[2] = nk_propertyf(&defoldfb->ctx, "#V:", 0, hsva[2], 1.0f, 0.01f,0.05f);
+        hsva[3] = nk_propertyf(&defoldfb->ctx, "#A:", 0, hsva[3], 1.0f, 0.01f,0.05f);
+        combo_color2 = nk_hsva_colorfv(hsva);
+    }
+
+    lua_pushnumber(L, nk_color_u32(nk_rgba_cf(combo_color2)));
+    return 1;
+}
+
+// ----------------------------
+
 static int nuklear_Check_Label(lua_State *L)
 {
     const char *text = luaL_checkstring(L, 1);
@@ -1213,6 +1251,7 @@ static const luaL_reg Module_methods[] =
     {"combo_begin_label", nuklear_Combo_Begin_Label },
 
     {"picker_color", nuklear_Picker_Color},
+    {"picker_color_complex", nuklear_Picker_Color_Complex},
 
     {"check_label", nuklear_Check_Label},
     {"check_flags_label", nuklear_Check_Flags_Label},
