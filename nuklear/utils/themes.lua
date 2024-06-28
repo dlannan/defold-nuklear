@@ -199,53 +199,58 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
 	flags = bit.bor(flags, self.flags.NK_WINDOW_MOVABLE)
 	flags = bit.bor(flags, self.flags.NK_WINDOW_MINIMIZABLE)
     flags = bit.bor(flags, self.flags.NK_WINDOW_NO_SCROLLBAR)
-    flags = bit.bor(flags, self.flags.NK_WINDOW_SCALABLE)
 
     local bg_current = nuklear.get_style_prop( indexes.NK_COLOR_WINDOW )
-    
-	local winshow = nuklear.begin_window( "Theme Editor" , x, y, width, height, flags)
-
-        -- Using index 2 for this panel. Which means editing it wont change anything.
-        local newx, newy, wide, high = nuklear.get_bounds_window()
-        -- Ensure alpga is enabled on bg for this panel
+    local txt_current = nuklear.get_style_prop( indexes.NK_COLOR_TEXT )
+    nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, 0xff000000)
+    nuklear.set_style_prop(indexes.NK_COLOR_TEXT, 0xffffffff)
+    nuklear.set_style_table()
         
-        nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, bit.bor(bg_current, 0xff000000))
-        nuklear.fill_rect(newx-20, newy-20, wide+40,high+40, 0, 0xff000000)
+	local winshow = nuklear.begin_window( "Theme Editor", x, y, width, height, flags)
+
+    -- Using index 2 for this panel. Which means editing it wont change anything.
+    local newx, newy, wide, high = nuklear.get_bounds_window()
+    -- Ensure alpga is enabled on bg for this panel
     
-        nuklear.set_font( font.fontid )
-        --nuklear.fill_rect(left, top, width + 30, height + 30, 0, 0x000001ff)
 
-        nuklear.layout_row_dyn(30, 1)
-        local select_theme = tonumber(nuklear.combo( themes.theme_names, self.theme_select or 2, 25, 280, 200 ))
+    nuklear.set_font( font.fontid )
+    --nuklear.fill_rect(left, top, width + 30, height + 30, 0, 0x000001ff)
+
+    nuklear.layout_row_dyn(30, 1)
+    local select_theme = tonumber(nuklear.combo( themes.theme_names, self.theme_select or 2, 25, 280, 200 ))
+
+    nuklear.layout_row_dyn(30, 1)
+    local select_index = nuklear.combo( theme_index_keys, self.theme_index_select or 0, 25, 280, 200 )
+    if(select_index ~= self.theme_index_select) then 
     
-        nuklear.layout_row_dyn(30, 1)
-        local select_index = nuklear.combo( theme_index_keys, self.theme_index_select or 0, 25, 280, 200 )
-        if(select_index ~= self.theme_index_select) then 
-        
-            local indexcol = nuklear.get_style_prop(select_index)
-            self.theme_index_color = indexcol 
-            self.theme_index_select = select_index
-        end 
-                
-        local index_color = nuklear.picker_color_complex( self.theme_index_color or 0xffffffff )
-        if (index_color ~= self.theme_index_color) then 
-            self.theme_index_color = index_color
-            nuklear.set_style_prop(self.theme_index_select,  self.theme_index_color)
-        end
-        
-        nuklear.layout_row_dyn(30, 1)
-        local set_style = nuklear.button_label_active( "Apply Style" )
-        if(set_style == 1) then 
-            nuklear.set_style_table()
-        end
+        local indexcol = nuklear.get_style_prop(select_index)
+        self.theme_index_color = indexcol 
+        self.theme_index_select = select_index
+    end 
+            
+    local index_color = nuklear.picker_color_complex( self.theme_index_color or 0xffffffff )
+    
+    nuklear.layout_row_dyn(30, 1)
+    local set_style = nuklear.button_label_active( "Apply Style" )
 
-        if(select_theme ~= self.theme_select) then 
-            self.theme_select = select_theme
-            themes[themes.theme_names[self.theme_select+1]]()
-        end
+    if(select_theme ~= self.theme_select) then 
+        self.theme_select = select_theme
+        themes[themes.theme_names[self.theme_select+1]]()
+    end
 
-        nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, bg_current)
+    nuklear.set_style_prop(indexes.NK_COLOR_WINDOW, bg_current)
+    nuklear.set_style_prop(indexes.NK_COLOR_TEXT, txt_current)
+    nuklear.set_style_table()
 
+    if (index_color ~= self.theme_index_color) then 
+        self.theme_index_color = index_color
+        nuklear.set_style_prop(self.theme_index_select,  self.theme_index_color)
+    end
+    
+    if(set_style == 1) then 
+        nuklear.set_style_table()
+    end
+    
     nuklear.end_window()
 end
 
