@@ -14,7 +14,7 @@ Example screenshots:
 The above was developed for an ISS Live viewer here:
 https://bukkat.itch.io/isslive
 
-![alt text](https://github.com/dlannan/defold-nuklear/blob/main/screenshots/2024-06-28_13-24-11.mp4?raw=true)
+![alt text](https://github.com/dlannan/defold-nuklear/blob/main/screenshots/2024-06-29_15-30.png?raw=true)
 Added new Theme Editor.
 
 ## Examples
