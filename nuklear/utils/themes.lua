@@ -233,6 +233,13 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
     nuklear.layout_row_dyn(30, 1)
     local set_style = nuklear.button_label_active( "Apply Style" )
 
+    nuklear.layout_row_dyn(30, 1)
+    self.style_path = nuklear.edit_string(10,  self.style_path or "", 128, 1)
+    
+    nuklear.layout_row_dyn(30, 2)
+    local load_style = nuklear.button_label_active( "Load Style" )
+    local save_style = nuklear.button_label_active( "Save Style" )
+    
     if(select_theme ~= self.theme_select) then 
         self.theme_select = select_theme
         themes[themes.theme_names[self.theme_select+1]]()
