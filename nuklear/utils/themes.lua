@@ -187,6 +187,50 @@ local themes = {
 }
 
 -----------------------------------------------------------------------------------
+-- Save a theme in the above format as lua. 
+--    This allows themes to eb used without the editor and this file. 
+
+local function save_theme( filename )
+
+    local fh = io.open(filename, "w")
+    if(fh == nil) then 
+        pprint("[Error Save Theme] Cannot save to file: "..filename)
+        return nil
+    end 
+
+    -- Always save out a theme into the custom style. Dont overwrite builtin styles
+    fh:write("-- -----------------------------------------------------------------------\n")
+    fh:write("-- Auto generated theme file. Do not edit!\n")
+    fh:write("-- -----------------------------------------------------------------------\n")
+    fh:write("nuklear.set_style(2, 255, 0xffffffff)  -- set custom style\n")
+
+    for k,v in ipairs(theme_index_keys) do        
+        fh:write("nuklear.set_style_prop(indexes."..v..", "..string.format("0x%0x", nuklear.get_style_prop(indexes[v]))..")\n" )
+    end
+    fh:write("nuklear.set_style_table()\n")
+    fh:close()
+
+end
+
+-----------------------------------------------------------------------------------
+-- Loading a theme is really simple. 
+--    Loadstring and run it. We cannot use require, because it only loads once.
+
+local function load_theme( filename )
+
+    local fh = io.open(filename, "r")
+    if(fh == nil) then 
+        pprint("[Error Save Theme] Cannot save to file: "..filename)
+        return nil
+    end 
+    local themestr = fh:read("*a")
+    fh:close()
+
+    local func = assert(load(themestr, themestr, "t" , {indexes=indexes, nuklear=nuklear}))
+    func()
+end
+
+-----------------------------------------------------------------------------------
 -- Theme editor panel. Load, Save and Modify your theme. 
 --    Themes are in the same format as above, and can be used in place of this file.
 
@@ -234,12 +278,20 @@ themes.theme_panel = function ( self, font, left, top, width, height, readonly )
     local set_style = nuklear.button_label_active( "Apply Style" )
 
     nuklear.layout_row_dyn(30, 1)
-    self.style_path = nuklear.edit_string(10,  self.style_path or "", 128, 1)
+    self.style_path = nuklear.edit_string(10,  self.style_path or "./config/custom_theme.lua", 128, 1)
     
     nuklear.layout_row_dyn(30, 2)
     local load_style = nuklear.button_label_active( "Load Style" )
     local save_style = nuklear.button_label_active( "Save Style" )
     
+    if(save_style == 1) then 
+        save_theme( self.style_path )
+    end
+
+    if(load_style == 1) then 
+        load_theme( self.style_path )
+    end
+
     if(select_theme ~= self.theme_select) then 
         self.theme_select = select_theme
         themes[themes.theme_names[self.theme_select+1]]()

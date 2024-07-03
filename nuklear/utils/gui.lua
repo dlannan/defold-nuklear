@@ -78,6 +78,23 @@ nuklear_gui.flags = {
     NK_WINDOW_NO_INPUT = 1024,         --| Prevents window of scaling, moving or getting focus
 }
 
+nuklear_gui.keys = {
+	NK_KEY_NONE			= 0,
+	NK_KEY_SHIFT		= 1,
+	NK_KEY_CTRL			= 2,
+	NK_KEY_DEL			= 3,
+	NK_KEY_ENTER		= 4,
+	NK_KEY_TAB			= 5,
+	NK_KEY_BACKSPACE	= 6,
+	NK_KEY_COPY			= 7,
+	NK_KEY_CUT			= 8,
+	NK_KEY_PASTE		= 9,
+	NK_KEY_UP			= 10,
+	NK_KEY_DOWN			= 11,
+	NK_KEY_LEFT			= 12,
+	NK_KEY_RIGHT		= 13,
+}
+
 --------------------------------------------------------------------------------
 
 nuklear_gui.world_to_screen = function (self, pos, width, height, x, y)
@@ -528,6 +545,58 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
             } )
         end
 	end
+
+	if( action_id == hash("backspace") or action_id == hash("delete") )  then 
+
+		local id = nuklear_gui.keys.NK_KEY_BACKSPACE
+		if(action_id == hash("delete")) then 
+			id = nuklear_gui.keys.NK_KEY_DEL
+		end 
+		local pressed = 1
+		if(action.pressed == false) then 
+			pressed = 0
+		end
+
+		tinsert(self.evt_queue, { 
+			evt = "key", 
+			button = 1, 
+			x = mousex, 
+			y = mousey, 
+			value = id,
+			down = pressed,
+		} )
+	end
+
+	local cursor = nil
+	if( action_id == hash("cursor_left") )  then 
+		cursor = nuklear_gui.keys.NK_KEY_LEFT
+	end
+	if( action_id == hash("cursor_right") )  then 
+		cursor = nuklear_gui.keys.NK_KEY_RIGHT
+	end
+	if( action_id == hash("cursor_up") )  then 
+		cursor = nuklear_gui.keys.NK_KEY_UP
+	end
+	if( action_id == hash("cursor_down") )  then 
+		cursor = nuklear_gui.keys.NK_KEY_DOWN
+	end
+	if(cursor) then 
+
+		local pressed = 1
+		if(action.pressed == false) then 
+			pressed = 0
+		end
+
+		tinsert(self.evt_queue, { 
+			evt = "key", 
+			button = 1, 
+			x = mousex, 
+			y = mousey, 
+			value = cursor,
+			down = pressed,
+		} )
+	end
+
 	if( action_id == hash("text") )  then 
 		tinsert(self.evt_queue, { 
 			evt = "text", 
@@ -592,6 +661,8 @@ nuklear_gui.update = function(self)
 			nuklear.input_scroll( 0, v.value )
 		elseif (v.evt == "text") then 
 			nuklear.input_char( string.byte(v.value ) )
+		elseif (v.evt == "key") then 
+			nuklear.input_key( v.value, v.down )
 		end
 	end
 	nuklear.input_end()
