@@ -85,17 +85,17 @@ nuklear_gui.flags = {
 	-- Window specific flags to set states
 	NK_WINDOW_PRIVATE       = NK_FLAG(11),
     NK_WINDOW_DYNAMIC       = NK_FLAG(11),
-    /* special window type growing up in height while being filled to a certain maximum height */
+    --/* special window type growing up in height while being filled to a certain maximum height */
     NK_WINDOW_ROM           = NK_FLAG(12),
-    /* sets window widgets into a read only mode and does not allow input changes */
+    --/* sets window widgets into a read only mode and does not allow input changes */
     NK_WINDOW_NOT_INTERACTIVE = NK_WINDOW_ROM|NK_WINDOW_NO_INPUT,
-    /* prevents all interaction caused by input to either window or widgets inside */
+    --/* prevents all interaction caused by input to either window or widgets inside */
     NK_WINDOW_HIDDEN        = NK_FLAG(13),
-    /* Hides window and stops any window interaction and drawing */
+    --/* Hides window and stops any window interaction and drawing */
     NK_WINDOW_CLOSED        = NK_FLAG(14),
-    /* Directly closes and frees the window at the end of the frame */
+    --/* Directly closes and frees the window at the end of the frame */
     NK_WINDOW_MINIMIZED     = NK_FLAG(15),
-    /* marks the window as minimized */
+    --/* marks the window as minimized */
     NK_WINDOW_REMOVE_ROM    = NK_FLAG(16),
 }
 
