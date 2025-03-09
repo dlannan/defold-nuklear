@@ -87,8 +87,6 @@ nuklear_gui.flags = {
     NK_WINDOW_DYNAMIC       = NK_FLAG(11),
     --/* special window type growing up in height while being filled to a certain maximum height */
     NK_WINDOW_ROM           = NK_FLAG(12),
-    --/* sets window widgets into a read only mode and does not allow input changes */
-    NK_WINDOW_NOT_INTERACTIVE = NK_WINDOW_ROM|NK_WINDOW_NO_INPUT,
     --/* prevents all interaction caused by input to either window or widgets inside */
     NK_WINDOW_HIDDEN        = NK_FLAG(13),
     --/* Hides window and stops any window interaction and drawing */
@@ -98,6 +96,11 @@ nuklear_gui.flags = {
     --/* marks the window as minimized */
     NK_WINDOW_REMOVE_ROM    = NK_FLAG(16),
 }
+
+    --/* sets window widgets into a read only mode and does not allow input changes */
+nuklear_gui.flags.NK_WINDOW_NOT_INTERACTIVE = bit.bor(nuklear_gui.flags.NK_WINDOW_ROM,nuklear_gui.flags.NK_WINDOW_NO_INPUT)
+
+--------------------------------------------------------------------------------
 
 nuklear_gui.keys = {
 	NK_KEY_NONE			= 0,
