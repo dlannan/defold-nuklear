@@ -60,6 +60,11 @@ local function getHorizFOV(vertFOV, aspect)
 end
 
 --------------------------------------------------------------------------------
+local function NK_FLAG(num)
+	return bit.lshift(1, num)
+end
+
+--------------------------------------------------------------------------------
 
 nuklear_gui.flags = {
 -- /// #### nk_panel_flags
@@ -76,6 +81,22 @@ nuklear_gui.flags = {
     NK_WINDOW_BACKGROUND = 256,        --| Always keep window in the background
     NK_WINDOW_SCALE_LEFT = 512,        --| Puts window scaler in the left-bottom corner instead right-bottom
     NK_WINDOW_NO_INPUT = 1024,         --| Prevents window of scaling, moving or getting focus
+
+	-- Window specific flags to set states
+	NK_WINDOW_PRIVATE       = NK_FLAG(11),
+    NK_WINDOW_DYNAMIC       = NK_FLAG(11),
+    /* special window type growing up in height while being filled to a certain maximum height */
+    NK_WINDOW_ROM           = NK_FLAG(12),
+    /* sets window widgets into a read only mode and does not allow input changes */
+    NK_WINDOW_NOT_INTERACTIVE = NK_WINDOW_ROM|NK_WINDOW_NO_INPUT,
+    /* prevents all interaction caused by input to either window or widgets inside */
+    NK_WINDOW_HIDDEN        = NK_FLAG(13),
+    /* Hides window and stops any window interaction and drawing */
+    NK_WINDOW_CLOSED        = NK_FLAG(14),
+    /* Directly closes and frees the window at the end of the frame */
+    NK_WINDOW_MINIMIZED     = NK_FLAG(15),
+    /* marks the window as minimized */
+    NK_WINDOW_REMOVE_ROM    = NK_FLAG(16),
 }
 
 nuklear_gui.keys = {
@@ -263,7 +284,7 @@ end
 
 --------------------------------------------------------------------------------
 
-nuklear_gui.widget_panel = function (self, title, left, top, width, height, panel_function, ctx)
+nuklear_gui.widget_panel = function (self, title, left, top, width, height, panel_function, ctx, minimized)
 
 	local y =  self.edge_top + top
 	local x = left
@@ -273,6 +294,10 @@ nuklear_gui.widget_panel = function (self, title, left, top, width, height, pane
 	flags = bit.bor(flags, self.flags.NK_WINDOW_MINIMIZABLE)
     -- flags = bit.bor(flags, self.flags.NK_WINDOW_CLOSABLE)
     flags = bit.bor(flags, self.flags.NK_WINDOW_SCALABLE)
+	
+	if(minimized) then
+		flags = bit.bor(flags, self.flags.NK_WINDOW_MINIMIZED)
+	end
 
 	local winshow = nuklear.begin_window( title , x, y, width, height, flags)
 	if( winshow == 1) then 
