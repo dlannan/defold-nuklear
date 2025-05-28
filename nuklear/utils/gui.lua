@@ -394,7 +394,7 @@ nuklear_gui.faicon_tooltip = function( self, ctx, obj, align)
         nuklear.tooltip(obj.name)
         nuklear.set_font( ctx.fonts.fa.fontid )
     end 
-    local res = nuklear.button_label(obj.faicon, 1)
+    local res = nuklear.button_label(obj.faicon, align or 1)
     return res
 end
 
