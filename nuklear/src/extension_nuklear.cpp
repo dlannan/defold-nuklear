@@ -217,7 +217,11 @@ static int nuklear_Label(lua_State *L)
 static int nuklear_Button_Label(lua_State *L)
 {
     const char *name = luaL_checkstring(L, 1);
+    int ltype = luaL_checknumber(L, 2);
     int res = nk_button_label(&defoldfb->ctx, name);
+    nk_style_button styled;
+    styled.text_alignment = ltype;
+    int res = nk_button_label_styled(&defoldfb->ctx, &styled, name);
     lua_pushnumber(L, res);
     return 1;
 }
