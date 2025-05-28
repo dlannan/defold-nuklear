@@ -19329,7 +19329,7 @@ nk_combobox_callback(struct nk_context *ctx,
  *
  * ===============================================================*/
 NK_API int
-nk_tooltip_begin(struct nk_context *ctx, float width)
+nk_tooltip_begin(struct nk_context *ctx, float width, int align)
 {
     int x,y,w,h;
     struct nk_window *win;
@@ -19351,7 +19351,12 @@ nk_tooltip_begin(struct nk_context *ctx, float width)
 
     w = nk_iceilf(width);
     h = nk_iceilf(nk_null_rect.h);
-    x = nk_ifloorf(in->mouse.pos.x + 1) - (int)win->layout->clip.x;
+    if(align == 1) 
+        x = nk_ifloorf(in->mouse.pos.x + 1) - (int)win->layout->clip.x - w/2;
+    else if(align == 2) 
+        x = nk_ifloorf(in->mouse.pos.x + 1) - (int)win->layout->clip.x - w;
+    else
+        x = nk_ifloorf(in->mouse.pos.x + 1) - (int)win->layout->clip.x;
     y = nk_ifloorf(in->mouse.pos.y + 1) - (int)win->layout->clip.y;
 
     bounds.x = (float)x;
@@ -19378,7 +19383,7 @@ nk_tooltip_end(struct nk_context *ctx)
     nk_popup_end(ctx);
 }
 NK_API void
-nk_tooltip(struct nk_context *ctx, const char *text)
+nk_tooltip(struct nk_context *ctx, const char *text, int align)
 {
     const struct nk_style *style;
     struct nk_vec2 padding;
@@ -19406,7 +19411,7 @@ nk_tooltip(struct nk_context *ctx, const char *text)
     text_height = (style->font->height + 2 * padding.y);
 
     /* execute tooltip and fill with text */
-    if (nk_tooltip_begin(ctx, (float)text_width)) {
+    if (nk_tooltip_begin(ctx, (float)text_width, align)) {
         nk_layout_row_dynamic(ctx, (float)text_height, 1);
         nk_text(ctx, text, text_len, NK_TEXT_LEFT);
         nk_tooltip_end(ctx);

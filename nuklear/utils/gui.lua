@@ -391,10 +391,10 @@ nuklear_gui.faicon_tooltip = function( self, ctx, obj, align)
     if(hovered == 1) then obj.hoverctr = (obj.hoverctr or 0) + 1 else obj.hoverctr = 0 end 		
     if(obj.hoverctr > 100) then 
         nuklear.set_font( ctx.fonts.text1.fontid )
-        nuklear.tooltip(obj.name)
+        nuklear.tooltip(obj.name, align or 0)
         nuklear.set_font( ctx.fonts.fa.fontid )
     end 
-    local res = nuklear.button_label(obj.faicon, align or 1)
+    local res = nuklear.button_label(obj.faicon, 1)
     return res
 end
 
