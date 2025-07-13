@@ -155,11 +155,15 @@ nuklear_gui.window_resized = function(self, data)
 	self.evt_queue = {}
 	self.updates = {}
 
-	self:init()
+	self:init("/camera#camera",  1.0)
 	nuklear.window_scissor(0, 0, data.width, data.height)
 
 	self:reload_fonts()
 	nuklear.set_font( self.first_font.fontid )
+
+	if(nuklear_gui.on_window_resized) then 
+		nuklear_gui.on_window_resized(self)
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -170,8 +174,12 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 
 	local newwidth, newheight = window.get_size()
 	-- Trying to fit width of gui quad into exact position 
-	self.window.width = newwidth
-	self.window.height = newheight
+	self.window.width 	= newwidth
+	self.window.height 	= newheight
+
+	if(self.window.orgininalheight == nil) then 
+		self.window.orgininalheight = newheight 
+	end
 
 	local res = self.window.width * scale_texture
 	if( self.window.height * scale_texture > res) then 
@@ -181,11 +189,11 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 	self.res.resolution = { w = self.window.width * scale_texture, h = self.window.height * scale_texture }
 	local gui_resolution = self.res.resolution
 
-	local aspect = newwidth/newheight
-	local vertFOV = go.get(self.camera.url, "fov")
-	local horizFOV = getHorizFOV(vertFOV, aspect)
+	local aspect 		= newwidth/newheight
+	local vertFOV 		= go.get(self.camera.url, "fov")
+	local horizFOV 		= getHorizFOV(vertFOV, aspect)
 	pprint(horizFOV.."   "..self.res.resolution.w)
-	local aspectFOV = horizFOV / vertFOV
+	local aspectFOV 	= horizFOV / vertFOV
 	--if( aspect < 1.0) then aspectScale = 0.95 end
 
 	local panel_distance = getCamDistToSeeSize(horizFOV, 1.0)
@@ -193,11 +201,12 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 	go.set_scale(vmath.vector3(1.0, 1.0/aspect, 1.0), gui_quad)
 
 	self.edge_top = 0 --getTopDisplayEdge(vertFOV, panel_distance, gui_resolution.h)
-	if(aspect < 1.0) then self.edge_top = 0 end
+	--if(aspect < 1.0) then self.edge_top = 0 end
 
-	self.window.scalex = 1.0 -- gui_resolution.w / newwidth
-	self.window.scaley = 1.0 -- aspectYScale
-	self.window.offx = 0
+	self.window.scalex 	= newwidth / 1920
+	self.window.scaley 	= newheight / 1080
+	self.window.offx 	= 0
+	pprint(self.window, self.edge_top)
 end
 
 --------------------------------------------------------------------------------
@@ -214,11 +223,11 @@ nuklear_gui.init = function(self, camera, texture_scale)
 	texture_scale = texture_scale or 1.0
 	self:setup_gui( "/nuklear_gui", camera, texture_scale )
 	
-	self.winctr = 0
-	self.res.width = self.res.resolution.w
-	self.res.height = self.res.resolution.h
+	self.winctr 		= 0
+	self.res.width		= self.res.resolution.w
+	self.res.height 	= self.res.resolution.h
 
-	self.resource_path = go.get("/nuklear_gui#model", "texture0")
+	self.resource_path 	= go.get("/nuklear_gui#model", "texture0")
  
  	self.buffer_info = {
 		buffer = buffer.create(self.res.resolution.w * self.res.resolution.h, {{
@@ -257,7 +266,6 @@ nuklear_gui.init = function(self, camera, texture_scale)
 	for k,v in pairs(self.themes.indexes) do
 		self.themes.editor_theme[v] = nuklear.get_style_prop(v) 
 	end
-
 end
 
 --------------------------------------------------------------------------------
@@ -531,7 +539,7 @@ nuklear_gui.handle_input = function(self, caller, action_id, action)
     local evt_button = 0
 
 	local mousex = action.x + self.window.offx
-	local mousey = self.window.height - action.y + self.edge_top
+	local mousey = self.window.orgininalheight - action.y + self.edge_top
 
     -- Leftclick handler
 	if action_id == hash("touch") or action_id == hash("button_left") then
