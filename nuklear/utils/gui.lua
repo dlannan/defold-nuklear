@@ -192,7 +192,6 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 	local aspect 		= newwidth/newheight
 	local vertFOV 		= go.get(self.camera.url, "fov")
 	local horizFOV 		= getHorizFOV(vertFOV, aspect)
-	pprint(horizFOV.."   "..self.res.resolution.w)
 	local aspectFOV 	= horizFOV / vertFOV
 	--if( aspect < 1.0) then aspectScale = 0.95 end
 
@@ -206,7 +205,6 @@ nuklear_gui.setup_gui = function( self, gui_quad, camera_url, scale_texture )
 	self.window.scalex 	= newwidth / 1920
 	self.window.scaley 	= newheight / 1080
 	self.window.offx 	= 0
-	pprint(self.window, self.edge_top)
 end
 
 --------------------------------------------------------------------------------
