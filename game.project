@@ -14,7 +14,7 @@ fullscreen = 0
 [project]
 title = defold-nuklear
 custom_resources = /example/fonts/,/example/images/
-bundle_resources = 
+bundle_resources = example/images
 dependencies#0 = https://github.com/subsoap/defos/archive/master.zip
 
 [library]

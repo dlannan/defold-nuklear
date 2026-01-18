@@ -213,7 +213,7 @@ nk_defold_img_blendpixel(const struct defold_image *img,
     nk_defold_img_setpixel(img, x0, y0, col);
 }
 
-static void
+void
 nk_defold_scissor(struct defold_context *defold,
                   const float x,
                   const float y,

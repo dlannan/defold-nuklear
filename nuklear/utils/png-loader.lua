@@ -29,15 +29,17 @@ local function loadbuffer(filename)
     local imgid = nil
     local data = nil
 
-    local fh = io.open(filename, "rb")
-    if(fh) then 
-        data = fh:read("*a")
-        fh:close()
-    else 
-        print("[Error] loadbuffer: Unable to load - "..filename)
-        return nil
-    end
-           
+    -- local fh = io.open(filename, "rb")
+    -- if(fh) then 
+    --     data = fh:read("*a")
+    --     fh:close()
+    -- else 
+    --     print("[Error] loadbuffer: Unable to load - "..filename)
+    --     return nil
+    -- end
+    local databuffer = sys.load_buffer(filename)
+    local data = buffer.get_bytes(databuffer, hash("data"))
+    
     --print(gltfobj.basepath..v.uri)
     local res, err = image.load(data)
     if(err) then print("[Image Load Error]: "..v.uri.." #:"..err) end 

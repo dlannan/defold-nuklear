@@ -35,7 +35,7 @@ static std::vector<struct nk_font *> g_fonts;
 typedef struct stringdata {
     char *  value;
     int  *  length;
-} stringdata;
+} _stringdata;
 static std::map<uint32_t, stringdata> g_editstrings;
 
 // ----------------------------
